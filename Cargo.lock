@@ -1552,7 +1552,7 @@ dependencies = [
 
 [[package]]
 name = "idlixdownloader"
-version = "0.1.0-alpha"
+version = "0.1.1-alpha"
 dependencies = [
  "axum",
  "dirs",
@@ -1560,6 +1560,7 @@ dependencies = [
  "image",
  "mime_guess",
  "open",
+ "raw-window-handle",
  "regex",
  "reqwest",
  "rfd",

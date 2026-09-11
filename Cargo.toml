@@ -1,6 +1,6 @@
 [package]
 name = "idlixdownloader"
-version = "0.1.0-alpha"
+version = "0.1.1-alpha"
 edition = "2024"
 
 [dependencies]
@@ -26,6 +26,7 @@ tray-icon = "0.19"
 open = "5.3"
 image = { version = "0.25", default-features = false, features = ["png"] }
 rfd = "0.15"
+raw-window-handle = "0.6"
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.59", features = ["Win32_UI_WindowsAndMessaging", "Win32_Foundation"] }

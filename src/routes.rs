@@ -148,11 +148,43 @@ pub async fn start_download(
     Ok(Json(task))
 }
 
+#[cfg(windows)]
+struct ForegroundWindowWrapper(isize);
+
+#[cfg(windows)]
+impl raw_window_handle::HasWindowHandle for ForegroundWindowWrapper {
+    fn window_handle(&self) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
+        let non_zero = std::num::NonZeroIsize::new(self.0)
+            .ok_or(raw_window_handle::HandleError::Unavailable)?;
+        let handle = raw_window_handle::Win32WindowHandle::new(non_zero);
+        unsafe { Ok(raw_window_handle::WindowHandle::borrow_raw(raw_window_handle::RawWindowHandle::Win32(handle))) }
+    }
+}
+
+#[cfg(windows)]
+impl raw_window_handle::HasDisplayHandle for ForegroundWindowWrapper {
+    fn display_handle(&self) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
+        let handle = raw_window_handle::WindowsDisplayHandle::new();
+        unsafe { Ok(raw_window_handle::DisplayHandle::borrow_raw(raw_window_handle::RawDisplayHandle::Windows(handle))) }
+    }
+}
+
 pub async fn pick_folder_handler() -> Result<Json<serde_json::Value>, AppError> {
     let chosen = tokio::task::spawn_blocking(|| {
-        rfd::FileDialog::new()
-            .set_title("Pilih Folder Penyimpanan")
-            .pick_folder()
+        let mut dialog = rfd::FileDialog::new().set_title("Pilih Folder Penyimpanan");
+
+        #[cfg(windows)]
+        {
+            unsafe {
+                let hwnd = windows_sys::Win32::UI::WindowsAndMessaging::GetForegroundWindow();
+                if !hwnd.is_null() {
+                    let wrapper = ForegroundWindowWrapper(hwnd as isize);
+                    dialog = dialog.set_parent(&wrapper);
+                }
+            }
+        }
+
+        dialog.pick_folder()
     })
     .await
     .map_err(|e| AppError(StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
