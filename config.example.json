@@ -1,0 +1,8 @@
+{
+  "download_dir": "C:\\Users\\User\\Downloads",
+  "movies_dir": "C:\\Users\\User\\Downloads\\Movies",
+  "series_dir": "C:\\Users\\User\\Downloads\\TV Series",
+  "base_url": "https://z2.idlixku.com",
+  "max_concurrent_downloads": 2,
+  "default_sub_lang": "Indonesian"
+}
