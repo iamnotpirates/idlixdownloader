@@ -22,7 +22,8 @@ use extractor::IdlixClient;
 use models::AppConfig;
 use routes::{
     extract_stream_sources, get_catalog, get_downloads, get_movie_details, get_series_details,
-    get_settings, search_media, start_download, update_settings, ws_handler, AppState,
+    get_settings, open_folder_handler, search_media, start_download, update_settings, ws_handler,
+    AppState,
 };
 use rust_embed::RustEmbed;
 use std::net::SocketAddr;
@@ -87,8 +88,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("[Init] N_m3u8DL-RE: {:?}", bin_paths.n_m3u8dl_re);
 
     let config = AppConfig::load();
-    let movies_dir = config.movies_dir.clone();
-    let series_dir = config.series_dir.clone();
     let extractor = Arc::new(IdlixClient::new(Some(config.base_url.clone())));
     let downloader = Arc::new(DownloadManager::new(bin_paths, config, Arc::clone(&extractor)));
 
@@ -109,6 +108,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/api/extract", post(extract_stream_sources))
         .route("/api/downloads", get(get_downloads).post(start_download))
         .route("/api/settings", get(get_settings).post(update_settings))
+        .route("/api/open-folder", post(open_folder_handler))
         .route("/ws", get(ws_handler))
         .fallback(static_handler)
         .layer(cors)
@@ -126,11 +126,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     let server_url = "http://localhost:8989".to_string();
-    tray::run_tray_loop(
-        server_url,
-        std::path::PathBuf::from(movies_dir),
-        std::path::PathBuf::from(series_dir),
-    )?;
+    tray::run_tray_loop(server_url)?;
 
     Ok(())
 }

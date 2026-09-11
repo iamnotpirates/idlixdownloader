@@ -1,11 +1,28 @@
-use std::path::PathBuf;
+pub fn open_folder_path(dir_str: &str) {
+    let p = std::path::Path::new(dir_str);
+    let abs_path = if p.is_absolute() {
+        p.to_path_buf()
+    } else {
+        std::env::current_dir().unwrap_or_default().join(p)
+    };
+
+    // Ensure folder exists before opening
+    let _ = std::fs::create_dir_all(&abs_path);
+
+    #[cfg(windows)]
+    {
+        let _ = std::process::Command::new("explorer")
+            .arg(&abs_path)
+            .spawn();
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = open::that(&abs_path);
+    }
+}
 
 #[cfg(windows)]
-pub fn run_tray_loop(
-    server_url: String,
-    movies_dir: PathBuf,
-    series_dir: PathBuf,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub fn run_tray_loop(server_url: String) -> Result<(), Box<dyn std::error::Error>> {
     use image::GenericImageView;
     use tray_icon::{
         menu::{Menu, MenuEvent, MenuItem, PredefinedMenuItem},
@@ -63,9 +80,11 @@ pub fn run_tray_loop(
                 if event.id == open_id {
                     let _ = open::that(&server_url);
                 } else if event.id == movies_id {
-                    let _ = open::that(&movies_dir);
+                    let cfg = crate::models::AppConfig::load();
+                    open_folder_path(&cfg.movies_dir);
                 } else if event.id == series_id {
-                    let _ = open::that(&series_dir);
+                    let cfg = crate::models::AppConfig::load();
+                    open_folder_path(&cfg.series_dir);
                 } else if event.id == exit_id {
                     std::process::exit(0);
                 }
@@ -94,11 +113,7 @@ pub fn run_tray_loop(
 }
 
 #[cfg(not(windows))]
-pub fn run_tray_loop(
-    server_url: String,
-    _movies_dir: PathBuf,
-    _series_dir: PathBuf,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub fn run_tray_loop(server_url: String) -> Result<(), Box<dyn std::error::Error>> {
     let _ = open::that(&server_url);
     std::thread::park();
     Ok(())

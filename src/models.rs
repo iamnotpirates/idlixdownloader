@@ -147,6 +147,54 @@ impl Default for AppConfig {
 }
 
 impl AppConfig {
+    pub fn validate(&self) -> Result<(), String> {
+        if self.movies_dir.trim().is_empty() {
+            return Err("Movies directory path cannot be empty".to_string());
+        }
+        if self.series_dir.trim().is_empty() {
+            return Err("TV Series directory path cannot be empty".to_string());
+        }
+        if self.base_url.trim().is_empty() {
+            return Err("Base URL cannot be empty".to_string());
+        }
+        let parsed_url = url::Url::parse(&self.base_url)
+            .map_err(|_| "Base URL must be a valid URL (e.g. https://z2.idlixku.com)".to_string())?;
+        if parsed_url.scheme() != "http" && parsed_url.scheme() != "https" {
+            return Err("Base URL must use http or https protocol".to_string());
+        }
+        if self.max_concurrent_downloads < 1 || self.max_concurrent_downloads > 10 {
+            return Err("Max concurrent downloads must be between 1 and 10".to_string());
+        }
+
+        for (label, dir_str) in [("Movies", &self.movies_dir), ("TV Series", &self.series_dir)] {
+            let s = dir_str.trim();
+            #[cfg(windows)]
+            {
+                let without_drive = if s.len() >= 2 && s.chars().nth(1) == Some(':') {
+                    &s[2..]
+                } else {
+                    s
+                };
+                if without_drive.contains(['<', '>', '"', '|', '?', '*', ':']) {
+                    return Err(format!("{} folder path contains invalid characters (< > \" | ? * :)", label));
+                }
+            }
+
+            let path = std::path::Path::new(s);
+            let abs_path = if path.is_absolute() {
+                path.to_path_buf()
+            } else {
+                std::env::current_dir().unwrap_or_default().join(path)
+            };
+
+            if let Err(e) = std::fs::create_dir_all(&abs_path) {
+                return Err(format!("Cannot create/access {} folder at '{}': {}", label, dir_str, e));
+            }
+        }
+
+        Ok(())
+    }
+
     fn config_file_path() -> std::path::PathBuf {
         if let Ok(exe) = std::env::current_exe() {
             if let Some(parent) = exe.parent() {

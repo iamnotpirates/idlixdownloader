@@ -87,8 +87,21 @@ export async function saveSettings(config: AppConfig): Promise<AppConfig> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(config),
   })
-  if (!res.ok) throw new Error('Failed to save settings')
+  if (!res.ok) {
+    const errText = await res.text()
+    throw new Error(errText || 'Failed to save settings')
+  }
   return res.json()
+}
+
+export async function openFolder(target: 'movies' | 'series'): Promise<void> {
+  const res = await fetch(`${API_BASE}/open-folder?target=${target}`, {
+    method: 'POST',
+  })
+  if (!res.ok) {
+    const errText = await res.text()
+    throw new Error(errText || 'Failed to open folder')
+  }
 }
 
 export function createDownloadSocket(onMessage: (tasks: DownloadTask | DownloadTask[]) => void): () => void {

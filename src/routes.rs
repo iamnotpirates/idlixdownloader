@@ -148,6 +148,31 @@ pub async fn start_download(
     Ok(Json(task))
 }
 
+#[derive(Deserialize)]
+pub struct OpenFolderParams {
+    pub target: String,
+}
+
+pub async fn open_folder_handler(
+    State(state): State<AppState>,
+    Query(params): Query<OpenFolderParams>,
+) -> Result<Json<serde_json::Value>, AppError> {
+    let conf = state.downloader.config.read().await;
+    let target_dir = match params.target.as_str() {
+        "movies" => &conf.movies_dir,
+        "series" => &conf.series_dir,
+        _ => {
+            return Err(AppError(
+                StatusCode::BAD_REQUEST,
+                "Invalid folder target. Must be 'movies' or 'series'".to_string(),
+            ))
+        }
+    };
+
+    crate::tray::open_folder_path(target_dir);
+    Ok(Json(serde_json::json!({ "status": "ok", "path": target_dir })))
+}
+
 pub async fn get_settings(State(state): State<AppState>) -> Json<AppConfig> {
     let conf = state.downloader.config.read().await;
     Json(conf.clone())
@@ -156,11 +181,20 @@ pub async fn get_settings(State(state): State<AppState>) -> Json<AppConfig> {
 pub async fn update_settings(
     State(state): State<AppState>,
     Json(new_conf): Json<AppConfig>,
-) -> Json<AppConfig> {
+) -> Result<Json<AppConfig>, AppError> {
+    if let Err(err_msg) = new_conf.validate() {
+        return Err(AppError(StatusCode::BAD_REQUEST, err_msg));
+    }
+
     let mut conf = state.downloader.config.write().await;
     *conf = new_conf.clone();
-    let _ = conf.save();
-    Json(conf.clone())
+    if let Err(e) = conf.save() {
+        return Err(AppError(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to save config: {e}"),
+        ));
+    }
+    Ok(Json(conf.clone()))
 }
 
 pub async fn ws_handler(ws: WebSocketUpgrade, State(state): State<AppState>) -> impl IntoResponse {
