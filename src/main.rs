@@ -1,3 +1,5 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 mod bin_manager;
 mod downloader;
 mod extractor;
@@ -5,6 +7,7 @@ mod http_client;
 mod models;
 mod routes;
 mod scraper;
+mod tray;
 
 use axum::{
     body::Body,
@@ -84,6 +87,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("[Init] N_m3u8DL-RE: {:?}", bin_paths.n_m3u8dl_re);
 
     let config = AppConfig::load();
+    let movies_dir = config.movies_dir.clone();
+    let series_dir = config.series_dir.clone();
     let extractor = Arc::new(IdlixClient::new(Some(config.base_url.clone())));
     let downloader = Arc::new(DownloadManager::new(bin_paths, config, Arc::clone(&extractor)));
 
@@ -114,7 +119,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("💡 Open http://localhost:8989 or http://<your-ip>:8989 in your browser.");
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
-    axum::serve(listener, app).await?;
+    tokio::spawn(async move {
+        if let Err(e) = axum::serve(listener, app).await {
+            eprintln!("[Server Error] {e}");
+        }
+    });
+
+    let server_url = "http://localhost:8989".to_string();
+    tray::run_tray_loop(
+        server_url,
+        std::path::PathBuf::from(movies_dir),
+        std::path::PathBuf::from(series_dir),
+    )?;
 
     Ok(())
 }
