@@ -113,6 +113,12 @@ pub struct CreateDownloadRequest {
     pub season_num: Option<u32>,
     pub episode_num: Option<u32>,
     pub sub_lang: Option<String>,
+    #[serde(default)]
+    pub custom_output_dir: Option<String>,
+}
+
+fn default_ask_download_location() -> bool {
+    true
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -126,6 +132,8 @@ pub struct AppConfig {
     pub base_url: String,
     pub max_concurrent_downloads: usize,
     pub default_sub_lang: String,
+    #[serde(default = "default_ask_download_location")]
+    pub ask_download_location: bool,
 }
 
 impl Default for AppConfig {
@@ -142,6 +150,7 @@ impl Default for AppConfig {
             base_url: "https://z2.idlixku.com".to_string(),
             max_concurrent_downloads: 2,
             default_sub_lang: "Indonesian".to_string(),
+            ask_download_location: true,
         }
     }
 }

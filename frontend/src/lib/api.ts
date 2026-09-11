@@ -56,6 +56,7 @@ export async function startDownload(params: {
   season_num?: number
   episode_num?: number
   sub_lang?: string
+  custom_output_dir?: string
 }): Promise<DownloadTask> {
   const res = await fetch(`${API_BASE}/downloads`, {
     method: 'POST',
@@ -67,6 +68,18 @@ export async function startDownload(params: {
     throw new Error(err || 'Failed to start download')
   }
   return res.json()
+}
+
+export async function pickFolder(): Promise<string | null> {
+  const res = await fetch(`${API_BASE}/pick-folder`, {
+    method: 'POST',
+  })
+  if (!res.ok) {
+    const errText = await res.text()
+    throw new Error(errText || 'Failed to open folder picker')
+  }
+  const data = await res.json()
+  return data.path || null
 }
 
 export async function fetchDownloads(): Promise<DownloadTask[]> {

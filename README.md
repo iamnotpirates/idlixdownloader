@@ -23,8 +23,12 @@ Pantau antrean download, kecepatan download real-time, progress bar, dan status 
 ![Downloads Manager](docs/screenshots/04-downloads-tab.png)
 
 ### 5. Settings & Directory Routing
-Konfigurasi folder penyimpanan terpisah untuk Movie dan TV Series (Jellyfin/Plex ready), base URL, bahasa subtitle default, dan limit concurrent download.
+Konfigurasi folder penyimpanan terpisah untuk Movie dan TV Series (Jellyfin/Plex ready) dengan native folder picker (`Browse...`), base URL, bahasa subtitle default, dan opsi konfirmasi download.
 ![Settings](docs/screenshots/05-settings-tab.png)
+
+### 6. Download Confirmation & Folder Selection
+Dialog konfirmasi fleksibel sebelum memulai download untuk memilih folder default atau memilih folder root lain secara manual via dialog native Windows Explorer, tanpa merusak struktur subfolder otomatis Jellyfin/Plex.
+![Download Confirmation](docs/screenshots/06-confirmation-modal.png)
 
 ---
 
@@ -32,6 +36,8 @@ Konfigurasi folder penyimpanan terpisah untuk Movie dan TV Series (Jellyfin/Plex
 
 - ⚡ **Ultra Lightweight & Fast**: Backend native Rust murni (Axum + Tokio) dengan memory footprint sangat kecil (< 30 MB RAM).
 - 🌐 **Embedded Single Binary**: Web UI modern (Svelte 5 + Tailwind CSS + Lucide Icons) di-embed langsung ke dalam binary Rust via `rust-embed` (~8 MB `.exe`).
+- 🗂️ **Native Windows System Tray**: Ikon tray di taskbar Windows dengan menu klik kanan (Open IDLIX Downloader, Exit) dan aksi double-click untuk membuka web UI langsung di browser default.
+- 🗃️ **Native Folder Picker & Location Confirmation**: Dukungan dialog native Windows Explorer (`rfd`) untuk memilih folder penyimpanan langsung dari UI web dengan opsi konfirmasi sebelum unduh.
 - 🛡️ **Anti-Blocking DNS-over-HTTPS (DoH)**: Menggunakan Cloudflare DoH (`https://1.1.1.1/dns-query`) untuk bypass blokir ISP dan DNS poisoning tanpa perlu VPN/proxy tambahan.
 - 🎬 **Lossless Remuxing to MP4**: Otomatis menggabungkan chunk HLS (`.m3u8`) dan me-remux ke ISO standard `.mp4` melalui `ffmpeg` (kompatibel penuh dengan Jellyfin, Plex, dan Smart TV).
 - 📝 **Auto Subtitle Converter**: Otomatis mendownload subtitle `.vtt` dan mengonversinya menjadi format `.srt` yang disimpan berdampingan dengan video.

@@ -79,4 +79,17 @@ export interface AppConfig {
   base_url: string
   max_concurrent_downloads: number
   default_sub_lang: string
+  ask_download_location?: boolean
+}
+
+export interface CreateDownloadPayload {
+  page_url: string
+  media_type: string
+  media_id?: string
+  title: string
+  year?: string
+  season_num?: number
+  episode_num?: number
+  sub_lang?: string
+  custom_output_dir?: string
 }

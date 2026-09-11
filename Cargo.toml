@@ -25,6 +25,7 @@ uuid = { version = "1.11", features = ["v4"] }
 tray-icon = "0.19"
 open = "5.3"
 image = { version = "0.25", default-features = false, features = ["png"] }
+rfd = "0.15"
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.59", features = ["Win32_UI_WindowsAndMessaging", "Win32_Foundation"] }

@@ -140,12 +140,33 @@ pub async fn start_download(
             String::new(), // extracted in background queue worker
             None,
             req.sub_lang,
-            None,
+            req.custom_output_dir,
         )
         .await
         .map_err(|e| AppError(StatusCode::INTERNAL_SERVER_ERROR, e))?;
 
     Ok(Json(task))
+}
+
+pub async fn pick_folder_handler() -> Result<Json<serde_json::Value>, AppError> {
+    let chosen = tokio::task::spawn_blocking(|| {
+        rfd::FileDialog::new()
+            .set_title("Pilih Folder Penyimpanan")
+            .pick_folder()
+    })
+    .await
+    .map_err(|e| AppError(StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+
+    match chosen {
+        Some(path) => Ok(Json(serde_json::json!({
+            "status": "ok",
+            "path": path.to_string_lossy().to_string()
+        }))),
+        None => Ok(Json(serde_json::json!({
+            "status": "cancelled",
+            "path": null
+        }))),
+    }
 }
 
 #[derive(Deserialize)]
