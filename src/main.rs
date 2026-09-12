@@ -126,8 +126,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     });
 
+    let silent = std::env::args().any(|a| a == "--silent");
     let server_url = "http://localhost:8989".to_string();
-    tray::run_tray_loop(server_url)?;
+    tray::run_tray_loop(server_url, silent)?;
 
     Ok(())
 }

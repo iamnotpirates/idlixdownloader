@@ -22,10 +22,48 @@ pub fn open_folder_path(dir_str: &str) {
 }
 
 #[cfg(windows)]
-pub fn run_tray_loop(server_url: String) -> Result<(), Box<dyn std::error::Error>> {
+const AUTOSTART_REG_KEY: &str = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+#[cfg(windows)]
+const AUTOSTART_REG_NAME: &str = "IDLIXDownloader";
+
+#[cfg(windows)]
+fn is_autostart_enabled() -> bool {
+    use winreg::enums::HKEY_CURRENT_USER;
+    use winreg::RegKey;
+
+    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+    let Ok(run_key) = hkcu.open_subkey(AUTOSTART_REG_KEY) else {
+        return false;
+    };
+    run_key.get_value::<String, _>(AUTOSTART_REG_NAME).is_ok()
+}
+
+#[cfg(windows)]
+fn set_autostart(enabled: bool) {
+    use winreg::enums::{HKEY_CURRENT_USER, KEY_SET_VALUE};
+    use winreg::RegKey;
+
+    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+    let Ok(run_key) = hkcu.open_subkey_with_flags(AUTOSTART_REG_KEY, KEY_SET_VALUE) else {
+        return;
+    };
+
+    if enabled {
+        // Get current exe path, add --silent so startup launch skips browser open
+        if let Ok(exe) = std::env::current_exe() {
+            let val = format!("\"{}\" --silent", exe.display());
+            let _ = run_key.set_value(AUTOSTART_REG_NAME, &val);
+        }
+    } else {
+        let _ = run_key.delete_value(AUTOSTART_REG_NAME);
+    }
+}
+
+#[cfg(windows)]
+pub fn run_tray_loop(server_url: String, silent: bool) -> Result<(), Box<dyn std::error::Error>> {
     use image::GenericImageView;
     use tray_icon::{
-        menu::{Menu, MenuEvent, MenuItem, PredefinedMenuItem},
+        menu::{Menu, MenuEvent, MenuItem, CheckMenuItem, PredefinedMenuItem},
         Icon, MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent,
     };
     use windows_sys::Win32::UI::WindowsAndMessaging::{
@@ -43,18 +81,23 @@ pub fn run_tray_loop(server_url: String) -> Result<(), Box<dyn std::error::Error
     let item_open = MenuItem::new("🌐 Open IDLIX Downloader", true, None);
     let item_movies = MenuItem::new("🎬 Open Movies Folder", true, None);
     let item_series = MenuItem::new("📺 Open TV Series Folder", true, None);
-    let item_sep = PredefinedMenuItem::separator();
+    let item_sep1 = PredefinedMenuItem::separator();
+    let item_autostart = CheckMenuItem::new("🚀 Start with Windows", true, is_autostart_enabled(), None);
+    let item_sep2 = PredefinedMenuItem::separator();
     let item_exit = MenuItem::new("❌ Exit", true, None);
 
     menu.append(&item_open)?;
     menu.append(&item_movies)?;
     menu.append(&item_series)?;
-    menu.append(&item_sep)?;
+    menu.append(&item_sep1)?;
+    menu.append(&item_autostart)?;
+    menu.append(&item_sep2)?;
     menu.append(&item_exit)?;
 
     let open_id = item_open.id().clone();
     let movies_id = item_movies.id().clone();
     let series_id = item_series.id().clone();
+    let autostart_id = item_autostart.id().clone();
     let exit_id = item_exit.id().clone();
 
     let _tray_icon = TrayIconBuilder::new()
@@ -63,8 +106,10 @@ pub fn run_tray_loop(server_url: String) -> Result<(), Box<dyn std::error::Error
         .with_icon(icon)
         .build()?;
 
-    // Open default browser on startup
-    let _ = open::that(&server_url);
+    // Only open browser on startup if NOT in silent mode
+    if !silent {
+        let _ = open::that(&server_url);
+    }
 
     let menu_channel = MenuEvent::receiver();
     let tray_channel = TrayIconEvent::receiver();
@@ -85,6 +130,10 @@ pub fn run_tray_loop(server_url: String) -> Result<(), Box<dyn std::error::Error
                 } else if event.id == series_id {
                     let cfg = crate::models::AppConfig::load();
                     open_folder_path(&cfg.series_dir);
+                } else if event.id == autostart_id {
+                    let new_state = !is_autostart_enabled();
+                    set_autostart(new_state);
+                    item_autostart.set_checked(new_state);
                 } else if event.id == exit_id {
                     std::process::exit(0);
                 }
@@ -113,8 +162,10 @@ pub fn run_tray_loop(server_url: String) -> Result<(), Box<dyn std::error::Error
 }
 
 #[cfg(not(windows))]
-pub fn run_tray_loop(server_url: String) -> Result<(), Box<dyn std::error::Error>> {
-    let _ = open::that(&server_url);
+pub fn run_tray_loop(server_url: String, silent: bool) -> Result<(), Box<dyn std::error::Error>> {
+    if !silent {
+        let _ = open::that(&server_url);
+    }
     std::thread::park();
     Ok(())
 }
