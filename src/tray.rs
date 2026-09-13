@@ -63,8 +63,8 @@ fn set_autostart(enabled: bool) {
 pub fn run_tray_loop(server_url: String, silent: bool) -> Result<(), Box<dyn std::error::Error>> {
     use image::GenericImageView;
     use tray_icon::{
-        menu::{Menu, MenuEvent, MenuItem, CheckMenuItem, PredefinedMenuItem},
-        Icon, MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent,
+        menu::{CheckMenuItem, Menu, MenuEvent, MenuItem, PredefinedMenuItem},
+        Icon, TrayIconBuilder, TrayIconEvent,
     };
     use windows_sys::Win32::UI::WindowsAndMessaging::{
         DispatchMessageW, GetMessageW, TranslateMessage, MSG,
@@ -102,6 +102,7 @@ pub fn run_tray_loop(server_url: String, silent: bool) -> Result<(), Box<dyn std
 
     let _tray_icon = TrayIconBuilder::new()
         .with_menu(Box::new(menu))
+        .with_menu_on_left_click(false)
         .with_tooltip("IDLIX Downloader")
         .with_icon(icon)
         .build()?;
@@ -141,18 +142,8 @@ pub fn run_tray_loop(server_url: String, silent: bool) -> Result<(), Box<dyn std
 
             // Process tray icon clicks
             while let Ok(event) = tray_channel.try_recv() {
-                match event {
-                    TrayIconEvent::DoubleClick { .. } => {
-                        let _ = open::that(&server_url);
-                    }
-                    TrayIconEvent::Click {
-                        button: MouseButton::Left,
-                        button_state: MouseButtonState::Up,
-                        ..
-                    } => {
-                        let _ = open::that(&server_url);
-                    }
-                    _ => {}
+                if let TrayIconEvent::DoubleClick { .. } = event {
+                    let _ = open::that(&server_url);
                 }
             }
         }
