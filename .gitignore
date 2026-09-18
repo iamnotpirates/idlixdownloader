@@ -10,4 +10,5 @@ config.json
 *.txt
 .env
 .playwright-mcp/
-graphify-out/
+/test
+*.zip

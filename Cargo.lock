@@ -1588,7 +1588,7 @@ dependencies = [
 
 [[package]]
 name = "idlixdownloader"
-version = "0.1.4-alpha"
+version = "0.1.5-alpha"
 dependencies = [
  "axum",
  "dirs",

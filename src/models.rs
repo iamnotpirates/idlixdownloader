@@ -150,7 +150,7 @@ impl Default for AppConfig {
             movies_dir,
             series_dir,
             base_url: "https://z2.idlixku.com".to_string(),
-            max_concurrent_downloads: 2,
+            max_concurrent_downloads: 1,
             default_sub_lang: "Indonesian".to_string(),
             ask_download_location: true,
         }

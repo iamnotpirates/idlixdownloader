@@ -236,6 +236,7 @@ impl DownloadManager {
     }
 
     pub async fn delete_task(&self, task_id: &str) -> Result<(), String> {
+        clean_staging_dir(task_id);
         {
             let mut tasks = self.tasks.write().await;
             if let Some(pos) = tasks.iter().position(|t| t.id == task_id) {
@@ -498,14 +499,16 @@ impl DownloadManager {
             }
         }
 
-        let _ = tokio::fs::create_dir_all(&task.output_dir).await;
+        let staging_dir = std::env::temp_dir().join("idlixdownloader").join(&task.id);
+        let chunks_dir = staging_dir.join("chunks");
+        let _ = tokio::fs::create_dir_all(&chunks_dir).await;
 
-        // Download subtitle if present
+        // Download subtitle if present into staging directory
         if let Some(ref sub_url) = task.subtitle_url {
-            let srt_path = PathBuf::from(&task.output_dir).join(format!("{}.srt", task.file_name));
+            let srt_path = staging_dir.join(format!("{}.srt", task.file_name));
             log_task_event(
                 &task.id,
-                &format!("Downloading subtitle to: {:?}", srt_path),
+                &format!("Downloading subtitle to staging: {:?}", srt_path),
                 &tasks_arc,
                 &tx,
                 &db,
@@ -532,12 +535,15 @@ impl DownloadManager {
             }
         }
 
-        // Run N_m3u8DL-RE command with automatic MP4 remuxing
+        // Run N_m3u8DL-RE command with automatic MP4 remuxing in local staging directory
         let ref_header = format!("Referer: {}/", extractor.base_url.trim_end_matches('/'));
         let mut cmd = Command::new(&bin_paths.n_m3u8dl_re);
-        cmd.arg(&task.m3u8_url)
+        cmd.current_dir(&staging_dir)
+            .arg(&task.m3u8_url)
+            .arg("--tmp-dir")
+            .arg(&chunks_dir)
             .arg("--save-dir")
-            .arg(&task.output_dir)
+            .arg(&staging_dir)
             .arg("--save-name")
             .arg(&task.file_name)
             .arg("--auto-select")
@@ -568,8 +574,8 @@ impl DownloadManager {
         log_task_event(
             &task.id,
             &format!(
-                "Executing N_m3u8DL-RE command for '{}' -> Output: '{}/{}'",
-                task.title, task.output_dir, task.file_name
+                "Executing N_m3u8DL-RE command for '{}' in temporary staging",
+                task.title
             ),
             &tasks_arc,
             &tx,
@@ -580,6 +586,7 @@ impl DownloadManager {
         let mut child = match cmd.spawn() {
             Ok(c) => c,
             Err(e) => {
+                let _ = tokio::fs::remove_dir_all(&staging_dir).await;
                 let err_str = format!("Failed to spawn downloader binary: {e}");
                 log_task_event(
                     &task.id,
@@ -635,7 +642,46 @@ impl DownloadManager {
         }
 
         if success {
-            if let Some(size) = check_existing_valid_file(&task.output_dir, &task.file_name) {
+            let staging_dir_str = staging_dir.to_string_lossy().to_string();
+            if let Some(size) = check_existing_valid_file(&staging_dir_str, &task.file_name) {
+                // Ensure target directory exists before moving
+                let _ = tokio::fs::create_dir_all(&task.output_dir).await;
+
+                log_task_event(
+                    &task.id,
+                    &format!(
+                        "Moving completed media files to destination: '{}'",
+                        task.output_dir
+                    ),
+                    &tasks_arc,
+                    &tx,
+                    &db,
+                )
+                .await;
+
+                let src_mp4 = staging_dir.join(format!("{}.mp4", task.file_name));
+                let dst_mp4 = PathBuf::from(&task.output_dir).join(format!("{}.mp4", task.file_name));
+                if src_mp4.exists() {
+                    if let Err(e) = move_file_cross_device(&src_mp4, &dst_mp4).await {
+                        log_task_event(
+                            &task.id,
+                            &format!("[WARN] Failed moving MP4 file: {}", e),
+                            &tasks_arc,
+                            &tx,
+                            &db,
+                        )
+                        .await;
+                    }
+                }
+
+                let src_srt = staging_dir.join(format!("{}.srt", task.file_name));
+                if src_srt.exists() {
+                    let dst_srt = PathBuf::from(&task.output_dir).join(format!("{}.srt", task.file_name));
+                    let _ = move_file_cross_device(&src_srt, &dst_srt).await;
+                }
+
+                let _ = tokio::fs::remove_dir_all(&staging_dir).await;
+
                 let size_mb = size as f64 / (1024.0 * 1024.0);
                 log_task_event(
                     &task.id,
@@ -659,6 +705,7 @@ impl DownloadManager {
                     task = t.clone();
                 }
             } else {
+                let _ = tokio::fs::remove_dir_all(&staging_dir).await;
                 let err_msg = "Download selesai namun file video .mp4 tidak ditemukan atau corrupt (<= 1MB).".to_string();
                 log_task_event(
                     &task.id,
@@ -677,6 +724,7 @@ impl DownloadManager {
                 }
             }
         } else {
+            let _ = tokio::fs::remove_dir_all(&staging_dir).await;
             let captured_logs = {
                 let tasks = tasks_arc.read().await;
                 tasks
@@ -1269,4 +1317,19 @@ fn vtt_to_srt(vtt: &str) -> String {
     }
 
     srt_lines.join("\n")
+}
+
+pub fn clean_staging_dir(task_id: &str) {
+    let staging_dir = std::env::temp_dir().join("idlixdownloader").join(task_id);
+    if staging_dir.exists() {
+        let _ = std::fs::remove_dir_all(&staging_dir);
+    }
+}
+
+pub async fn move_file_cross_device(from: &Path, to: &Path) -> Result<(), std::io::Error> {
+    if tokio::fs::rename(from, to).await.is_err() {
+        tokio::fs::copy(from, to).await?;
+        let _ = tokio::fs::remove_file(from).await;
+    }
+    Ok(())
 }

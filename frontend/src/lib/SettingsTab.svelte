@@ -9,7 +9,7 @@
     movies_dir: './downloads/Movies',
     series_dir: './downloads/TV Series',
     base_url: 'https://z2.idlixku.com',
-    max_concurrent_downloads: 2,
+    max_concurrent_downloads: 1,
     default_sub_lang: 'Indonesian',
     ask_download_location: true,
   }
