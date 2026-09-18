@@ -60,8 +60,11 @@ export interface DownloadTask {
   year?: string
   season_num?: number
   episode_num?: number
+  page_url?: string
+  media_id?: string
   m3u8_url: string
   subtitle_url?: string
+  sub_lang?: string
   output_dir: string
   file_name: string
   status: 'queued' | 'extracting' | 'downloading' | 'paused' | 'completed' | 'failed' | 'cancelled'
@@ -69,6 +72,7 @@ export interface DownloadTask {
   speed: string
   eta: string
   error_msg?: string
+  logs?: string[]
   created_at: number
 }
 

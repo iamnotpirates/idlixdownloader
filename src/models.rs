@@ -99,6 +99,8 @@ pub struct DownloadTask {
     pub speed: String,
     pub eta: String,
     pub error_msg: Option<String>,
+    #[serde(default)]
+    pub logs: Vec<String>,
     pub created_at: i64,
 }
 

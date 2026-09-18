@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte'
-  import type { AppConfig, MediaItem, MovieDetails, SeriesDetails } from './types'
+  import type { AppConfig, DownloadTask, EpisodeInfo, MediaItem, MovieDetails, SeriesDetails } from './types'
   import { fetchMovieDetails, fetchSeriesDetails, fetchSettings, pickFolder, startDownload } from './api'
   import {
     X,
@@ -17,19 +17,23 @@
     FolderSearch,
     FolderCheck,
     Subtitles,
+    RotateCcw,
+    Layers,
   } from 'lucide-svelte'
 
   export let item: MediaItem
+  export let downloads: DownloadTask[] = []
   export let onClose: () => void
-  export let onDownloadStarted: (title: string) => void
+  export let onDownloadStarted: (title: string, mediaType?: 'movie' | 'series') => void
 
   interface PendingDownload {
-    type: 'movie' | 'series'
+    type: 'movie' | 'series' | 'season_batch'
     title: string
     year?: string
     mediaId?: string
     seasonNum?: number
     episodeNum?: number
+    episodes?: EpisodeInfo[]
     defaultDir: string
     customDir: string | null
     useCustomDir: boolean
@@ -95,13 +99,26 @@
     return movieDetails?.year || seriesDetails?.year || item.year || ''
   }
 
+  function getEpisodeTask(seasonNum: number, episodeNum: number): DownloadTask | undefined {
+    return downloads.find(
+      (d) =>
+        d.media_type === 'series' &&
+        d.title.toLowerCase() === item.title.toLowerCase() &&
+        d.season_num === seasonNum &&
+        d.episode_num === episodeNum
+    )
+  }
+
   function getFolderPreview(p: PendingDownload): string {
     const clean = sanitizeTitle(p.title)
     const yr = p.year || getYear()
     const folderTitle = yr ? `${clean} (${yr})` : clean
     const baseDir = (p.useCustomDir && p.customDir ? p.customDir : p.defaultDir) || 'Downloads'
 
-    if (p.type === 'series') {
+    if (p.type === 'season_batch') {
+      const s = String(p.seasonNum || 1).padStart(2, '0')
+      return `${baseDir}\\${folderTitle}\\Season ${s}\\* (${p.episodes?.length || 0} Episode)`
+    } else if (p.type === 'series') {
       const s = String(p.seasonNum || 1).padStart(2, '0')
       const e = String(p.episodeNum || 1).padStart(2, '0')
       return `${baseDir}\\${folderTitle}\\Season ${s}\\${clean} - S${s}E${e}.mp4`
@@ -166,6 +183,29 @@
     }
   }
 
+  function requestDownloadSeason(seasonIdx: number) {
+    if (!seriesDetails || !seriesDetails.seasons[seasonIdx]) return
+    const season = seriesDetails.seasons[seasonIdx]
+    const yr = seriesDetails?.year || item.year
+    const defDir = appConfig?.series_dir || './downloads/TV Series'
+
+    if (appConfig?.ask_download_location !== false) {
+      pendingDownload = {
+        type: 'season_batch',
+        title: item.title,
+        year: yr,
+        seasonNum: season.season_num,
+        episodes: season.episodes,
+        defaultDir: defDir,
+        customDir: null,
+        useCustomDir: false,
+        subLang: subtitleLang,
+      }
+    } else {
+      executeDownloadSeason(season.season_num, season.episodes)
+    }
+  }
+
   async function handleBrowseCustomFolder() {
     if (!pendingDownload) return
     isBrowsingFolder = true
@@ -197,6 +237,8 @@
         sub_lang: p.subLang,
         custom_output_dir: customOut,
       })
+    } else if (p.type === 'season_batch' && p.seasonNum && p.episodes) {
+      await executeDownloadSeason(p.seasonNum, p.episodes, customOut)
     } else {
       await executeDownload({
         page_url: item.url,
@@ -244,12 +286,12 @@
         : `${params.title} - S${String(params.season_num).padStart(2, '0')}E${String(params.episode_num).padStart(2, '0')}`
 
       successMsg = `Antrean download ditambahkan: "${displayTitle}"`
-      onDownloadStarted(displayTitle)
+      onDownloadStarted(displayTitle, isMovie ? 'movie' : 'series')
 
       if (isMovie) {
         setTimeout(() => {
           onClose()
-        }, 1200)
+        }, 800)
       }
     } catch (err: any) {
       errorMsg = err.message || 'Gagal memulai download'
@@ -262,15 +304,64 @@
       }
     }
   }
+
+  async function executeDownloadSeason(
+    seasonNum: number,
+    episodes: EpisodeInfo[],
+    customOutputDir?: string
+  ) {
+    isSubmitting = true
+    errorMsg = ''
+    successMsg = ''
+    const yr = seriesDetails?.year || item.year
+
+    let queuedCount = 0
+    try {
+      for (const ep of episodes) {
+        const epKey = `${ep.season_num}-${ep.episode_num}`
+        downloadingEpisodes[epKey] = true
+        try {
+          await startDownload({
+            page_url: item.url,
+            media_type: 'series',
+            media_id: ep.media_id,
+            title: item.title,
+            year: yr,
+            season_num: ep.season_num,
+            episode_num: ep.episode_num,
+            sub_lang: subtitleLang,
+            custom_output_dir: customOutputDir,
+          })
+          queuedCount++
+        } catch (e) {
+          console.error(`Gagal mengantrekan S${ep.season_num}E${ep.episode_num}`, e)
+        } finally {
+          downloadingEpisodes[epKey] = false
+        }
+      }
+
+      const displayTitle = `${item.title} - Season ${seasonNum} (${queuedCount} Episode)`
+      successMsg = `Berhasil mengantrekan ${queuedCount} episode Season ${seasonNum}`
+      onDownloadStarted(displayTitle, 'series')
+    } catch (err: any) {
+      errorMsg = err.message || 'Gagal memulai batch download season'
+    } finally {
+      isSubmitting = false
+    }
+  }
 </script>
 
 <div
   class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-zinc-950/80 p-0 sm:p-4 backdrop-blur-md transition-all"
   on:click|self={onClose}
+  on:keydown={(e) => e.key === 'Escape' && onClose()}
+  role="dialog"
+  aria-modal="true"
+  tabindex="-1"
 >
   <div class="relative flex max-h-[92vh] sm:max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl border-t sm:border border-zinc-800 bg-zinc-900 shadow-2xl">
     <!-- Drag Handle indicator for mobile bottom sheet -->
-    <div class="mx-auto mt-2.5 h-1 w-12 rounded-full bg-zinc-700 sm:hidden" />
+    <div class="mx-auto mt-2.5 h-1 w-12 rounded-full bg-zinc-700 sm:hidden"></div>
 
     <!-- Close Button -->
     <button
@@ -422,6 +513,7 @@
             <p class="mt-2 text-xs text-zinc-400">Memuat season & episode...</p>
           </div>
         {:else if seriesDetails && seriesDetails.seasons.length > 0}
+          {@const currentSeason = seriesDetails.seasons[selectedSeasonIndex]}
           <!-- Season Tabs (Horizontal swipeable on mobile) -->
           <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
             {#each seriesDetails.seasons as season, idx}
@@ -436,10 +528,29 @@
             {/each}
           </div>
 
+          <!-- Season Batch Action Header -->
+          <div class="mt-3 flex items-center justify-between gap-2 rounded-xl border border-zinc-800/80 bg-zinc-900/60 px-3.5 py-2.5">
+            <div class="flex items-center gap-2">
+              <Layers class="h-4 w-4 text-indigo-400" />
+              <span class="text-xs font-semibold text-zinc-200">
+                Season {currentSeason.season_num} ({currentSeason.episodes.length} Episode)
+              </span>
+            </div>
+            <button
+              class="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-indigo-500 active:scale-95 transition-all disabled:opacity-50"
+              on:click={() => requestDownloadSeason(selectedSeasonIndex)}
+              disabled={isSubmitting}
+            >
+              <Download class="h-3.5 w-3.5" />
+              <span>Download Semua</span>
+            </button>
+          </div>
+
           <!-- Episode List -->
           <div class="mt-3 flex flex-col gap-2">
-            {#each seriesDetails.seasons[selectedSeasonIndex].episodes as ep}
-              {@const isDownloading = downloadingEpisodes[`${ep.season_num}-${ep.episode_num}`]}
+            {#each currentSeason.episodes as ep}
+              {@const task = getEpisodeTask(ep.season_num, ep.episode_num)}
+              {@const isQueuing = downloadingEpisodes[`${ep.season_num}-${ep.episode_num}`]}
               <div class="flex items-center justify-between gap-3 rounded-xl border border-zinc-800/80 bg-zinc-800/40 p-3 hover:bg-zinc-800/80 transition-all">
                 <div class="flex items-center gap-3 min-w-0">
                   <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-700/60 text-xs font-bold text-zinc-300">
@@ -451,19 +562,72 @@
                   </div>
                 </div>
 
-                <button
-                  class="flex shrink-0 items-center gap-1.5 rounded-lg bg-indigo-600/20 px-3 py-2 text-xs font-semibold text-indigo-400 hover:bg-indigo-600 hover:text-white active:scale-95 transition-all disabled:opacity-50"
-                  on:click={() => requestDownloadEpisode(ep.media_id, ep.season_num, ep.episode_num, ep.title)}
-                  disabled={isDownloading}
-                >
-                  {#if isDownloading}
-                    <Loader2 class="h-3.5 w-3.5 animate-spin" />
-                    <span>Queuing...</span>
+                <div class="flex items-center gap-2 shrink-0">
+                  {#if isQueuing}
+                    <span class="flex items-center gap-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1.5 text-xs font-semibold text-indigo-400">
+                      <Loader2 class="h-3.5 w-3.5 animate-spin" />
+                      <span>Mengantre...</span>
+                    </span>
+                  {:else if task}
+                    {#if task.status === 'completed'}
+                      <div class="flex items-center gap-1.5">
+                        <span class="flex items-center gap-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 text-xs font-semibold text-emerald-400">
+                          <CheckCircle2 class="h-3.5 w-3.5" />
+                          <span>Selesai</span>
+                        </span>
+                        <button
+                          class="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700/50 transition-all"
+                          title="Download ulang episode ini"
+                          on:click={() => requestDownloadEpisode(ep.media_id, ep.season_num, ep.episode_num, ep.title)}
+                        >
+                          <RotateCcw class="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    {:else if task.status === 'downloading'}
+                      <div class="flex items-center gap-2">
+                        <span class="flex items-center gap-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1.5 text-xs font-semibold text-indigo-400">
+                          <Loader2 class="h-3.5 w-3.5 animate-spin" />
+                          <span>{task.progress_percent.toFixed(0)}%</span>
+                        </span>
+                      </div>
+                    {:else if task.status === 'queued' || task.status === 'extracting'}
+                      <span class="flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 px-2.5 py-1.5 text-xs font-semibold text-amber-400">
+                        <Clock class="h-3.5 w-3.5 animate-pulse" />
+                        <span>{task.status === 'extracting' ? 'Extracting...' : 'Antrean'}</span>
+                      </span>
+                    {:else if task.status === 'failed'}
+                      <div class="flex items-center gap-1.5">
+                        <span class="flex items-center gap-1 rounded-lg bg-red-500/10 border border-red-500/20 px-2.5 py-1.5 text-xs font-semibold text-red-400">
+                          <AlertCircle class="h-3.5 w-3.5" />
+                          <span>Gagal</span>
+                        </span>
+                        <button
+                          class="flex items-center gap-1 rounded-lg bg-red-600/20 px-2.5 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-600 hover:text-white transition-all"
+                          on:click={() => requestDownloadEpisode(ep.media_id, ep.season_num, ep.episode_num, ep.title)}
+                        >
+                          <RotateCcw class="h-3.5 w-3.5" />
+                          <span>Coba Lagi</span>
+                        </button>
+                      </div>
+                    {:else}
+                      <button
+                        class="flex items-center gap-1.5 rounded-lg bg-indigo-600/20 px-3 py-2 text-xs font-semibold text-indigo-400 hover:bg-indigo-600 hover:text-white active:scale-95 transition-all"
+                        on:click={() => requestDownloadEpisode(ep.media_id, ep.season_num, ep.episode_num, ep.title)}
+                      >
+                        <Download class="h-3.5 w-3.5" />
+                        <span>Download</span>
+                      </button>
+                    {/if}
                   {:else}
-                    <Download class="h-3.5 w-3.5" />
-                    <span>Download</span>
+                    <button
+                      class="flex items-center gap-1.5 rounded-lg bg-indigo-600/20 px-3 py-2 text-xs font-semibold text-indigo-400 hover:bg-indigo-600 hover:text-white active:scale-95 transition-all"
+                      on:click={() => requestDownloadEpisode(ep.media_id, ep.season_num, ep.episode_num, ep.title)}
+                    >
+                      <Download class="h-3.5 w-3.5" />
+                      <span>Download</span>
+                    </button>
                   {/if}
-                </button>
+                </div>
               </div>
             {/each}
           </div>
@@ -481,6 +645,10 @@
     <div
       class="fixed inset-0 z-60 flex items-center justify-center bg-zinc-950/85 p-3 sm:p-4 backdrop-blur-md animate-in fade-in duration-150"
       on:click|self={() => (pendingDownload = null)}
+      on:keydown={(e) => e.key === 'Escape' && (pendingDownload = null)}
+      role="dialog"
+      aria-modal="true"
+      tabindex="-1"
     >
       <div class="relative flex w-full max-w-lg flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6 shadow-2xl">
         <!-- Close Button -->

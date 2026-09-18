@@ -29,7 +29,7 @@
     />
 
     <!-- Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-80" />
+    <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-80"></div>
 
     <!-- Badges -->
     <div class="absolute top-2 left-2 flex items-center gap-1.5">

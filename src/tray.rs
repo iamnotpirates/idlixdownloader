@@ -9,16 +9,7 @@ pub fn open_folder_path(dir_str: &str) {
     // Ensure folder exists before opening
     let _ = std::fs::create_dir_all(&abs_path);
 
-    #[cfg(windows)]
-    {
-        let _ = std::process::Command::new("explorer")
-            .arg(&abs_path)
-            .spawn();
-    }
-    #[cfg(not(windows))]
-    {
-        let _ = open::that(&abs_path);
-    }
+    let _ = open::that(&abs_path);
 }
 
 #[cfg(windows)]

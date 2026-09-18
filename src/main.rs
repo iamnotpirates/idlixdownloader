@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod bin_manager;
+mod db;
 mod downloader;
 mod extractor;
 mod http_client;
@@ -21,9 +22,9 @@ use downloader::DownloadManager;
 use extractor::IdlixClient;
 use models::AppConfig;
 use routes::{
-    extract_stream_sources, get_catalog, get_downloads, get_movie_details, get_series_details,
-    get_settings, open_folder_handler, pick_folder_handler, search_media, start_download,
-    update_settings, ws_handler, AppState,
+    delete_download, extract_stream_sources, get_catalog, get_downloads, get_movie_details,
+    get_series_details, get_settings, get_task_log, open_folder_handler, pick_folder_handler,
+    retry_download, search_media, start_download, update_settings, ws_handler, AppState,
 };
 use rust_embed::RustEmbed;
 use std::net::SocketAddr;
@@ -87,9 +88,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("[Init] FFmpeg: {:?}", bin_paths.ffmpeg);
     println!("[Init] N_m3u8DL-RE: {:?}", bin_paths.n_m3u8dl_re);
 
+    let database = db::Database::init().expect("Failed to initialize SQLite database");
+    println!("[Init] SQLite Database initialized at {:?}", db::Database::get_db_path());
+
     let config = AppConfig::load();
     let extractor = Arc::new(IdlixClient::new(Some(config.base_url.clone())));
-    let downloader = Arc::new(DownloadManager::new(bin_paths, config, Arc::clone(&extractor)));
+    let downloader = Arc::new(DownloadManager::new(bin_paths, config, Arc::clone(&extractor), database));
 
     let state = AppState {
         downloader,
@@ -107,6 +111,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/api/series", get(get_series_details))
         .route("/api/extract", post(extract_stream_sources))
         .route("/api/downloads", get(get_downloads).post(start_download))
+        .route("/api/downloads/retry", post(retry_download))
+        .route("/api/downloads/delete", post(delete_download))
+        .route("/api/downloads/log", get(get_task_log))
         .route("/api/settings", get(get_settings).post(update_settings))
         .route("/api/open-folder", post(open_folder_handler))
         .route("/api/pick-folder", post(pick_folder_handler))

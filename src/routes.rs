@@ -203,27 +203,95 @@ pub async fn pick_folder_handler() -> Result<Json<serde_json::Value>, AppError> 
 
 #[derive(Deserialize)]
 pub struct OpenFolderParams {
-    pub target: String,
+    pub target: Option<String>,
+    pub path: Option<String>,
 }
 
 pub async fn open_folder_handler(
     State(state): State<AppState>,
     Query(params): Query<OpenFolderParams>,
 ) -> Result<Json<serde_json::Value>, AppError> {
-    let conf = state.downloader.config.read().await;
-    let target_dir = match params.target.as_str() {
-        "movies" => &conf.movies_dir,
-        "series" => &conf.series_dir,
-        _ => {
-            return Err(AppError(
-                StatusCode::BAD_REQUEST,
-                "Invalid folder target. Must be 'movies' or 'series'".to_string(),
-            ))
+    let target_path = if let Some(ref p) = params.path {
+        p.clone()
+    } else if let Some(ref target) = params.target {
+        let conf = state.downloader.config.read().await;
+        match target.as_str() {
+            "movies" => conf.movies_dir.clone(),
+            "series" => conf.series_dir.clone(),
+            _ => {
+                return Err(AppError(
+                    StatusCode::BAD_REQUEST,
+                    "Invalid folder target. Must be 'movies' or 'series'".to_string(),
+                ))
+            }
         }
+    } else {
+        return Err(AppError(
+            StatusCode::BAD_REQUEST,
+            "Missing 'target' or 'path' query parameter".to_string(),
+        ));
     };
 
-    crate::tray::open_folder_path(target_dir);
-    Ok(Json(serde_json::json!({ "status": "ok", "path": target_dir })))
+    crate::tray::open_folder_path(&target_path);
+    Ok(Json(serde_json::json!({ "status": "ok", "path": target_path })))
+}
+
+#[derive(Deserialize)]
+pub struct TaskActionParams {
+    pub id: String,
+}
+
+pub async fn retry_download(
+    State(state): State<AppState>,
+    Query(params): Query<TaskActionParams>,
+) -> Result<Json<DownloadTask>, AppError> {
+    let task = state
+        .downloader
+        .retry_task(&params.id)
+        .await
+        .map_err(|e| AppError(StatusCode::BAD_REQUEST, e))?;
+    Ok(Json(task))
+}
+
+pub async fn delete_download(
+    State(state): State<AppState>,
+    Query(params): Query<TaskActionParams>,
+) -> Result<Json<serde_json::Value>, AppError> {
+    state
+        .downloader
+        .delete_task(&params.id)
+        .await
+        .map_err(|e| AppError(StatusCode::BAD_REQUEST, e))?;
+    Ok(Json(serde_json::json!({ "status": "ok", "id": params.id })))
+}
+
+#[derive(Deserialize)]
+pub struct TaskLogParams {
+    pub id: String,
+}
+
+pub async fn get_task_log(
+    State(state): State<AppState>,
+    Query(params): Query<TaskLogParams>,
+) -> Result<Json<serde_json::Value>, AppError> {
+    let db = state.downloader.db.clone();
+    let task_id = params.id.clone();
+    let logs = tokio::task::spawn_blocking(move || {
+        db.get_task_logs(&task_id).unwrap_or_default()
+    })
+    .await
+    .map_err(|e| AppError(StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+
+    let content = if logs.is_empty() {
+        "No logs recorded in database for this task yet.".to_string()
+    } else {
+        logs.join("\n")
+    };
+
+    Ok(Json(serde_json::json!({
+        "task_id": params.id,
+        "log": content
+    })))
 }
 
 pub async fn get_settings(State(state): State<AppState>) -> Json<AppConfig> {

@@ -107,14 +107,44 @@ export async function saveSettings(config: AppConfig): Promise<AppConfig> {
   return res.json()
 }
 
-export async function openFolder(target: 'movies' | 'series'): Promise<void> {
-  const res = await fetch(`${API_BASE}/open-folder?target=${target}`, {
+export async function openFolder(target?: 'movies' | 'series', path?: string): Promise<void> {
+  const query = path
+    ? `path=${encodeURIComponent(path)}`
+    : `target=${encodeURIComponent(target || 'movies')}`
+  const res = await fetch(`${API_BASE}/open-folder?${query}`, {
     method: 'POST',
   })
   if (!res.ok) {
     const errText = await res.text()
     throw new Error(errText || 'Failed to open folder')
   }
+}
+
+export async function retryDownload(id: string): Promise<DownloadTask> {
+  const res = await fetch(`${API_BASE}/downloads/retry?id=${encodeURIComponent(id)}`, {
+    method: 'POST',
+  })
+  if (!res.ok) {
+    const err = await res.text()
+    throw new Error(err || 'Failed to retry download')
+  }
+  return res.json()
+}
+
+export async function deleteDownload(id: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/downloads/delete?id=${encodeURIComponent(id)}`, {
+    method: 'POST',
+  })
+  if (!res.ok) {
+    const err = await res.text()
+    throw new Error(err || 'Failed to delete download')
+  }
+}
+
+export async function fetchTaskLog(id: string): Promise<{ task_id: string; log: string }> {
+  const res = await fetch(`${API_BASE}/downloads/log?id=${encodeURIComponent(id)}`)
+  if (!res.ok) throw new Error('Failed to load task log')
+  return res.json()
 }
 
 export function createDownloadSocket(onMessage: (tasks: DownloadTask | DownloadTask[]) => void): () => void {
