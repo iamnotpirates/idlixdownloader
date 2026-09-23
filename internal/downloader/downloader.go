@@ -153,9 +153,9 @@ func (m *Manager) workerLoop(workerID int) {
 }
 
 func (m *Manager) executeTask(task *models.DownloadTask) {
-	// 0. Check if file already exists in output directory
+	// 0. Check if file already exists in output directory and validate integrity via FFmpeg
 	existingFile := filepath.Join(task.OutputDir, task.FileName+".mp4")
-	if info, err := os.Stat(existingFile); err == nil && info.Size() > 1024*1024 {
+	if isValid, sizeMB := validateMediaIntegrity(m.binPaths.FFmpeg, existingFile); isValid {
 		m.mu.Lock()
 		task.Status = models.StatusCompleted
 		task.Progress = 100.0
@@ -163,7 +163,7 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 		task.Speed = ""
 		_ = m.db.SaveTask(task)
 		m.mu.Unlock()
-		m.log(task.ID, fmt.Sprintf("File already exists on disk (%.2f MB), skipping download: %s", float64(info.Size())/(1024*1024), existingFile))
+		m.log(task.ID, fmt.Sprintf("Valid media file already exists (%.2f MB), skipping download: %s", sizeMB, existingFile))
 		m.sseHub.Broadcast("task_updated", task)
 		return
 	}
@@ -481,6 +481,29 @@ func downloadAndConvertVTTtoSRT(vttURL, srtPath string) error {
 	}
 
 	return os.WriteFile(srtPath, []byte(strings.Join(srtLines, "\n")), 0644)
+}
+
+func validateMediaIntegrity(ffmpegPath, filePath string) (bool, float64) {
+	info, err := os.Stat(filePath)
+	if err != nil || info.IsDir() || info.Size() < 1024*1024 {
+		return false, 0
+	}
+
+	sizeMB := float64(info.Size()) / (1024 * 1024)
+
+	// If FFmpeg is available, verify stream container and header parsing
+	if ffmpegPath != "" {
+		cmd := exec.Command(ffmpegPath, "-v", "error", "-i", filePath, "-t", "0.1", "-f", "null", "-")
+		if runtime.GOOS == "windows" {
+			cmd.SysProcAttr = &syscall.SysProcAttr{CreationFlags: 0x08000000} // CREATE_NO_WINDOW
+		}
+		if err := cmd.Run(); err != nil {
+			// File corrupted / broken moov atom
+			return false, sizeMB
+		}
+	}
+
+	return true, sizeMB
 }
 
 func copyFile(src, dst string) error {
