@@ -26,7 +26,7 @@ import (
 
 var (
 	progressRegex = regexp.MustCompile(`(\d{1,3}(?:\.\d+)?)%`)
-	speedRegex    = regexp.MustCompile(`(\d+(?:\.\d+)?\s*(?:KB|MB|GB)/s)`)
+	speedRegex    = regexp.MustCompile(`(\d+(?:\.\d+)?\s*(?:[KMGT]?B(?:ps|/s|/sec)))`)
 	etaRegex      = regexp.MustCompile(`(\d{2}:\d{2}:\d{2})`)
 )
 
@@ -153,6 +153,21 @@ func (m *Manager) workerLoop(workerID int) {
 }
 
 func (m *Manager) executeTask(task *models.DownloadTask) {
+	// 0. Check if file already exists in output directory
+	existingFile := filepath.Join(task.OutputDir, task.FileName+".mp4")
+	if info, err := os.Stat(existingFile); err == nil && info.Size() > 1024*1024 {
+		m.mu.Lock()
+		task.Status = models.StatusCompleted
+		task.Progress = 100.0
+		task.ETA = "File already exists"
+		task.Speed = ""
+		_ = m.db.SaveTask(task)
+		m.mu.Unlock()
+		m.log(task.ID, fmt.Sprintf("File already exists on disk (%.2f MB), skipping download: %s", float64(info.Size())/(1024*1024), existingFile))
+		m.sseHub.Broadcast("task_updated", task)
+		return
+	}
+
 	// 1. Check if extraction is needed
 	if task.M3U8URL == "" {
 		m.updateStatus(task, models.StatusExtracting, "Extracting video stream...")
@@ -328,17 +343,27 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 }
 
 func (m *Manager) scanOutput(taskID string, r io.Reader) {
-	reader := bufio.NewReader(r)
-	for {
-		line, err := reader.ReadString('\n')
-		if len(line) > 0 {
-			cleanLine := strings.TrimSpace(line)
-			if cleanLine != "" {
-				m.handleProgressLine(taskID, cleanLine)
+	scanner := bufio.NewScanner(r)
+	// Custom split function for both \r and \n
+	scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
+		if atEOF && len(data) == 0 {
+			return 0, nil, nil
+		}
+		for i, b := range data {
+			if b == '\r' || b == '\n' {
+				return i + 1, data[:i], nil
 			}
 		}
-		if err != nil {
-			break
+		if atEOF {
+			return len(data), data, nil
+		}
+		return 0, nil, nil
+	})
+
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line != "" {
+			m.handleProgressLine(taskID, line)
 		}
 	}
 }

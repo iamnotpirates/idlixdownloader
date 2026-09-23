@@ -76,6 +76,7 @@ func (s *Server) setupRoutes() {
 
 		r.Get("/downloads", s.handleGetDownloads)
 		r.Post("/download", s.handleCreateDownload)
+		r.Post("/download/season", s.handleCreateSeasonDownload)
 		r.Post("/download/cancel", s.handleCancelDownload)
 		r.Delete("/download/{id}", s.handleDeleteDownload)
 		r.Get("/download/{id}/logs", s.handleGetLogs)
@@ -238,6 +239,84 @@ func (s *Server) handleCreateDownload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusCreated, task)
+}
+
+type SeasonDownloadRequest struct {
+	Title     string               `json:"title"`
+	Year      *string              `json:"year,omitempty"`
+	SeasonNum int                  `json:"season_num"`
+	PageURL   *string              `json:"page_url,omitempty"`
+	OutputDir string               `json:"output_dir,omitempty"`
+	Episodes  []models.EpisodeInfo `json:"episodes"`
+}
+
+func (s *Server) handleCreateSeasonDownload(w http.ResponseWriter, r *http.Request) {
+	var req SeasonDownloadRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		respondError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	cfg := config.LoadConfig()
+	cleanTitle := sanitizeFilename(req.Title)
+	yearStr := "N/A"
+	if req.Year != nil && *req.Year != "" {
+		yearStr = *req.Year
+	}
+
+	baseSeriesDir := cfg.SeriesDir
+	if req.OutputDir != "" {
+		baseSeriesDir = req.OutputDir
+	}
+
+	seriesFolder := fmt.Sprintf("%s (%s)", cleanTitle, yearStr)
+	seasonFolder := fmt.Sprintf("Season %d", req.SeasonNum)
+	outputDir := filepath.Join(baseSeriesDir, seriesFolder, seasonFolder)
+
+	var createdTasks []*models.DownloadTask
+
+	for _, ep := range req.Episodes {
+		taskID := uuid.New().String()[:8]
+		createdAt := time.Now().Unix()
+		sNum := req.SeasonNum
+		eNum := ep.EpisodeNum
+		epTitle := sanitizeFilename(ep.Title)
+		if epTitle == "" {
+			epTitle = fmt.Sprintf("Episode %d", eNum)
+		}
+
+		fileName := fmt.Sprintf("%s - S%02dE%02d - %s", cleanTitle, sNum, eNum, epTitle)
+		mediaID := ep.MediaID
+		if mediaID == "" {
+			mediaID = ep.Slug
+		}
+
+		task := &models.DownloadTask{
+			ID:         taskID,
+			Title:      req.Title,
+			MediaType:  "series",
+			Year:       req.Year,
+			SeasonNum:  &sNum,
+			EpisodeNum: &eNum,
+			PageURL:    req.PageURL,
+			MediaID:    &mediaID,
+			OutputDir:  outputDir,
+			FileName:   fileName,
+			Status:     models.StatusQueued,
+			Progress:   0.0,
+			Speed:      "",
+			ETA:        "Queued",
+			CreatedAt:  createdAt,
+		}
+
+		_ = s.downloader.Enqueue(task)
+		createdTasks = append(createdTasks, task)
+	}
+
+	respondJSON(w, http.StatusCreated, map[string]any{
+		"queued_count": len(createdTasks),
+		"tasks":        createdTasks,
+	})
 }
 
 func (s *Server) handleCancelDownload(w http.ResponseWriter, r *http.Request) {
