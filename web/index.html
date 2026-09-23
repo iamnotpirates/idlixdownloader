@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>IDLIX Downloader</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+            },
+            surface: {
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155',
+              600: '#475569',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between" x-data="app()" x-init="initApp()">
+
+  <!-- Desktop Centered Container Wrapper -->
+  <div class="w-full max-w-md mx-auto min-h-screen flex flex-col relative bg-[#0f172a] shadow-2xl pb-20">
+
+    <!-- Top App Header -->
+    <header class="sticky top-0 z-30 bg-[#0f172a]/95 backdrop-blur border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
+          <i data-lucide="play" class="w-4 h-4 text-white fill-current"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-sm leading-tight text-white">IDLIX Downloader</h1>
+          <p class="text-[10px] text-slate-400 font-mono" x-text="config.base_url.replace('https://', '')"></p>
+        </div>
+      </div>
+
+      <!-- Quick Active Badge -->
+      <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs">
+        <span class="w-2 h-2 rounded-full" :class="activeDownloadsCount > 0 ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'"></span>
+        <span class="text-[11px] font-medium text-slate-300" x-text="activeDownloadsCount > 0 ? activeDownloadsCount + ' Aktif' : 'Ready'"></span>
+      </div>
+    </header>
+
+    <!-- Main Content Tab Switcher -->
+    <main class="flex-1 px-3.5 py-3 overflow-y-auto">
+
+      <!-- TAB 1: BROWSE / SEARCH -->
+      <section x-show="activeTab === 'browse'" x-transition:enter="transition duration-150 ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+        <!-- Search Bar -->
+        <div class="relative mb-3.5">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+          <input
+            type="text"
+            placeholder="Cari judul film / series..."
+            class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-9 pr-8 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition"
+            x-model="searchQuery"
+            @input.debounce.400ms="performSearch()"
+          />
+          <button x-show="searchQuery" @click="clearSearch()" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Section Title & Refresh -->
+        <div class="flex items-center justify-between mb-2.5 px-1">
+          <h2 class="text-xs font-semibold text-slate-300 uppercase tracking-wider" x-text="searchQuery.trim() ? 'Hasil Pencarian' : 'Populer & Rekomendasi'"></h2>
+          <button @click="searchQuery.trim() ? performSearch() : loadCatalog()" class="text-slate-400 hover:text-purple-400 transition" :class="loading ? 'animate-spin' : ''">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Loading State -->
+        <div x-show="loading" class="py-12 flex flex-col items-center justify-center space-y-2 text-slate-400">
+          <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-purple-500"></i>
+          <p class="text-xs">Memuat katalog...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div x-show="!loading && items.length === 0" class="py-12 text-center text-slate-500">
+          <i data-lucide="film" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>
+          <p class="text-xs">Tidak ada hasil ditemukan.</p>
+        </div>
+
+        <!-- Grid 2-Kolom Mobile -->
+        <div x-show="!loading && items.length > 0" class="grid grid-cols-2 gap-2.5">
+          <template x-for="item in items" :key="item.slug + item.url">
+            <div
+              @click="openDetails(item)"
+              class="group relative bg-slate-800/80 border border-slate-700/60 rounded-xl overflow-hidden shadow-sm active:scale-[0.98] transition cursor-pointer flex flex-col"
+            >
+              <!-- Poster Image -->
+              <div class="relative w-full aspect-[2/3] bg-slate-900 overflow-hidden">
+                <img
+                  :src="item.poster || 'https://via.placeholder.com/300x450?text=No+Poster'"
+                  :alt="item.title"
+                  loading="lazy"
+                  class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  @error="$el.src = 'https://via.placeholder.com/300x450?text=IDLIX'"
+                />
+                <!-- Badges -->
+                <div class="absolute top-1.5 left-1.5 flex flex-col gap-1">
+                  <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-600/90 text-white backdrop-blur shadow" x-text="item.media_type"></span>
+                </div>
+                <div class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold bg-black/70 text-amber-300 backdrop-blur flex items-center gap-0.5">
+                  <i data-lucide="star" class="w-2.5 h-2.5 fill-current"></i>
+                  <span x-text="item.rating"></span>
+                </div>
+              </div>
+
+              <!-- Title & Year -->
+              <div class="p-2 flex-1 flex flex-col justify-between">
+                <h3 class="text-xs font-semibold text-slate-200 line-clamp-2 leading-snug" x-text="item.title"></h3>
+                <div class="flex items-center justify-between mt-1 text-[10px] text-slate-400">
+                  <span x-text="item.year || '-'"></span>
+                  <span class="text-purple-400 font-medium">Lihat</span>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <!-- TAB 2: DOWNLOADS -->
+      <section x-show="activeTab === 'downloads'" x-transition:enter="transition duration-150 ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <h2 class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Antrean Unduhan</h2>
+          <button @click="loadDownloads()" class="text-slate-400 hover:text-purple-400 transition">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Empty State -->
+        <div x-show="downloads.length === 0" class="py-16 text-center text-slate-500">
+          <i data-lucide="download-cloud" class="w-10 h-10 mx-auto mb-2 opacity-40"></i>
+          <p class="text-xs font-medium">Belum ada tugas unduhan</p>
+          <p class="text-[10px] text-slate-600 mt-0.5">Pilih film atau episode untuk mulai mengunduh.</p>
+        </div>
+
+        <!-- Download Task Cards -->
+        <div class="space-y-2.5">
+          <template x-for="task in downloads" :key="task.id">
+            <div class="bg-slate-800/90 border border-slate-700/80 rounded-xl p-3 shadow-sm flex flex-col space-y-2">
+              <!-- Task Header -->
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span
+                      class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider"
+                      :class="{
+                        'bg-purple-600/30 text-purple-300 border border-purple-500/30': task.media_type === 'series',
+                        'bg-blue-600/30 text-blue-300 border border-blue-500/30': task.media_type === 'movie'
+                      }"
+                      x-text="task.media_type"
+                    ></span>
+                    <span
+                      class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase"
+                      :class="{
+                        'bg-amber-500/20 text-amber-300': task.status === 'downloading' || task.status === 'extracting',
+                        'bg-emerald-500/20 text-emerald-300': task.status === 'completed',
+                        'bg-rose-500/20 text-rose-300': task.status === 'failed',
+                        'bg-slate-700 text-slate-400': task.status === 'queued' || task.status === 'cancelled'
+                      }"
+                      x-text="task.status"
+                    ></span>
+                  </div>
+                  <h4 class="text-xs font-semibold text-slate-100 truncate mt-1" x-text="task.file_name || task.title"></h4>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-1">
+                  <button
+                    x-show="task.status === 'downloading' || task.status === 'queued' || task.status === 'extracting'"
+                    @click="cancelDownload(task.id)"
+                    class="p-1 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-700/50"
+                    title="Batal"
+                  >
+                    <i data-lucide="square" class="w-3.5 h-3.5 fill-current"></i>
+                  </button>
+                  <button
+                    @click="deleteDownload(task.id)"
+                    class="p-1 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-700/50"
+                    title="Hapus"
+                  >
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                <div
+                  class="h-full rounded-full transition-all duration-300"
+                  :class="{
+                    'bg-purple-500': task.status === 'downloading',
+                    'bg-emerald-500': task.status === 'completed',
+                    'bg-rose-500': task.status === 'failed',
+                    'bg-slate-600': task.status === 'queued'
+                  }"
+                  :style="`width: ${task.progress}%`"
+                ></div>
+              </div>
+
+              <!-- Metrics -->
+              <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                <span x-text="`${task.progress.toFixed(1)}%`"></span>
+                <span x-show="task.speed" x-text="task.speed"></span>
+                <span x-text="task.eta || '-'"></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <!-- TAB 3: SETTINGS -->
+      <section x-show="activeTab === 'settings'" x-transition:enter="transition duration-150 ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+        <h2 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3 px-1">Pengaturan Server</h2>
+
+        <form @submit.prevent="saveConfig()" class="space-y-3 bg-slate-800/80 border border-slate-700/80 rounded-xl p-3.5">
+          <div>
+            <label class="block text-[11px] font-medium text-slate-300 mb-1">IDLIX Base Mirror URL</label>
+            <input
+              type="url"
+              x-model="config.base_url"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+              placeholder="https://z2.idlixku.com"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-slate-300 mb-1">Folder Film (Movies)</label>
+            <input
+              type="text"
+              x-model="config.movies_dir"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-purple-500 focus:outline-none font-mono text-[10px]"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-slate-300 mb-1">Folder TV Series</label>
+            <input
+              type="text"
+              x-model="config.series_dir"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-purple-500 focus:outline-none font-mono text-[10px]"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-slate-300 mb-1">Bahasa Subtitle Utama</label>
+            <input
+              type="text"
+              x-model="config.sub_lang"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+              placeholder="Indonesian"
+              required
+            />
+          </div>
+
+          <div class="pt-2">
+            <button
+              type="submit"
+              class="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-purple-500/20 active:scale-[0.98] transition"
+            >
+              Simpan Pengaturan
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <!-- BOTTOM SHEET DRAWER (Movie / Series Details & Episode Picker) -->
+    <div
+      x-show="modalOpen"
+      class="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      @click.self="closeModal()"
+    >
+      <div
+        class="w-full max-w-md bg-slate-900 border-t border-slate-700 rounded-t-3xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl safe-bottom"
+        x-show="modalOpen"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="translate-y-full"
+        x-transition:enter-end="translate-y-0"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="translate-y-0"
+        x-transition:leave-end="translate-y-full"
+      >
+        <!-- Sheet Handle Bar -->
+        <div class="w-12 h-1.5 bg-slate-700 rounded-full mx-auto my-2.5"></div>
+
+        <!-- Sheet Header -->
+        <div class="px-4 pb-3 flex items-start justify-between border-b border-slate-800">
+          <div class="flex items-start space-x-3 min-w-0 pr-2">
+            <img
+              :src="modalItem?.poster || 'https://via.placeholder.com/100x150'"
+              class="w-12 h-18 object-cover rounded-lg bg-slate-800 flex-shrink-0 shadow"
+            />
+            <div class="min-w-0">
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-600/80 text-white" x-text="modalItem?.media_type"></span>
+              <h3 class="text-sm font-bold text-white truncate mt-0.5 leading-snug" x-text="modalItem?.title"></h3>
+              <p class="text-[11px] text-slate-400" x-text="modalItem?.year || '-'"></p>
+            </div>
+          </div>
+          <button @click="closeModal()" class="p-1 rounded-full text-slate-400 hover:text-white bg-slate-800">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Sheet Body -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-3.5">
+          <!-- Loading Details -->
+          <div x-show="loadingDetails" class="py-8 text-center text-slate-400">
+            <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto text-purple-500 mb-2"></i>
+            <p class="text-xs">Mengambil informasi media...</p>
+          </div>
+
+          <div x-show="!loadingDetails">
+            <!-- Synopsis -->
+            <div x-show="detailsData?.synopsis" class="mb-3">
+              <h4 class="text-[11px] font-semibold text-slate-300 mb-1">Sinopsis</h4>
+              <p class="text-xs text-slate-400 leading-relaxed line-clamp-3" x-text="detailsData?.synopsis"></p>
+            </div>
+
+            <!-- MOVIE ACTION -->
+            <div x-show="modalItem?.media_type === 'Movie'">
+              <button
+                @click="triggerMovieDownload()"
+                class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-purple-500/25 flex items-center justify-center space-x-2 active:scale-[0.98] transition"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Download Film Ini</span>
+              </button>
+            </div>
+
+            <!-- SERIES EPISODE SELECTOR -->
+            <div x-show="modalItem?.media_type !== 'Movie' && detailsData?.seasons" class="space-y-3">
+              <!-- Season Selector Tabs -->
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-300 mb-1.5">Pilih Season</label>
+                <div class="flex space-x-2 overflow-x-auto pb-1 hide-scrollbar">
+                  <template x-for="s in detailsData?.seasons" :key="s.season_num">
+                    <button
+                      @click="selectedSeason = s.season_num"
+                      class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition"
+                      :class="selectedSeason === s.season_num ? 'bg-purple-600 text-white shadow' : 'bg-slate-800 text-slate-400 hover:text-white'"
+                      x-text="`Season ${s.season_num}`"
+                    ></button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Episode List -->
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-300 mb-1.5">Daftar Episode</label>
+                <div class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                  <template x-for="ep in getCurrentSeasonEpisodes()" :key="ep.media_id + ep.episode_num">
+                    <div class="flex items-center justify-between p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 hover:border-slate-600 text-xs">
+                      <span class="font-medium text-slate-200 truncate pr-2" x-text="`E${ep.episode_num}: ${ep.title}`"></span>
+                      <button
+                        @click="triggerSeriesDownload(ep)"
+                        class="px-2.5 py-1 rounded-md bg-purple-600 hover:bg-purple-500 text-white text-[11px] font-semibold flex items-center space-x-1 active:scale-95 transition"
+                      >
+                        <i data-lucide="download" class="w-3 h-3"></i>
+                        <span>Unduh</span>
+                      </button>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div
+      x-show="toast.show"
+      x-transition:enter="transition ease-out duration-150"
+      x-transition:enter-start="opacity-0 translate-y-2"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in duration-100"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-slate-800/95 border border-purple-500/40 text-white shadow-xl flex items-center space-x-2 text-xs font-medium"
+    >
+      <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+      <span x-text="toast.message"></span>
+    </div>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#0f172a]/95 backdrop-blur border-t border-slate-800 safe-bottom">
+      <div class="max-w-md mx-auto flex items-center justify-around py-2">
+        <button
+          @click="activeTab = 'browse'"
+          class="flex flex-col items-center py-1 px-3 rounded-xl transition"
+          :class="activeTab === 'browse' ? 'text-purple-400' : 'text-slate-400 hover:text-slate-200'"
+        >
+          <i data-lucide="compass" class="w-5 h-5"></i>
+          <span class="text-[10px] font-medium mt-1">Katalog</span>
+        </button>
+
+        <button
+          @click="activeTab = 'downloads'"
+          class="flex flex-col items-center py-1 px-3 rounded-xl transition relative"
+          :class="activeTab === 'downloads' ? 'text-purple-400' : 'text-slate-400 hover:text-slate-200'"
+        >
+          <i data-lucide="download" class="w-5 h-5"></i>
+          <span class="text-[10px] font-medium mt-1">Unduhan</span>
+          <span
+            x-show="activeDownloadsCount > 0"
+            class="absolute top-0 right-2 w-4 h-4 rounded-full bg-purple-600 text-white text-[9px] font-bold flex items-center justify-center"
+            x-text="activeDownloadsCount"
+          ></span>
+        </button>
+
+        <button
+          @click="activeTab = 'settings'"
+          class="flex flex-col items-center py-1 px-3 rounded-xl transition"
+          :class="activeTab === 'settings' ? 'text-purple-400' : 'text-slate-400 hover:text-slate-200'"
+        >
+          <i data-lucide="settings" class="w-5 h-5"></i>
+          <span class="text-[10px] font-medium mt-1">Settings</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+
+  <script>
+    function app() {
+      return {
+        activeTab: 'browse',
+        searchQuery: '',
+        items: [],
+        downloads: [],
+        loading: false,
+        config: {
+          base_url: 'https://z2.idlixku.com',
+          movies_dir: '',
+          series_dir: '',
+          sub_lang: 'Indonesian'
+        },
+        modalOpen: false,
+        modalItem: null,
+        loadingDetails: false,
+        detailsData: null,
+        selectedSeason: 1,
+        toast: { show: false, message: '' },
+        eventSource: null,
+
+        get activeDownloadsCount() {
+          return this.downloads.filter(d => d.status === 'downloading' || d.status === 'queued' || d.status === 'extracting').length;
+        },
+
+        async initApp() {
+          this.$nextTick(() => lucide.createIcons());
+          await this.loadConfig();
+          await this.loadCatalog();
+          await this.loadDownloads();
+          this.initSSE();
+        },
+
+        initSSE() {
+          if (this.eventSource) this.eventSource.close();
+          this.eventSource = new EventSource('/api/events');
+          this.eventSource.onmessage = (event) => {
+            try {
+              const data = JSON.parse(event.data);
+              if (data.type === 'task_updated' || data.type === 'task_created') {
+                const idx = this.downloads.findIndex(d => d.id === data.data.id);
+                if (idx !== -1) {
+                  this.downloads[idx] = data.data;
+                } else {
+                  this.downloads.unshift(data.data);
+                }
+              } else if (data.type === 'task_deleted') {
+                this.downloads = this.downloads.filter(d => d.id !== data.data.id);
+              }
+            } catch (e) {}
+          };
+        },
+
+        async loadConfig() {
+          try {
+            const res = await fetch('/api/config');
+            if (res.ok) this.config = await res.json();
+          } catch (e) {}
+        },
+
+        async saveConfig() {
+          try {
+            const res = await fetch('/api/config', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(this.config)
+            });
+            if (res.ok) {
+              this.showToast('Pengaturan berhasil disimpan');
+            }
+          } catch (e) {
+            this.showToast('Gagal menyimpan pengaturan');
+          }
+        },
+
+        async loadCatalog() {
+          this.loading = true;
+          try {
+            const res = await fetch('/api/catalog');
+            if (res.ok) {
+              this.items = await res.json();
+              this.$nextTick(() => lucide.createIcons());
+            }
+          } catch (e) {}
+          this.loading = false;
+        },
+
+        async performSearch() {
+          if (!this.searchQuery.trim()) {
+            return this.loadCatalog();
+          }
+          this.loading = true;
+          try {
+            const res = await fetch(`/api/search?q=${encodeURIComponent(this.searchQuery)}`);
+            if (res.ok) {
+              this.items = await res.json();
+              this.$nextTick(() => lucide.createIcons());
+            }
+          } catch (e) {}
+          this.loading = false;
+        },
+
+        clearSearch() {
+          this.searchQuery = '';
+          this.loadCatalog();
+        },
+
+        async loadDownloads() {
+          try {
+            const res = await fetch('/api/downloads');
+            if (res.ok) {
+              this.downloads = await res.json();
+              this.$nextTick(() => lucide.createIcons());
+            }
+          } catch (e) {}
+        },
+
+        async openDetails(item) {
+          this.modalItem = item;
+          this.modalOpen = true;
+          this.loadingDetails = true;
+          this.detailsData = null;
+          this.selectedSeason = 1;
+          this.$nextTick(() => lucide.createIcons());
+
+          try {
+            const isMovie = item.media_type === 'Movie';
+            const endpoint = isMovie ? `/api/movie/${item.slug}` : `/api/series/${item.slug}`;
+            const res = await fetch(endpoint);
+            if (res.ok) {
+              this.detailsData = await res.json();
+              if (!isMovie && this.detailsData.seasons && this.detailsData.seasons.length > 0) {
+                this.selectedSeason = this.detailsData.seasons[0].season_num;
+              }
+            }
+          } catch (e) {}
+          this.loadingDetails = false;
+          this.$nextTick(() => lucide.createIcons());
+        },
+
+        closeModal() {
+          this.modalOpen = false;
+        },
+
+        getCurrentSeasonEpisodes() {
+          if (!this.detailsData || !this.detailsData.seasons) return [];
+          const s = this.detailsData.seasons.find(s => s.season_num === this.selectedSeason);
+          return s ? s.episodes : [];
+        },
+
+        async triggerMovieDownload() {
+          try {
+            const res = await fetch('/api/download', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                title: this.modalItem.title,
+                media_type: 'movie',
+                year: this.modalItem.year,
+                page_url: this.modalItem.url,
+                media_id: this.detailsData?.id || this.modalItem.slug
+              })
+            });
+            if (res.ok) {
+              this.closeModal();
+              this.showToast('Film ditambahkan ke antrean');
+              this.activeTab = 'downloads';
+            }
+          } catch (e) {
+            this.showToast('Gagal menambahkan film');
+          }
+        },
+
+        async triggerSeriesDownload(ep) {
+          try {
+            const res = await fetch('/api/download', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                title: this.modalItem.title,
+                media_type: 'series',
+                year: this.modalItem.year,
+                season_num: ep.season_num,
+                episode_num: ep.episode_num,
+                episode_title: ep.title,
+                page_url: this.modalItem.url,
+                media_id: ep.media_id || ep.slug
+              })
+            });
+            if (res.ok) {
+              this.showToast(`S${ep.season_num}E${ep.episode_num} ditambahkan ke antrean`);
+            }
+          } catch (e) {
+            this.showToast('Gagal menambahkan episode');
+          }
+        },
+
+        async cancelDownload(id) {
+          await fetch('/api/download/cancel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+          });
+        },
+
+        async deleteDownload(id) {
+          await fetch(`/api/download/${id}`, { method: 'DELETE' });
+        },
+
+        showToast(msg) {
+          this.toast.message = msg;
+          this.toast.show = true;
+          this.$nextTick(() => lucide.createIcons());
+          setTimeout(() => { this.toast.show = false; }, 2500);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

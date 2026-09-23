@@ -8,6 +8,10 @@
 /tmp_test
 config.json
 *.txt
+*.exe
+*.db
+*.db-shm
+*.db-wal
 .env
 .playwright-mcp/
 /test
