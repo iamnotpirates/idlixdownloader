@@ -294,6 +294,18 @@
             />
           </div>
 
+          <div>
+            <label class="block text-[11px] font-medium text-slate-300 mb-1">Maksimal Unduhan Bersamaan (Concurrency)</label>
+            <input
+              type="number"
+              min="1"
+              max="5"
+              x-model.number="config.max_concurrent_tasks"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-purple-500 focus:outline-none"
+              required
+            />
+          </div>
+
           <div class="pt-2">
             <button
               type="submit"

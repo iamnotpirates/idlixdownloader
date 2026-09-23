@@ -49,7 +49,7 @@ func DefaultConfig() models.AppConfig {
 		SubLang:            DefaultSubLang,
 		ConfirmDownload:    false,
 		BaseURL:            DefaultBaseURL,
-		MaxConcurrentTasks: 2,
+		MaxConcurrentTasks: 1,
 	}
 }
 
@@ -69,7 +69,7 @@ func LoadConfig() models.AppConfig {
 		cfg.SubLang = DefaultSubLang
 	}
 	if cfg.MaxConcurrentTasks <= 0 {
-		cfg.MaxConcurrentTasks = 2
+		cfg.MaxConcurrentTasks = 1
 	}
 
 	return cfg

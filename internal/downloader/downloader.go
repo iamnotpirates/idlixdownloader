@@ -68,7 +68,7 @@ func (m *Manager) Start() {
 	cfg := config.LoadConfig()
 	workers := cfg.MaxConcurrentTasks
 	if workers <= 0 {
-		workers = 2
+		workers = 1
 	}
 
 	for i := 0; i < workers; i++ {
