@@ -1,7 +1,6 @@
 package downloader
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"net/http"
@@ -25,9 +24,11 @@ import (
 )
 
 var (
-	progressRegex = regexp.MustCompile(`(\d{1,3}(?:\.\d+)?)%`)
-	speedRegex    = regexp.MustCompile(`(\d+(?:\.\d+)?\s*(?:[KMGT]?B(?:ps|/s|/sec)))`)
-	etaRegex      = regexp.MustCompile(`(\d{2}:\d{2}:\d{2})`)
+	ansiRegex              = regexp.MustCompile(`\x1b(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])`)
+	fullProgressRegex      = regexp.MustCompile(`(\d+)\s*/\s*(\d+)\s+(\d+(?:\.\d+)?)%(?:\s+[\d\.]+[kKMmGg]?[bB]/[\d\.]+[kKMmGg]?[bB])?\s*-?(\d+(?:\.\d+)?\s*(?:[kKMmGg][iI]?[bB](?:/s|ps)|[bB]ps))?\s*(\d{1,2}:\d{2}:\d{2}|--:--:--)?`)
+	fallbackProgressRegex  = regexp.MustCompile(`(\d+(?:\.\d+)?)%`)
+	fallbackSpeedRegex     = regexp.MustCompile(`(?:^|\s)-?(\d+(?:\.\d+)?\s*(?:[kKMmGg][iI]?[bB](?:/s|ps)|[bB]ps))`)
+	fallbackETARegex       = regexp.MustCompile(`(\d{1,2}:\d{2}:\d{2})`)
 )
 
 type Manager struct {
@@ -238,7 +239,7 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 		}
 	}
 
-	// 4. Run N_m3u8DL-RE
+	// 4. Run N_m3u8DL-RE with exact flags for full real-time progress stream
 	refHeader := fmt.Sprintf("Referer: %s/", strings.TrimRight(m.extractor.BaseURL, "/"))
 	args := []string{
 		task.M3U8URL,
@@ -246,10 +247,15 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 		"--save-dir", stagingDir,
 		"--save-name", task.FileName,
 		"--auto-select",
+		"--force-ansi-console",
+		"--thread-count", "16",
+		"--download-retry-count", "3",
+		"-M", "format=mp4:muxer=ffmpeg",
 		"--auto-subtitle-fix",
 		"--check-segments-count", "false",
 		"-H", refHeader,
 		"-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+		"--log-level", "INFO",
 	}
 
 	if m.binPaths.FFmpeg != "" {
@@ -343,27 +349,37 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 }
 
 func (m *Manager) scanOutput(taskID string, r io.Reader) {
-	scanner := bufio.NewScanner(r)
-	// Custom split function for both \r and \n
-	scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-		if atEOF && len(data) == 0 {
-			return 0, nil, nil
-		}
-		for i, b := range data {
-			if b == '\r' || b == '\n' {
-				return i + 1, data[:i], nil
+	buf := make([]byte, 4096)
+	var rollingBuf strings.Builder
+
+	for {
+		n, err := r.Read(buf)
+		if n > 0 {
+			cleanChunk := ansiRegex.ReplaceAllString(string(buf[:n]), "")
+			rollingBuf.WriteString(cleanChunk)
+
+			str := rollingBuf.String()
+			for {
+				pos := strings.IndexAny(str, "\r\n")
+				if pos == -1 {
+					break
+				}
+				line := strings.TrimSpace(str[:pos])
+				str = str[pos+1:]
+				if line != "" {
+					m.handleProgressLine(taskID, line)
+				}
+			}
+			rollingBuf.Reset()
+			rollingBuf.WriteString(str)
+
+			// Also process in-flight un-delimited chunks
+			if rollingBuf.Len() > 0 {
+				m.handleProgressLine(taskID, rollingBuf.String())
 			}
 		}
-		if atEOF {
-			return len(data), data, nil
-		}
-		return 0, nil, nil
-	})
-
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line != "" {
-			m.handleProgressLine(taskID, line)
+		if err != nil {
+			break
 		}
 	}
 }
@@ -378,19 +394,51 @@ func (m *Manager) handleProgressLine(taskID, line string) {
 
 	updated := false
 
-	if match := progressRegex.FindStringSubmatch(line); len(match) > 1 {
-		if p, err := strconv.ParseFloat(match[1], 64); err == nil {
-			task.Progress = p
-			updated = true
+	if match := fullProgressRegex.FindStringSubmatch(line); len(match) > 1 {
+		if len(match) > 3 && match[3] != "" {
+			if p, err := strconv.ParseFloat(match[3], 64); err == nil {
+				if p != task.Progress {
+					task.Progress = p
+					updated = true
+				}
+			}
 		}
-	}
-	if match := speedRegex.FindStringSubmatch(line); len(match) > 1 {
-		task.Speed = match[1]
-		updated = true
-	}
-	if match := etaRegex.FindStringSubmatch(line); len(match) > 1 {
-		task.ETA = match[1]
-		updated = true
+		if len(match) > 4 && match[4] != "" {
+			sp := formatSpeedDisplay(match[4])
+			if sp != "" && sp != task.Speed {
+				task.Speed = sp
+				updated = true
+			}
+		}
+		if len(match) > 5 && match[5] != "" && match[5] != "--:--:--" {
+			if match[5] != task.ETA {
+				task.ETA = match[5]
+				updated = true
+			}
+		}
+	} else {
+		// Fallbacks
+		if match := fallbackProgressRegex.FindStringSubmatch(line); len(match) > 1 {
+			if p, err := strconv.ParseFloat(match[1], 64); err == nil {
+				if p != task.Progress {
+					task.Progress = p
+					updated = true
+				}
+			}
+		}
+		if match := fallbackSpeedRegex.FindStringSubmatch(line); len(match) > 1 {
+			sp := formatSpeedDisplay(match[1])
+			if sp != "" && sp != task.Speed {
+				task.Speed = sp
+				updated = true
+			}
+		}
+		if match := fallbackETARegex.FindStringSubmatch(line); len(match) > 1 {
+			if match[1] != "--:--:--" && match[1] != task.ETA {
+				task.ETA = match[1]
+				updated = true
+			}
+		}
 	}
 
 	if updated {
@@ -398,6 +446,18 @@ func (m *Manager) handleProgressLine(taskID, line string) {
 		m.sseHub.Broadcast("task_updated", task)
 	}
 	m.mu.Unlock()
+}
+
+func formatSpeedDisplay(raw string) string {
+	s := strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(raw), "-"))
+	if s == "" {
+		return ""
+	}
+	s = strings.ReplaceAll(s, "MBps", " MB/s")
+	s = strings.ReplaceAll(s, "KBps", " KB/s")
+	s = strings.ReplaceAll(s, "GBps", " GB/s")
+	s = strings.ReplaceAll(s, "Bps", " B/s")
+	return s
 }
 
 func (m *Manager) updateStatus(task *models.DownloadTask, status models.DownloadStatus, eta string) {
