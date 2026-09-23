@@ -24,11 +24,11 @@ import (
 )
 
 var (
-	ansiRegex              = regexp.MustCompile(`\x1b(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])`)
-	fullProgressRegex      = regexp.MustCompile(`(\d+)\s*/\s*(\d+)\s+(\d+(?:\.\d+)?)%(?:\s+[\d\.]+[kKMmGg]?[bB]/[\d\.]+[kKMmGg]?[bB])?\s*-?(\d+(?:\.\d+)?\s*(?:[kKMmGg][iI]?[bB](?:/s|ps)|[bB]ps))?\s*(\d{1,2}:\d{2}:\d{2}|--:--:--)?`)
-	fallbackProgressRegex  = regexp.MustCompile(`(\d+(?:\.\d+)?)%`)
-	fallbackSpeedRegex     = regexp.MustCompile(`(?:^|\s)-?(\d+(?:\.\d+)?\s*(?:[kKMmGg][iI]?[bB](?:/s|ps)|[bB]ps))`)
-	fallbackETARegex       = regexp.MustCompile(`(\d{1,2}:\d{2}:\d{2})`)
+	ansiRegex           = regexp.MustCompile(`\x1b(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])`)
+	streamProgressRegex = regexp.MustCompile(`(?i)(\d+(?:\.\d+)?)%\s*(?:[\d\.]+\s*[kKMmGg]?[bB]/[\d\.]+\s*[kKMmGg]?[bB])?\s*-?([\d\.]+\s*(?:[kKMmGg]?[bB](?:ps|/s|/sec)|[kKMmGg]bps))\s*(\d{2}:\d{2}:\d{2}|--:--:--)?`)
+	fallbackPercentRegex = regexp.MustCompile(`(?i)(?:Progress:)?\s*(\d+(?:\.\d+)?)%`)
+	fallbackSpeedRegex   = regexp.MustCompile(`(?i)-?([\d\.]+\s*(?:[kKMmGg]?[bB](?:ps|/s|/sec)|[kKMmGg]bps))`)
+	fallbackETARegex     = regexp.MustCompile(`(\d{2}:\d{2}:\d{2})`)
 )
 
 type Manager struct {
@@ -351,6 +351,7 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 func (m *Manager) scanOutput(taskID string, r io.Reader) {
 	buf := make([]byte, 4096)
 	var rollingBuf strings.Builder
+	var lastBroadcast time.Time
 
 	for {
 		n, err := r.Read(buf)
@@ -358,94 +359,76 @@ func (m *Manager) scanOutput(taskID string, r io.Reader) {
 			cleanChunk := ansiRegex.ReplaceAllString(string(buf[:n]), "")
 			rollingBuf.WriteString(cleanChunk)
 
-			str := rollingBuf.String()
-			for {
-				pos := strings.IndexAny(str, "\r\n")
-				if pos == -1 {
-					break
+			content := rollingBuf.String()
+			matches := streamProgressRegex.FindAllStringSubmatch(content, -1)
+			if len(matches) > 0 {
+				lastMatch := matches[len(matches)-1]
+				percentStr := lastMatch[1]
+				speedStr := lastMatch[2]
+				etaStr := ""
+				if len(lastMatch) > 3 {
+					etaStr = lastMatch[3]
 				}
-				line := strings.TrimSpace(str[:pos])
-				str = str[pos+1:]
-				if line != "" {
-					m.handleProgressLine(taskID, line)
+
+				m.mu.Lock()
+				task, ok := m.tasks[taskID]
+				if ok && task.Status == models.StatusDownloading {
+					updated := false
+					if p, err := strconv.ParseFloat(percentStr, 64); err == nil {
+						if p != task.Progress {
+							task.Progress = p
+							updated = true
+						}
+					}
+					sp := formatSpeedDisplay(speedStr)
+					if sp != "" && sp != task.Speed {
+						task.Speed = sp
+						updated = true
+					}
+					if etaStr != "" && etaStr != "--:--:--" && etaStr != task.ETA {
+						task.ETA = etaStr
+						updated = true
+					}
+
+					if updated && time.Since(lastBroadcast) > 100*time.Millisecond {
+						lastBroadcast = time.Now()
+						_ = m.db.SaveTask(task)
+						m.sseHub.Broadcast("task_updated", task)
+					}
+				}
+				m.mu.Unlock()
+			} else {
+				// Fallback if full regex didn't catch, try simple percent
+				if pMatches := fallbackPercentRegex.FindAllStringSubmatch(content, -1); len(pMatches) > 0 {
+					pLast := pMatches[len(pMatches)-1]
+					if p, err := strconv.ParseFloat(pLast[1], 64); err == nil {
+						m.mu.Lock()
+						task, ok := m.tasks[taskID]
+						if ok && task.Status == models.StatusDownloading && p != task.Progress {
+							task.Progress = p
+							if time.Since(lastBroadcast) > 100*time.Millisecond {
+								lastBroadcast = time.Now()
+								_ = m.db.SaveTask(task)
+								m.sseHub.Broadcast("task_updated", task)
+							}
+						}
+						m.mu.Unlock()
+					}
 				}
 			}
-			rollingBuf.Reset()
-			rollingBuf.WriteString(str)
 
-			// Also process in-flight un-delimited chunks
-			if rollingBuf.Len() > 0 {
-				m.handleProgressLine(taskID, rollingBuf.String())
+			// Keep only tail in rollingBuf so memory stays tiny
+			if rollingBuf.Len() > 300 {
+				tail := rollingBuf.String()
+				tail = tail[len(tail)-300:]
+				rollingBuf.Reset()
+				rollingBuf.WriteString(tail)
 			}
 		}
 		if err != nil {
 			break
 		}
 	}
-}
-
-func (m *Manager) handleProgressLine(taskID, line string) {
-	m.mu.Lock()
-	task, ok := m.tasks[taskID]
-	if !ok || task.Status != models.StatusDownloading {
-		m.mu.Unlock()
-		return
-	}
-
-	updated := false
-
-	if match := fullProgressRegex.FindStringSubmatch(line); len(match) > 1 {
-		if len(match) > 3 && match[3] != "" {
-			if p, err := strconv.ParseFloat(match[3], 64); err == nil {
-				if p != task.Progress {
-					task.Progress = p
-					updated = true
-				}
-			}
-		}
-		if len(match) > 4 && match[4] != "" {
-			sp := formatSpeedDisplay(match[4])
-			if sp != "" && sp != task.Speed {
-				task.Speed = sp
-				updated = true
-			}
-		}
-		if len(match) > 5 && match[5] != "" && match[5] != "--:--:--" {
-			if match[5] != task.ETA {
-				task.ETA = match[5]
-				updated = true
-			}
-		}
-	} else {
-		// Fallbacks
-		if match := fallbackProgressRegex.FindStringSubmatch(line); len(match) > 1 {
-			if p, err := strconv.ParseFloat(match[1], 64); err == nil {
-				if p != task.Progress {
-					task.Progress = p
-					updated = true
-				}
-			}
-		}
-		if match := fallbackSpeedRegex.FindStringSubmatch(line); len(match) > 1 {
-			sp := formatSpeedDisplay(match[1])
-			if sp != "" && sp != task.Speed {
-				task.Speed = sp
-				updated = true
-			}
-		}
-		if match := fallbackETARegex.FindStringSubmatch(line); len(match) > 1 {
-			if match[1] != "--:--:--" && match[1] != task.ETA {
-				task.ETA = match[1]
-				updated = true
-			}
-		}
-	}
-
-	if updated {
-		_ = m.db.SaveTask(task)
-		m.sseHub.Broadcast("task_updated", task)
-	}
-	m.mu.Unlock()
 }
 
 func formatSpeedDisplay(raw string) string {
