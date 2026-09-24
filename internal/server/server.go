@@ -18,6 +18,7 @@ import (
 	"github.com/iamnotpirates/idlixdownloader/internal/models"
 	"github.com/iamnotpirates/idlixdownloader/internal/scraper"
 	"github.com/iamnotpirates/idlixdownloader/internal/sse"
+	"github.com/iamnotpirates/idlixdownloader/internal/system"
 	"github.com/iamnotpirates/idlixdownloader/web"
 )
 
@@ -75,12 +76,15 @@ func (s *Server) setupRoutes() {
 		r.Get("/series/{slug}", s.handleSeriesDetails)
 
 		r.Get("/downloads", s.handleGetDownloads)
+		r.Post("/downloads/clear", s.handleClearFinishedDownloads)
 		r.Post("/download", s.handleCreateDownload)
 		r.Post("/download/season", s.handleCreateSeasonDownload)
 		r.Post("/download/cancel", s.handleCancelDownload)
+		r.Post("/download/{id}/retry", s.handleRetryDownload)
 		r.Delete("/download/{id}", s.handleDeleteDownload)
 		r.Get("/download/{id}/logs", s.handleGetLogs)
 
+		r.Get("/system/storage", s.handleGetStorage)
 		r.Get("/config", s.handleGetConfig)
 		r.Post("/config", s.handleSaveConfig)
 	})
@@ -336,6 +340,34 @@ func (s *Server) handleDeleteDownload(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	_ = s.downloader.Delete(id)
 	respondJSON(w, http.StatusOK, map[string]string{"status": "deleted"})
+}
+
+func (s *Server) handleClearFinishedDownloads(w http.ResponseWriter, r *http.Request) {
+	if err := s.downloader.ClearFinished(); err != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+func (s *Server) handleRetryDownload(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if err := s.downloader.Retry(id); err != nil {
+		respondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	respondJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+func (s *Server) handleGetStorage(w http.ResponseWriter, r *http.Request) {
+	cfg := config.LoadConfig()
+	moviesStorage, _ := system.GetDiskSpace(cfg.MoviesDir)
+	seriesStorage, _ := system.GetDiskSpace(cfg.SeriesDir)
+
+	respondJSON(w, http.StatusOK, map[string]any{
+		"movies": moviesStorage,
+		"series": seriesStorage,
+	})
 }
 
 func (s *Server) handleGetLogs(w http.ResponseWriter, r *http.Request) {

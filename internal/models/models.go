@@ -103,4 +103,19 @@ type AppConfig struct {
 	ConfirmDownload     bool   `json:"confirm_download"`
 	BaseURL             string `json:"base_url"`
 	MaxConcurrentTasks  int    `json:"max_concurrent_tasks"`
+	TelegramBotToken    string `json:"telegram_bot_token,omitempty"`
+	TelegramChatID      string `json:"telegram_chat_id,omitempty"`
+	TelegramThreadID    *int64 `json:"telegram_thread_id,omitempty"`
+	NotifyTelegram      bool   `json:"notify_telegram"`
+}
+
+type StorageInfo struct {
+	Path        string  `json:"path"`
+	TotalBytes  uint64  `json:"total_bytes"`
+	FreeBytes   uint64  `json:"free_bytes"`
+	UsedBytes   uint64  `json:"used_bytes"`
+	TotalGB     float64 `json:"total_gb"`
+	FreeGB      float64 `json:"free_gb"`
+	UsedGB      float64 `json:"used_gb"`
+	PercentUsed float64 `json:"percent_used"`
 }

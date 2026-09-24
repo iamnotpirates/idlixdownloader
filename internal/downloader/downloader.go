@@ -20,6 +20,7 @@ import (
 	"github.com/iamnotpirates/idlixdownloader/internal/db"
 	"github.com/iamnotpirates/idlixdownloader/internal/extractor"
 	"github.com/iamnotpirates/idlixdownloader/internal/models"
+	"github.com/iamnotpirates/idlixdownloader/internal/notifier"
 	"github.com/iamnotpirates/idlixdownloader/internal/sse"
 )
 
@@ -32,14 +33,15 @@ var (
 )
 
 type Manager struct {
-	db         *db.DB
-	extractor  *extractor.IdlixClient
-	binPaths   *binmanager.BinPaths
-	sseHub     *sse.Hub
-	queueChan  chan string
-	tasks      map[string]*models.DownloadTask
+	db          *db.DB
+	extractor   *extractor.IdlixClient
+	binPaths    *binmanager.BinPaths
+	sseHub      *sse.Hub
+	notifier    *notifier.Notifier
+	queueChan   chan string
+	tasks       map[string]*models.DownloadTask
 	activeProcs map[string]*exec.Cmd
-	mu         sync.RWMutex
+	mu          sync.RWMutex
 }
 
 func New(database *db.DB, ext *extractor.IdlixClient, bins *binmanager.BinPaths, hub *sse.Hub) *Manager {
@@ -48,6 +50,7 @@ func New(database *db.DB, ext *extractor.IdlixClient, bins *binmanager.BinPaths,
 		extractor:   ext,
 		binPaths:    bins,
 		sseHub:      hub,
+		notifier:    notifier.New(),
 		queueChan:   make(chan string, 100),
 		tasks:       make(map[string]*models.DownloadTask),
 		activeProcs: make(map[string]*exec.Cmd),
@@ -125,6 +128,46 @@ func (m *Manager) Delete(taskID string) error {
 		return err
 	}
 	m.sseHub.Broadcast("task_deleted", map[string]string{"id": taskID})
+	return nil
+}
+
+func (m *Manager) ClearFinished() error {
+	m.mu.Lock()
+	for id, t := range m.tasks {
+		if t.Status == models.StatusCompleted || t.Status == models.StatusFailed || t.Status == models.StatusCancelled {
+			delete(m.tasks, id)
+		}
+	}
+	m.mu.Unlock()
+
+	if err := m.db.ClearFinishedTasks(); err != nil {
+		return err
+	}
+	m.sseHub.Broadcast("tasks_cleared", map[string]string{"status": "ok"})
+	return nil
+}
+
+func (m *Manager) Retry(taskID string) error {
+	m.mu.Lock()
+	task, ok := m.tasks[taskID]
+	if !ok {
+		m.mu.Unlock()
+		return fmt.Errorf("task not found")
+	}
+	if task.Status != models.StatusFailed && task.Status != models.StatusCancelled {
+		m.mu.Unlock()
+		return fmt.Errorf("only failed or cancelled tasks can be retried")
+	}
+	task.Status = models.StatusQueued
+	task.Progress = 0
+	task.Speed = ""
+	task.ETA = "Queued"
+	task.ErrorMsg = nil
+	_ = m.db.SaveTask(task)
+	m.mu.Unlock()
+
+	m.sseHub.Broadcast("task_updated", task)
+	m.queueChan <- task.ID
 	return nil
 }
 
@@ -346,6 +389,21 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 
 	m.log(task.ID, fmt.Sprintf("Successfully saved to: %s", task.OutputDir))
 	m.sseHub.Broadcast("task_updated", task)
+	go m.notifyComplete(task)
+}
+
+func (m *Manager) notifyComplete(task *models.DownloadTask) {
+	cfg := config.LoadConfig()
+	if !cfg.NotifyTelegram || cfg.TelegramBotToken == "" || cfg.TelegramChatID == "" {
+		return
+	}
+
+	msg := fmt.Sprintf("🎬 <b>Unduhan Selesai!</b>\n\n📌 <b>%s</b>\n📁 <code>%s.mp4</code>\n💾 <code>%s</code>",
+		task.Title,
+		task.FileName,
+		task.OutputDir,
+	)
+	_ = m.notifier.SendMessage(cfg.TelegramBotToken, cfg.TelegramChatID, cfg.TelegramThreadID, msg)
 }
 
 func (m *Manager) scanOutput(taskID string, r io.Reader) {

@@ -197,6 +197,19 @@ func (d *DB) DeleteTask(id string) error {
 	return err
 }
 
+func (d *DB) ClearFinishedTasks() error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	_, _ = d.db.Exec(`
+		DELETE FROM task_logs WHERE task_id IN (
+			SELECT id FROM tasks WHERE status IN ('completed', 'failed', 'cancelled')
+		)
+	`)
+	_, err := d.db.Exec(`DELETE FROM tasks WHERE status IN ('completed', 'failed', 'cancelled')`)
+	return err
+}
+
 func (d *DB) AddTaskLog(taskID, message string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
