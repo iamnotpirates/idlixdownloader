@@ -1,0 +1,11 @@
+{
+  "project": "IDLIX Downloader",
+  "name": "IDLIX Downloader DEV",
+  "icon": "🎬",
+  "env": "dev",
+  "desc": "Go-based IDLIX scraper and media downloader with mobile web UI",
+  "port": 8989,
+  "cmd": "idlixdownloader.exe",
+  "args": [],
+  "docs_path": ""
+}
