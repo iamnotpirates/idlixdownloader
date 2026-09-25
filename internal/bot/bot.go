@@ -3,6 +3,7 @@ package bot
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -67,6 +68,32 @@ func New(
 	dl *downloader.Manager,
 ) *Bot {
 	cfg := config.LoadConfig()
+	if database != nil {
+		if val := database.GetSetting("movies_dir", ""); val != "" {
+			cfg.MoviesDir = val
+		}
+		if val := database.GetSetting("series_dir", ""); val != "" {
+			cfg.SeriesDir = val
+		}
+		if val := database.GetSetting("sub_lang", ""); val != "" {
+			cfg.SubLang = val
+		}
+		if val := database.GetSetting("base_url", ""); val != "" {
+			cfg.BaseURL = val
+			if sc != nil {
+				sc.BaseURL = val
+			}
+			if ext != nil {
+				ext.BaseURL = val
+			}
+		}
+		if val := database.GetSetting("max_concurrent_tasks", ""); val != "" {
+			if n, err := strconv.Atoi(val); err == nil && n > 0 {
+				cfg.MaxConcurrentTasks = n
+			}
+		}
+	}
+
 	token := strings.TrimSpace(cfg.DiscordBotToken)
 	if token == "" {
 		log.Println("ℹ️ Discord bot token is empty. Discord Bot UI will not start.")

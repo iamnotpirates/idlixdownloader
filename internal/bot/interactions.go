@@ -3,6 +3,7 @@ package bot
 import (
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -289,6 +290,46 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
+	// Open Change Directories Modal
+	if customID == "btn_open_change_dirs_modal" {
+		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseModal,
+			Data: &discordgo.InteractionResponseData{
+				CustomID: "modal_change_directories",
+				Title:    "📁 Ubah Folder Penyimpanan",
+				Components: []discordgo.MessageComponent{
+					discordgo.ActionsRow{
+						Components: []discordgo.MessageComponent{
+							discordgo.TextInput{
+								CustomID:    "input_movies_dir",
+								Label:       "Folder Film (Movies)",
+								Style:       discordgo.TextInputShort,
+								Placeholder: "Contoh: Z:\\Film\\Movies atau D:\\Movies",
+								Value:       b.cfg.MoviesDir,
+								Required:    true,
+								MaxLength:   255,
+							},
+						},
+					},
+					discordgo.ActionsRow{
+						Components: []discordgo.MessageComponent{
+							discordgo.TextInput{
+								CustomID:    "input_series_dir",
+								Label:       "Folder Series (TV Shows)",
+								Style:       discordgo.TextInputShort,
+								Placeholder: "Contoh: Z:\\Film\\Series atau D:\\Series",
+								Value:       b.cfg.SeriesDir,
+								Required:    true,
+								MaxLength:   255,
+							},
+						},
+					},
+				},
+			},
+		})
+		return
+	}
+
 	// Close Settings popup
 	if customID == "btn_close_session_settings" {
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -514,12 +555,41 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 }
 
 func (b *Bot) handleModalSubmit(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	if i.ModalSubmitData().CustomID == "modal_search_input" {
+	customID := i.ModalSubmitData().CustomID
+
+	if customID == "modal_search_input" {
 		query := i.ModalSubmitData().Components[0].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
 		})
 		go b.executeSearch(s, i, query, "Search Result")
+		return
+	}
+
+	if customID == "modal_change_directories" {
+		moviesDir := strings.TrimSpace(i.ModalSubmitData().Components[0].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value)
+		seriesDir := strings.TrimSpace(i.ModalSubmitData().Components[1].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value)
+
+		if moviesDir != "" {
+			_ = os.MkdirAll(moviesDir, 0755)
+			b.cfg.MoviesDir = moviesDir
+			_ = b.db.SetSetting("movies_dir", moviesDir)
+		}
+		if seriesDir != "" {
+			_ = os.MkdirAll(seriesDir, 0755)
+			b.cfg.SeriesDir = seriesDir
+			_ = b.db.SetSetting("series_dir", seriesDir)
+		}
+		_ = config.SaveConfig(b.cfg)
+
+		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: fmt.Sprintf("✅ **Folder Penyimpanan Berhasil Diperbarui!**\n\n📁 **Movies**: `%s`\n📺 **Series**: `%s`\n\nTersimpan persisten di SQLite & config.json.", b.cfg.MoviesDir, b.cfg.SeriesDir),
+				Flags:   discordgo.MessageFlagsEphemeral,
+			},
+		})
+		return
 	}
 }
 
@@ -1062,9 +1132,15 @@ func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCre
 				},
 			},
 		},
-		// Row 4: Close Action
+		// Row 4: Directory & Close Actions
 		discordgo.ActionsRow{
 			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "Ubah Folder Penyimpanan",
+					Style:    discordgo.PrimaryButton,
+					CustomID: "btn_open_change_dirs_modal",
+					Emoji:    &discordgo.ComponentEmoji{Name: "📁"},
+				},
 				discordgo.Button{
 					Label:    "Tutup Pengaturan",
 					Style:    discordgo.SecondaryButton,
