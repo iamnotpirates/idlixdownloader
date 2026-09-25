@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -90,8 +91,51 @@ func (d *DB) migrate() error {
 
 	CREATE INDEX IF NOT EXISTS idx_task_logs_task_id ON task_logs (task_id);
 	`
-	_, err := d.db.Exec(schema)
-	return err
+	if _, err := d.db.Exec(schema); err != nil {
+		return err
+	}
+
+	return d.ensureTaskColumns()
+}
+
+func (d *DB) ensureTaskColumns() error {
+	rows, err := d.db.Query("PRAGMA table_info(tasks);")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	existingCols := make(map[string]bool)
+	for rows.Next() {
+		var cid int
+		var name, colType string
+		var notNull, pk int
+		var dfltValue any
+		if err := rows.Scan(&cid, &name, &colType, &notNull, &dfltValue, &pk); err == nil {
+			existingCols[strings.ToLower(name)] = true
+		}
+	}
+
+	colsToAdd := map[string]string{
+		"discord_thread_id":  "TEXT",
+		"discord_message_id": "TEXT",
+		"discord_guild_id":   "TEXT",
+		"discord_channel_id": "TEXT",
+		"year":               "TEXT",
+		"season_num":         "INTEGER",
+		"episode_num":        "INTEGER",
+		"page_url":           "TEXT",
+		"media_id":           "TEXT",
+		"subtitle_url":       "TEXT",
+		"sub_lang":           "TEXT",
+	}
+
+	for col, colType := range colsToAdd {
+		if !existingCols[col] {
+			_, _ = d.db.Exec(fmt.Sprintf("ALTER TABLE tasks ADD COLUMN %s %s;", col, colType))
+		}
+	}
+	return nil
 }
 
 func (d *DB) Close() error {
