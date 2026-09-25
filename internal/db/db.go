@@ -48,6 +48,12 @@ func Open() (*DB, error) {
 
 func (d *DB) migrate() error {
 	schema := `
+	CREATE TABLE IF NOT EXISTS settings (
+		key TEXT PRIMARY KEY,
+		value TEXT NOT NULL,
+		updated_at INTEGER NOT NULL
+	);
+
 	CREATE TABLE IF NOT EXISTS tasks (
 		id TEXT PRIMARY KEY,
 		title TEXT NOT NULL,
@@ -67,6 +73,10 @@ func (d *DB) migrate() error {
 		speed TEXT NOT NULL DEFAULT '',
 		eta TEXT NOT NULL DEFAULT '',
 		error_msg TEXT,
+		discord_thread_id TEXT,
+		discord_message_id TEXT,
+		discord_guild_id TEXT,
+		discord_channel_id TEXT,
 		created_at INTEGER NOT NULL
 	);
 
@@ -96,8 +106,9 @@ func (d *DB) SaveTask(task *models.DownloadTask) error {
 	INSERT INTO tasks (
 		id, title, media_type, year, season_num, episode_num,
 		page_url, media_id, m3u8_url, subtitle_url, sub_lang,
-		output_dir, file_name, status, progress, speed, eta, error_msg, created_at
-	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		output_dir, file_name, status, progress, speed, eta, error_msg,
+		discord_thread_id, discord_message_id, discord_channel_id, created_at
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	ON CONFLICT(id) DO UPDATE SET
 		title=excluded.title,
 		media_type=excluded.media_type,
@@ -115,13 +126,17 @@ func (d *DB) SaveTask(task *models.DownloadTask) error {
 		progress=excluded.progress,
 		speed=excluded.speed,
 		eta=excluded.eta,
-		error_msg=excluded.error_msg;
+		error_msg=excluded.error_msg,
+		discord_thread_id=coalesce(excluded.discord_thread_id, tasks.discord_thread_id),
+		discord_message_id=coalesce(excluded.discord_message_id, tasks.discord_message_id),
+		discord_channel_id=coalesce(excluded.discord_channel_id, tasks.discord_channel_id);
 	`
 
 	_, err := d.db.Exec(query,
 		task.ID, task.Title, task.MediaType, task.Year, task.SeasonNum, task.EpisodeNum,
 		task.PageURL, task.MediaID, task.M3U8URL, task.SubtitleURL, task.SubLang,
-		task.OutputDir, task.FileName, string(task.Status), task.Progress, task.Speed, task.ETA, task.ErrorMsg, task.CreatedAt,
+		task.OutputDir, task.FileName, string(task.Status), task.Progress, task.Speed, task.ETA, task.ErrorMsg,
+		task.DiscordThreadID, task.DiscordMessageID, task.DiscordChannelID, task.CreatedAt,
 	)
 	return err
 }
@@ -133,7 +148,8 @@ func (d *DB) GetTasks() ([]models.DownloadTask, error) {
 	rows, err := d.db.Query(`
 		SELECT id, title, media_type, year, season_num, episode_num,
 		       page_url, media_id, m3u8_url, subtitle_url, sub_lang,
-		       output_dir, file_name, status, progress, speed, eta, error_msg, created_at
+		       output_dir, file_name, status, progress, speed, eta, error_msg,
+		       discord_thread_id, discord_message_id, discord_channel_id, created_at
 		FROM tasks
 		ORDER BY created_at DESC
 	`)
@@ -149,7 +165,8 @@ func (d *DB) GetTasks() ([]models.DownloadTask, error) {
 		err := rows.Scan(
 			&t.ID, &t.Title, &t.MediaType, &t.Year, &t.SeasonNum, &t.EpisodeNum,
 			&t.PageURL, &t.MediaID, &t.M3U8URL, &t.SubtitleURL, &t.SubLang,
-			&t.OutputDir, &t.FileName, &statusStr, &t.Progress, &t.Speed, &t.ETA, &t.ErrorMsg, &t.CreatedAt,
+			&t.OutputDir, &t.FileName, &statusStr, &t.Progress, &t.Speed, &t.ETA, &t.ErrorMsg,
+			&t.DiscordThreadID, &t.DiscordMessageID, &t.DiscordChannelID, &t.CreatedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -169,12 +186,14 @@ func (d *DB) GetTask(id string) (*models.DownloadTask, error) {
 	err := d.db.QueryRow(`
 		SELECT id, title, media_type, year, season_num, episode_num,
 		       page_url, media_id, m3u8_url, subtitle_url, sub_lang,
-		       output_dir, file_name, status, progress, speed, eta, error_msg, created_at
+		       output_dir, file_name, status, progress, speed, eta, error_msg,
+		       discord_thread_id, discord_message_id, discord_channel_id, created_at
 		FROM tasks WHERE id = ?
 	`, id).Scan(
 		&t.ID, &t.Title, &t.MediaType, &t.Year, &t.SeasonNum, &t.EpisodeNum,
 		&t.PageURL, &t.MediaID, &t.M3U8URL, &t.SubtitleURL, &t.SubLang,
-		&t.OutputDir, &t.FileName, &statusStr, &t.Progress, &t.Speed, &t.ETA, &t.ErrorMsg, &t.CreatedAt,
+		&t.OutputDir, &t.FileName, &statusStr, &t.Progress, &t.Speed, &t.ETA, &t.ErrorMsg,
+		&t.DiscordThreadID, &t.DiscordMessageID, &t.DiscordChannelID, &t.CreatedAt,
 	)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -223,6 +242,50 @@ func (d *DB) AddTaskLog(taskID, message string) error {
 		VALUES (?, ?, ?, ?)
 	`, taskID, timestamp, message, createdAt)
 	return err
+}
+
+func (d *DB) SetSetting(key, val string) error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	_, err := d.db.Exec(`
+		INSERT INTO settings (key, value, updated_at)
+		VALUES (?, ?, ?)
+		ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+	`, key, val, time.Now().Unix())
+	return err
+}
+
+func (d *DB) GetSetting(key, defaultVal string) string {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	var val string
+	err := d.db.QueryRow(`SELECT value FROM settings WHERE key = ?`, key).Scan(&val)
+	if err != nil {
+		return defaultVal
+	}
+	return val
+}
+
+func (d *DB) GetAllSettings() (map[string]string, error) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	rows, err := d.db.Query(`SELECT key, value FROM settings`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	res := make(map[string]string)
+	for rows.Next() {
+		var k, v string
+		if err := rows.Scan(&k, &v); err == nil {
+			res[k] = v
+		}
+	}
+	return res, nil
 }
 
 func (d *DB) GetTaskLogs(taskID string) ([]models.TaskLog, error) {

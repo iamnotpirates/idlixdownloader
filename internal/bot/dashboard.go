@@ -165,6 +165,14 @@ func (b *Bot) buildDashboardComponents() []discordgo.MessageComponent {
 					},
 				},
 				discordgo.Button{
+					Label:    "⚙️ Settings",
+					Style:    discordgo.SecondaryButton,
+					CustomID: "btn_open_settings",
+					Emoji: &discordgo.ComponentEmoji{
+						Name: "⚙️",
+					},
+				},
+				discordgo.Button{
 					Label:    "🔄 Refresh",
 					Style:    discordgo.SecondaryButton,
 					CustomID: "btn_refresh_dash",

@@ -238,8 +238,27 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
+	// Settings button
+	if customID == "btn_open_settings" {
+		b.showSettingsCard(s, i)
+		return
+	}
+
+	// Change Concurrency Setting
+	if strings.HasPrefix(customID, "set_concurrency_") {
+		valStr := strings.TrimPrefix(customID, "set_concurrency_")
+		val, _ := strconv.Atoi(valStr)
+		if val > 0 {
+			_ = b.db.SetSetting("max_concurrent_tasks", valStr)
+			b.cfg.MaxConcurrentTasks = val
+			_ = config.SaveConfig(b.cfg)
+			b.showSettingsCard(s, i)
+		}
+		return
+	}
+
 	// 5. Close Session Button (Direct Delete - Zero Leftover Text)
-	if strings.HasPrefix(customID, "btn_close_session_") {
+	if strings.HasPrefix(customID, "btn_close_session_") || customID == "btn_close_session_settings" {
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseDeferredMessageUpdate,
 		})
@@ -847,4 +866,102 @@ func sanitizeTitle(name string) string {
 		name = strings.ReplaceAll(name, ch, "")
 	}
 	return strings.TrimSpace(name)
+}
+
+func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	currentMax := b.cfg.MaxConcurrentTasks
+	if currentMax <= 0 {
+		currentMax = 1
+	}
+
+	embed := &discordgo.MessageEmbed{
+		Title:       "⚙️ Pengaturan Downloader & Library (SQLite)",
+		Description: "Konfigurasi engine, penyimpanan direktori, dan batas simultaneous downloading.",
+		Color:       0xFEE75C,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name:   "⚡ Max Concurrent Tasks",
+				Value:  fmt.Sprintf("Saat ini: **%d task berjalan bersamaan**", currentMax),
+				Inline: false,
+			},
+			{
+				Name:   "📁 Movies Directory",
+				Value:  fmt.Sprintf("`%s`", b.cfg.MoviesDir),
+				Inline: false,
+			},
+			{
+				Name:   "📺 Series Directory",
+				Value:  fmt.Sprintf("`%s`", b.cfg.SeriesDir),
+				Inline: false,
+			},
+			{
+				Name:   "🇮🇩 Subtitle Language",
+				Value:  fmt.Sprintf("`%s`", b.cfg.SubLang),
+				Inline: true,
+			},
+		},
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: "Tersimpan persisten di SQLite & config.json",
+		},
+	}
+
+	comps := []discordgo.MessageComponent{
+		discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "1 Task (Aman/Hemat IP)",
+					Style:    getBtnStyle(currentMax == 1),
+					CustomID: "set_concurrency_1",
+					Emoji:    &discordgo.ComponentEmoji{Name: "1️⃣"},
+				},
+				discordgo.Button{
+					Label:    "2 Tasks",
+					Style:    getBtnStyle(currentMax == 2),
+					CustomID: "set_concurrency_2",
+					Emoji:    &discordgo.ComponentEmoji{Name: "2️⃣"},
+				},
+				discordgo.Button{
+					Label:    "3 Tasks",
+					Style:    getBtnStyle(currentMax == 3),
+					CustomID: "set_concurrency_3",
+					Emoji:    &discordgo.ComponentEmoji{Name: "3️⃣"},
+				},
+				discordgo.Button{
+					Label:    "5 Tasks (Maksimal)",
+					Style:    getBtnStyle(currentMax == 5),
+					CustomID: "set_concurrency_5",
+					Emoji:    &discordgo.ComponentEmoji{Name: "🚀"},
+				},
+			},
+		},
+		discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "Tutup",
+					Style:    discordgo.SecondaryButton,
+					CustomID: "btn_close_session_settings",
+					Emoji:    &discordgo.ComponentEmoji{Name: "❌"},
+				},
+			},
+		},
+	}
+
+	if i.Type == discordgo.InteractionMessageComponent {
+		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Embeds:     []*discordgo.MessageEmbed{embed},
+				Components: comps,
+			},
+		})
+	} else {
+		b.postSearchResponse(s, i, embed, comps)
+	}
+}
+
+func getBtnStyle(active bool) discordgo.ButtonStyle {
+	if active {
+		return discordgo.SuccessButton
+	}
+	return discordgo.SecondaryButton
 }
