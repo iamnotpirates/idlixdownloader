@@ -1,20 +1,15 @@
 {
   "0": "Server",
-  "1": "Bot",
+  "1": "main",
   "2": "Manager",
   "3": "binmanager.go",
   "4": "DB",
   "5": "LoadConfig",
-  "6": "server.go",
+  "6": "downloader.go",
   "7": "go_pkg_net_http",
   "8": "github.com/bwmarrin/discordgo.Session",
-  "9": "github.com/bwmarrin/discordgo.MessageComponent",
+  "9": "GetDiskSpace",
   "10": "IDLIX Downloader (v0.2.0-alpha)",
   "11": "IDLIX Downloader (Go Refactor)",
-  "12": "github.com/iamnotpirates/idlixdownloader",
-  "13": "downloader.go",
-  "14": "go_pkg_time",
-  "15": "models.go",
-  "16": "go_pkg_fmt",
-  "17": "db.go"
+  "12": "github.com/iamnotpirates/idlixdownloader"
 }

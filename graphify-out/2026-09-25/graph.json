@@ -67,7 +67,7 @@
       "file_type": "code",
       "norm_label": "responderror()",
       "source_file": "internal/server/server.go",
-      "source_location": "L414"
+      "source_location": "L413"
     },
     {
       "id": "internal_server_server_respondjson",
@@ -78,7 +78,7 @@
       "file_type": "code",
       "norm_label": "respondjson()",
       "source_file": "internal/server/server.go",
-      "source_location": "L408"
+      "source_location": "L407"
     },
     {
       "id": "internal_server_server_sanitizefilename",
@@ -89,7 +89,7 @@
       "file_type": "code",
       "norm_label": "sanitizefilename()",
       "source_file": "internal/server/server.go",
-      "source_location": "L418"
+      "source_location": "L417"
     },
     {
       "id": "server_server",
@@ -111,7 +111,7 @@
       "file_type": "code",
       "norm_label": ".handlecanceldownload()",
       "source_file": "internal/server/server.go",
-      "source_location": "L327"
+      "source_location": "L326"
     },
     {
       "id": "server_server_handlecatalog",
@@ -133,7 +133,7 @@
       "file_type": "code",
       "norm_label": ".handleclearfinisheddownloads()",
       "source_file": "internal/server/server.go",
-      "source_location": "L346"
+      "source_location": "L345"
     },
     {
       "id": "server_server_handlecreatedownload",
@@ -144,7 +144,7 @@
       "file_type": "code",
       "norm_label": ".handlecreatedownload()",
       "source_file": "internal/server/server.go",
-      "source_location": "L163"
+      "source_location": "L162"
     },
     {
       "id": "server_server_handlecreateseasondownload",
@@ -155,7 +155,7 @@
       "file_type": "code",
       "norm_label": ".handlecreateseasondownload()",
       "source_file": "internal/server/server.go",
-      "source_location": "L258"
+      "source_location": "L257"
     },
     {
       "id": "server_server_handledeletedownload",
@@ -166,7 +166,7 @@
       "file_type": "code",
       "norm_label": ".handledeletedownload()",
       "source_file": "internal/server/server.go",
-      "source_location": "L340"
+      "source_location": "L339"
     },
     {
       "id": "server_server_handlegetconfig",
@@ -177,7 +177,7 @@
       "file_type": "code",
       "norm_label": ".handlegetconfig()",
       "source_file": "internal/server/server.go",
-      "source_location": "L384"
+      "source_location": "L383"
     },
     {
       "id": "server_server_handlegetdownloads",
@@ -188,7 +188,7 @@
       "file_type": "code",
       "norm_label": ".handlegetdownloads()",
       "source_file": "internal/server/server.go",
-      "source_location": "L146"
+      "source_location": "L145"
     },
     {
       "id": "server_server_handlegetlogs",
@@ -199,7 +199,7 @@
       "file_type": "code",
       "norm_label": ".handlegetlogs()",
       "source_file": "internal/server/server.go",
-      "source_location": "L374"
+      "source_location": "L373"
     },
     {
       "id": "server_server_handlegetstorage",
@@ -210,7 +210,7 @@
       "file_type": "code",
       "norm_label": ".handlegetstorage()",
       "source_file": "internal/server/server.go",
-      "source_location": "L363"
+      "source_location": "L362"
     },
     {
       "id": "server_server_handlemoviedetails",
@@ -221,7 +221,7 @@
       "file_type": "code",
       "norm_label": ".handlemoviedetails()",
       "source_file": "internal/server/server.go",
-      "source_location": "L126"
+      "source_location": "L125"
     },
     {
       "id": "server_server_handleretrydownload",
@@ -232,7 +232,7 @@
       "file_type": "code",
       "norm_label": ".handleretrydownload()",
       "source_file": "internal/server/server.go",
-      "source_location": "L354"
+      "source_location": "L353"
     },
     {
       "id": "server_server_handlesaveconfig",
@@ -243,7 +243,7 @@
       "file_type": "code",
       "norm_label": ".handlesaveconfig()",
       "source_file": "internal/server/server.go",
-      "source_location": "L389"
+      "source_location": "L388"
     },
     {
       "id": "server_server_handlesearch",
@@ -265,7 +265,7 @@
       "file_type": "code",
       "norm_label": ".handleseriesdetails()",
       "source_file": "internal/server/server.go",
-      "source_location": "L136"
+      "source_location": "L135"
     },
     {
       "id": "server_server_router",
@@ -290,178 +290,57 @@
       "source_location": "L53"
     },
     {
-      "id": "bot_bot_createchannelundercategory",
-      "label": ".createChannelUnderCategory()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": ".createchannelundercategory()",
-      "source_file": "internal/bot/bot.go",
-      "source_location": "L277"
-    },
-    {
-      "id": "bot_bot_createexploresession",
-      "label": ".createExploreSession()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": ".createexploresession()",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L13"
-    },
-    {
-      "id": "bot_bot_ensurechannels",
-      "label": ".ensureChannels()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": ".ensurechannels()",
-      "source_file": "internal/bot/bot.go",
-      "source_location": "L140"
-    },
-    {
-      "id": "bot_bot_onready",
-      "label": ".onReady()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": ".onready()",
-      "source_file": "internal/bot/bot.go",
-      "source_location": "L129"
-    },
-    {
-      "id": "bot_bot_start",
-      "label": ".Start()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": ".start()",
-      "source_file": "internal/bot/bot.go",
-      "source_location": "L106"
-    },
-    {
-      "id": "bot_bot_stop",
-      "label": ".Stop()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": ".stop()",
-      "source_file": "internal/bot/bot.go",
-      "source_location": "L121"
-    },
-    {
-      "id": "bot_downloadthreadstate",
-      "label": "DownloadThreadState",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "downloadthreadstate",
-      "source_file": "internal/bot/bot.go",
-      "source_location": "L46"
-    },
-    {
-      "id": "bot_exploresession",
-      "label": "ExploreSession",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "exploresession",
-      "source_file": "internal/bot/bot.go",
-      "source_location": "L53"
-    },
-    {
       "id": "cmd_server_main_main",
       "label": "main()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "cmd/server/main.go",
       "source_location": "L25"
     },
     {
-      "id": "go_type_github_com_bwmarrin_discordgo_channel",
-      "label": "github.com/bwmarrin/discordgo.Channel",
+      "id": "extractor_idlixclient_extractstream",
+      "label": ".ExtractStream()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
-      "norm_label": "github.com/bwmarrin/discordgo.channel",
-      "source_file": "",
-      "source_location": ""
+      "norm_label": ".extractstream()",
+      "source_file": "internal/extractor/extractor.go",
+      "source_location": "L296"
     },
     {
-      "id": "go_type_github_com_bwmarrin_discordgo_channeltype",
-      "label": "github.com/bwmarrin/discordgo.ChannelType",
+      "id": "extractor_idlixclient_fetchmoviedetails",
+      "label": ".FetchMovieDetails()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
-      "norm_label": "github.com/bwmarrin/discordgo.channeltype",
-      "source_file": "",
-      "source_location": ""
+      "norm_label": ".fetchmoviedetails()",
+      "source_file": "internal/extractor/extractor.go",
+      "source_location": "L31"
     },
     {
-      "id": "go_type_github_com_bwmarrin_discordgo_ready",
-      "label": "github.com/bwmarrin/discordgo.Ready",
+      "id": "extractor_idlixclient_fetchseriesdetails",
+      "label": ".FetchSeriesDetails()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
-      "norm_label": "github.com/bwmarrin/discordgo.ready",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "go_type_net_http_handlerfunc",
-      "label": "net/http.HandlerFunc",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "net/http.handlerfunc",
-      "source_file": "",
-      "source_location": ""
+      "norm_label": ".fetchseriesdetails()",
+      "source_file": "internal/extractor/extractor.go",
+      "source_location": "L127"
     },
     {
       "id": "go_type_sync_rwmutex",
       "label": "sync.RWMutex",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "sync.rwmutex",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "go_type_testing_t",
-      "label": "testing.T",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "testing.t",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "go_type_time_time",
-      "label": "time.Time",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "time.time",
       "source_file": "",
       "source_location": ""
     },
@@ -470,7 +349,7 @@
       "label": ".Get()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": ".get()",
       "source_file": "internal/httpclient/client.go",
@@ -481,51 +360,29 @@
       "label": ".PostJSON()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": ".postjson()",
       "source_file": "internal/httpclient/client.go",
       "source_location": "L80"
     },
     {
-      "id": "internal_binmanager_binmanager_go_binmanager_binpaths",
-      "label": "BinPaths",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "binpaths",
-      "source_file": "internal/binmanager/binmanager.go",
-      "source_location": "L19"
-    },
-    {
-      "id": "internal_bot_bot_go_bot_bot",
-      "label": "Bot",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "bot",
-      "source_file": "internal/bot/bot.go",
-      "source_location": "L19"
-    },
-    {
       "id": "internal_bot_bot_new",
       "label": "New()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "new()",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L63"
+      "source_location": "L60"
     },
     {
       "id": "internal_downloader_downloader_new",
       "label": "New()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "new()",
       "source_file": "internal/downloader/downloader.go",
@@ -536,7 +393,7 @@
       "label": "IdlixClient",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "idlixclient",
       "source_file": "internal/extractor/extractor.go",
@@ -547,7 +404,7 @@
       "label": "New()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "new()",
       "source_file": "internal/extractor/extractor.go",
@@ -558,7 +415,7 @@
       "label": "CurlClient",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "curlclient",
       "source_file": "internal/httpclient/client.go",
@@ -569,29 +426,84 @@
       "label": "New()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "new()",
       "source_file": "internal/httpclient/client.go",
       "source_location": "L22"
     },
     {
+      "id": "internal_models_models",
+      "label": "models.go",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main",
+      "file_type": "code",
+      "norm_label": "models.go",
+      "source_file": "internal/models/models.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_models_models_go_models_episodeinfo",
+      "label": "EpisodeInfo",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main",
+      "file_type": "code",
+      "norm_label": "episodeinfo",
+      "source_file": "internal/models/models.go",
+      "source_location": "L13"
+    },
+    {
       "id": "internal_models_models_go_models_mediaitem",
       "label": "MediaItem",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "mediaitem",
       "source_file": "internal/models/models.go",
       "source_location": "L3"
     },
     {
+      "id": "internal_models_models_go_models_moviedetails",
+      "label": "MovieDetails",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main",
+      "file_type": "code",
+      "norm_label": "moviedetails",
+      "source_file": "internal/models/models.go",
+      "source_location": "L35"
+    },
+    {
+      "id": "internal_models_models_go_models_seriesdetails",
+      "label": "SeriesDetails",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main",
+      "file_type": "code",
+      "norm_label": "seriesdetails",
+      "source_file": "internal/models/models.go",
+      "source_location": "L26"
+    },
+    {
+      "id": "internal_models_models_go_models_streamsources",
+      "label": "StreamSources",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main",
+      "file_type": "code",
+      "norm_label": "streamsources",
+      "source_file": "internal/models/models.go",
+      "source_location": "L52"
+    },
+    {
       "id": "internal_scraper_scraper_go_scraper_scraper",
       "label": "Scraper",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "scraper",
       "source_file": "internal/scraper/scraper.go",
@@ -602,51 +514,40 @@
       "label": "New()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "new()",
       "source_file": "internal/scraper/scraper.go",
       "source_location": "L20"
     },
     {
-      "id": "internal_scraper_scraper_test",
-      "label": "scraper_test.go",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "scraper_test.go",
-      "source_file": "internal/scraper/scraper_test.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_scraper_scraper_test_testsearchcontentwithtype",
-      "label": "TestSearchContentWithType()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "testsearchcontentwithtype()",
-      "source_file": "internal/scraper/scraper_test.go",
-      "source_location": "L7"
-    },
-    {
       "id": "internal_server_server_new",
       "label": "New()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "new()",
       "source_file": "internal/server/server.go",
       "source_location": "L35"
     },
     {
+      "id": "internal_sse_hub",
+      "label": "hub.go",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main",
+      "file_type": "code",
+      "norm_label": "hub.go",
+      "source_file": "internal/sse/hub.go",
+      "source_location": "L1"
+    },
+    {
       "id": "internal_sse_hub_go_sse_hub",
       "label": "Hub",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "hub",
       "source_file": "internal/sse/hub.go",
@@ -657,77 +558,88 @@
       "label": "New()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": "new()",
       "source_file": "internal/sse/hub.go",
       "source_location": "L20"
     },
     {
+      "id": "models_seasoninfo",
+      "label": "SeasonInfo",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main",
+      "file_type": "code",
+      "norm_label": "seasoninfo",
+      "source_file": "internal/models/models.go",
+      "source_location": "L21"
+    },
+    {
+      "id": "models_subtitletrack",
+      "label": "SubtitleTrack",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "main",
+      "file_type": "code",
+      "norm_label": "subtitletrack",
+      "source_file": "internal/models/models.go",
+      "source_location": "L47"
+    },
+    {
       "id": "scraper_scraper_fetchfeatured",
       "label": ".FetchFeatured()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": ".fetchfeatured()",
       "source_file": "internal/scraper/scraper.go",
-      "source_location": "L148"
+      "source_location": "L130"
     },
     {
       "id": "scraper_scraper_searchcontent",
       "label": ".SearchContent()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": ".searchcontent()",
       "source_file": "internal/scraper/scraper.go",
       "source_location": "L33"
     },
     {
-      "id": "scraper_scraper_searchcontentwithtype",
-      "label": ".SearchContentWithType()",
+      "id": "server_seasondownloadrequest",
+      "label": "SeasonDownloadRequest",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
-      "norm_label": ".searchcontentwithtype()",
-      "source_file": "internal/scraper/scraper.go",
-      "source_location": "L37"
+      "norm_label": "seasondownloadrequest",
+      "source_file": "internal/server/server.go",
+      "source_location": "L248"
     },
     {
-      "id": "server_server_setuproutes",
-      "label": ".setupRoutes()",
+      "id": "sse_event",
+      "label": "Event",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
-      "norm_label": ".setuproutes()",
-      "source_file": "internal/server/server.go",
-      "source_location": "L60"
+      "norm_label": "event",
+      "source_file": "internal/sse/hub.go",
+      "source_location": "L10"
     },
     {
       "id": "sse_hub_broadcast",
       "label": ".Broadcast()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Bot",
+      "community_name": "main",
       "file_type": "code",
       "norm_label": ".broadcast()",
       "source_file": "internal/sse/hub.go",
       "source_location": "L26"
-    },
-    {
-      "id": "web_web_handler",
-      "label": "Handler()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "Bot",
-      "file_type": "code",
-      "norm_label": "handler()",
-      "source_file": "web/web.go",
-      "source_location": "L11"
     },
     {
       "id": "readme",
@@ -857,7 +769,7 @@
       "node_kind": "heading",
       "norm_label": "akses",
       "source_file": "Memory/Projects/idlixdownloader.md",
-      "source_location": "L26"
+      "source_location": "L24"
     },
     {
       "id": "memory_projects_idlixdownloader_idlix_downloader_go_refactor",
@@ -881,7 +793,7 @@
       "node_kind": "heading",
       "norm_label": "output library format",
       "source_file": "Memory/Projects/idlixdownloader.md",
-      "source_location": "L21"
+      "source_location": "L19"
     },
     {
       "id": "memory_projects_idlixdownloader_ringkasan_project",
@@ -919,314 +831,6 @@
       "source_file": "go.mod",
       "source_location": "L1",
       "type": "package"
-    },
-    {
-      "id": "internal_downloader_downloader",
-      "label": "downloader.go",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "downloader.go",
-      "file_type": "code",
-      "norm_label": "downloader.go",
-      "source_file": "internal/downloader/downloader.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_downloader_downloader_copyfile",
-      "label": "copyFile()",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "downloader.go",
-      "file_type": "code",
-      "norm_label": "copyfile()",
-      "source_file": "internal/downloader/downloader.go",
-      "source_location": "L633"
-    },
-    {
-      "id": "internal_downloader_downloader_downloadandconvertvtttosrt",
-      "label": "downloadAndConvertVTTtoSRT()",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "downloader.go",
-      "file_type": "code",
-      "norm_label": "downloadandconvertvtttosrt()",
-      "source_file": "internal/downloader/downloader.go",
-      "source_location": "L554"
-    },
-    {
-      "id": "internal_downloader_downloader_formatspeeddisplay",
-      "label": "formatSpeedDisplay()",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "downloader.go",
-      "file_type": "code",
-      "norm_label": "formatspeeddisplay()",
-      "source_file": "internal/downloader/downloader.go",
-      "source_location": "L515"
-    },
-    {
-      "id": "internal_downloader_downloader_validatemediaintegrity",
-      "label": "validateMediaIntegrity()",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "downloader.go",
-      "file_type": "code",
-      "norm_label": "validatemediaintegrity()",
-      "source_file": "internal/downloader/downloader.go",
-      "source_location": "L610"
-    },
-    {
-      "id": "internal_httpclient_client",
-      "label": "client.go",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "downloader.go",
-      "file_type": "code",
-      "norm_label": "client.go",
-      "source_file": "internal/httpclient/client.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_system_storage",
-      "label": "storage.go",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "downloader.go",
-      "file_type": "code",
-      "norm_label": "storage.go",
-      "source_file": "internal/system/storage.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_bot_dashboard",
-      "label": "dashboard.go",
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "file_type": "code",
-      "norm_label": "dashboard.go",
-      "source_file": "internal/bot/dashboard.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_bot_download",
-      "label": "download.go",
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "file_type": "code",
-      "norm_label": "download.go",
-      "source_file": "internal/bot/download.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_bot_download_generateprogressbar",
-      "label": "generateProgressBar()",
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "file_type": "code",
-      "norm_label": "generateprogressbar()",
-      "source_file": "internal/bot/download.go",
-      "source_location": "L289"
-    },
-    {
-      "id": "internal_bot_interactions",
-      "label": "interactions.go",
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "file_type": "code",
-      "norm_label": "interactions.go",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_bot_search",
-      "label": "search.go",
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "file_type": "code",
-      "norm_label": "search.go",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "extractor_idlixclient_extractstream",
-      "label": ".ExtractStream()",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": ".extractstream()",
-      "source_file": "internal/extractor/extractor.go",
-      "source_location": "L296"
-    },
-    {
-      "id": "extractor_idlixclient_fetchmoviedetails",
-      "label": ".FetchMovieDetails()",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": ".fetchmoviedetails()",
-      "source_file": "internal/extractor/extractor.go",
-      "source_location": "L31"
-    },
-    {
-      "id": "extractor_idlixclient_fetchseriesdetails",
-      "label": ".FetchSeriesDetails()",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": ".fetchseriesdetails()",
-      "source_file": "internal/extractor/extractor.go",
-      "source_location": "L127"
-    },
-    {
-      "id": "internal_models_models",
-      "label": "models.go",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": "models.go",
-      "source_file": "internal/models/models.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_models_models_go_models_episodeinfo",
-      "label": "EpisodeInfo",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": "episodeinfo",
-      "source_file": "internal/models/models.go",
-      "source_location": "L13"
-    },
-    {
-      "id": "internal_models_models_go_models_moviedetails",
-      "label": "MovieDetails",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": "moviedetails",
-      "source_file": "internal/models/models.go",
-      "source_location": "L35"
-    },
-    {
-      "id": "internal_models_models_go_models_seriesdetails",
-      "label": "SeriesDetails",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": "seriesdetails",
-      "source_file": "internal/models/models.go",
-      "source_location": "L26"
-    },
-    {
-      "id": "internal_models_models_go_models_streamsources",
-      "label": "StreamSources",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": "streamsources",
-      "source_file": "internal/models/models.go",
-      "source_location": "L52"
-    },
-    {
-      "id": "models_seasoninfo",
-      "label": "SeasonInfo",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": "seasoninfo",
-      "source_file": "internal/models/models.go",
-      "source_location": "L21"
-    },
-    {
-      "id": "models_subtitletrack",
-      "label": "SubtitleTrack",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": "subtitletrack",
-      "source_file": "internal/models/models.go",
-      "source_location": "L47"
-    },
-    {
-      "id": "server_seasondownloadrequest",
-      "label": "SeasonDownloadRequest",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "models.go",
-      "file_type": "code",
-      "norm_label": "seasondownloadrequest",
-      "source_file": "internal/server/server.go",
-      "source_location": "L249"
-    },
-    {
-      "id": "internal_extractor_extractor",
-      "label": "extractor.go",
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "file_type": "code",
-      "norm_label": "extractor.go",
-      "source_file": "internal/extractor/extractor.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_scraper_scraper",
-      "label": "scraper.go",
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "file_type": "code",
-      "norm_label": "scraper.go",
-      "source_file": "internal/scraper/scraper.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "internal_sse_hub",
-      "label": "hub.go",
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "file_type": "code",
-      "norm_label": "hub.go",
-      "source_file": "internal/sse/hub.go",
-      "source_location": "L1"
-    },
-    {
-      "id": "sse_event",
-      "label": "Event",
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "file_type": "code",
-      "norm_label": "event",
-      "source_file": "internal/sse/hub.go",
-      "source_location": "L10"
-    },
-    {
-      "id": "internal_db_db",
-      "label": "db.go",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "db.go",
-      "file_type": "code",
-      "norm_label": "db.go",
-      "source_file": "internal/db/db.go",
-      "source_location": "L1"
     },
     {
       "id": "bot_bot_buildprogresscomponents",
@@ -1303,7 +907,18 @@
       "file_type": "code",
       "norm_label": ".gettask()",
       "source_file": "internal/db/db.go",
-      "source_location": "L180"
+      "source_location": "L163"
+    },
+    {
+      "id": "db_db_gettasks",
+      "label": ".GetTasks()",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Manager",
+      "file_type": "code",
+      "norm_label": ".gettasks()",
+      "source_file": "internal/db/db.go",
+      "source_location": "L129"
     },
     {
       "id": "downloader_manager_addlistener",
@@ -1515,6 +1130,17 @@
       "source_location": ""
     },
     {
+      "id": "internal_bot_download_generateprogressbar",
+      "label": "generateProgressBar()",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Manager",
+      "file_type": "code",
+      "norm_label": "generateprogressbar()",
+      "source_file": "internal/bot/download.go",
+      "source_location": "L289"
+    },
+    {
       "id": "internal_bot_download_go_bot_bot",
       "label": "Bot",
       "_origin": "ast",
@@ -1680,6 +1306,17 @@
       "source_location": "L208"
     },
     {
+      "id": "internal_binmanager_binmanager_go_binmanager_binpaths",
+      "label": "BinPaths",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "binmanager.go",
+      "file_type": "code",
+      "norm_label": "binpaths",
+      "source_file": "internal/binmanager/binmanager.go",
+      "source_location": "L19"
+    },
+    {
       "id": "internal_binmanager_binmanager_new",
       "label": "New()",
       "_origin": "ast",
@@ -1699,7 +1336,7 @@
       "file_type": "code",
       "norm_label": ".addtasklog()",
       "source_file": "internal/db/db.go",
-      "source_location": "L232"
+      "source_location": "L213"
     },
     {
       "id": "db_db_clearfinishedtasks",
@@ -1710,7 +1347,7 @@
       "file_type": "code",
       "norm_label": ".clearfinishedtasks()",
       "source_file": "internal/db/db.go",
-      "source_location": "L219"
+      "source_location": "L200"
     },
     {
       "id": "db_db_close",
@@ -1721,7 +1358,7 @@
       "file_type": "code",
       "norm_label": ".close()",
       "source_file": "internal/db/db.go",
-      "source_location": "L97"
+      "source_location": "L87"
     },
     {
       "id": "db_db_deletetask",
@@ -1732,29 +1369,7 @@
       "file_type": "code",
       "norm_label": ".deletetask()",
       "source_file": "internal/db/db.go",
-      "source_location": "L208"
-    },
-    {
-      "id": "db_db_getallsettings",
-      "label": ".GetAllSettings()",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "DB",
-      "file_type": "code",
-      "norm_label": ".getallsettings()",
-      "source_file": "internal/db/db.go",
-      "source_location": "L271"
-    },
-    {
-      "id": "db_db_getsetting",
-      "label": ".GetSetting()",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "DB",
-      "file_type": "code",
-      "norm_label": ".getsetting()",
-      "source_file": "internal/db/db.go",
-      "source_location": "L259"
+      "source_location": "L189"
     },
     {
       "id": "db_db_gettasklogs",
@@ -1765,18 +1380,7 @@
       "file_type": "code",
       "norm_label": ".gettasklogs()",
       "source_file": "internal/db/db.go",
-      "source_location": "L291"
-    },
-    {
-      "id": "db_db_gettasks",
-      "label": ".GetTasks()",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "DB",
-      "file_type": "code",
-      "norm_label": ".gettasks()",
-      "source_file": "internal/db/db.go",
-      "source_location": "L144"
+      "source_location": "L228"
     },
     {
       "id": "db_db_migrate",
@@ -1798,18 +1402,7 @@
       "file_type": "code",
       "norm_label": ".savetask()",
       "source_file": "internal/db/db.go",
-      "source_location": "L101"
-    },
-    {
-      "id": "db_db_setsetting",
-      "label": ".SetSetting()",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "DB",
-      "file_type": "code",
-      "norm_label": ".setsetting()",
-      "source_file": "internal/db/db.go",
-      "source_location": "L247"
+      "source_location": "L91"
     },
     {
       "id": "go_type_database_sql_db",
@@ -1865,6 +1458,138 @@
       "norm_label": "tasklog",
       "source_file": "internal/models/models.go",
       "source_location": "L94"
+    },
+    {
+      "id": "bot_bot_createchannelundercategory",
+      "label": ".createChannelUnderCategory()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": ".createchannelundercategory()",
+      "source_file": "internal/bot/bot.go",
+      "source_location": "L252"
+    },
+    {
+      "id": "bot_bot_ensurechannels",
+      "label": ".ensureChannels()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": ".ensurechannels()",
+      "source_file": "internal/bot/bot.go",
+      "source_location": "L137"
+    },
+    {
+      "id": "bot_bot_onready",
+      "label": ".onReady()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": ".onready()",
+      "source_file": "internal/bot/bot.go",
+      "source_location": "L126"
+    },
+    {
+      "id": "bot_bot_start",
+      "label": ".Start()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": ".start()",
+      "source_file": "internal/bot/bot.go",
+      "source_location": "L103"
+    },
+    {
+      "id": "bot_bot_stop",
+      "label": ".Stop()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": ".stop()",
+      "source_file": "internal/bot/bot.go",
+      "source_location": "L118"
+    },
+    {
+      "id": "bot_downloadthreadstate",
+      "label": "DownloadThreadState",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": "downloadthreadstate",
+      "source_file": "internal/bot/bot.go",
+      "source_location": "L45"
+    },
+    {
+      "id": "bot_exploresession",
+      "label": "ExploreSession",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": "exploresession",
+      "source_file": "internal/bot/bot.go",
+      "source_location": "L52"
+    },
+    {
+      "id": "go_type_github_com_bwmarrin_discordgo_channel",
+      "label": "github.com/bwmarrin/discordgo.Channel",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": "github.com/bwmarrin/discordgo.channel",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "go_type_github_com_bwmarrin_discordgo_channeltype",
+      "label": "github.com/bwmarrin/discordgo.ChannelType",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": "github.com/bwmarrin/discordgo.channeltype",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "go_type_github_com_bwmarrin_discordgo_ready",
+      "label": "github.com/bwmarrin/discordgo.Ready",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": "github.com/bwmarrin/discordgo.ready",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "go_type_time_time",
+      "label": "time.Time",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": "time.time",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "internal_bot_bot_go_bot_bot",
+      "label": "Bot",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "LoadConfig",
+      "file_type": "code",
+      "norm_label": "bot",
+      "source_file": "internal/bot/bot.go",
+      "source_location": "L19"
     },
     {
       "id": "internal_config_config",
@@ -1970,7 +1695,7 @@
       "label": "main.go",
       "_origin": "ast",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "file_type": "code",
       "norm_label": "main.go",
       "source_file": "cmd/server/main.go",
@@ -1981,10 +1706,153 @@
       "label": "bot.go",
       "_origin": "ast",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "file_type": "code",
       "norm_label": "bot.go",
       "source_file": "internal/bot/bot.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_bot_dashboard",
+      "label": "dashboard.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "dashboard.go",
+      "source_file": "internal/bot/dashboard.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_bot_download",
+      "label": "download.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "download.go",
+      "source_file": "internal/bot/download.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_bot_interactions",
+      "label": "interactions.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "interactions.go",
+      "source_file": "internal/bot/interactions.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_bot_search",
+      "label": "search.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "search.go",
+      "source_file": "internal/bot/search.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_db_db",
+      "label": "db.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "db.go",
+      "source_file": "internal/db/db.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_downloader_downloader",
+      "label": "downloader.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "downloader.go",
+      "source_file": "internal/downloader/downloader.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_downloader_downloader_copyfile",
+      "label": "copyFile()",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "copyfile()",
+      "source_file": "internal/downloader/downloader.go",
+      "source_location": "L633"
+    },
+    {
+      "id": "internal_downloader_downloader_downloadandconvertvtttosrt",
+      "label": "downloadAndConvertVTTtoSRT()",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "downloadandconvertvtttosrt()",
+      "source_file": "internal/downloader/downloader.go",
+      "source_location": "L554"
+    },
+    {
+      "id": "internal_downloader_downloader_formatspeeddisplay",
+      "label": "formatSpeedDisplay()",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "formatspeeddisplay()",
+      "source_file": "internal/downloader/downloader.go",
+      "source_location": "L515"
+    },
+    {
+      "id": "internal_downloader_downloader_validatemediaintegrity",
+      "label": "validateMediaIntegrity()",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "validatemediaintegrity()",
+      "source_file": "internal/downloader/downloader.go",
+      "source_location": "L610"
+    },
+    {
+      "id": "internal_extractor_extractor",
+      "label": "extractor.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "extractor.go",
+      "source_file": "internal/extractor/extractor.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_httpclient_client",
+      "label": "client.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "client.go",
+      "source_file": "internal/httpclient/client.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_scraper_scraper",
+      "label": "scraper.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "scraper.go",
+      "source_file": "internal/scraper/scraper.go",
       "source_location": "L1"
     },
     {
@@ -1992,10 +1860,21 @@
       "label": "server.go",
       "_origin": "ast",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "file_type": "code",
       "norm_label": "server.go",
       "source_file": "internal/server/server.go",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_system_storage",
+      "label": "storage.go",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "downloader.go",
+      "file_type": "code",
+      "norm_label": "storage.go",
+      "source_file": "internal/system/storage.go",
       "source_location": "L1"
     },
     {
@@ -2003,11 +1882,11 @@
       "label": "DownloadRequest",
       "_origin": "ast",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "file_type": "code",
       "norm_label": "downloadrequest",
       "source_file": "internal/server/server.go",
-      "source_location": "L151"
+      "source_location": "L150"
     },
     {
       "id": "go_type_net_http_client",
@@ -2017,6 +1896,17 @@
       "community_name": "go_pkg_net_http",
       "file_type": "code",
       "norm_label": "net/http.client",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "go_type_net_http_handlerfunc",
+      "label": "net/http.HandlerFunc",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "go_pkg_net_http",
+      "file_type": "code",
+      "norm_label": "net/http.handlerfunc",
       "source_file": "",
       "source_location": ""
     },
@@ -2065,6 +1955,17 @@
       "source_location": "L21"
     },
     {
+      "id": "server_server_setuproutes",
+      "label": ".setupRoutes()",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "go_pkg_net_http",
+      "file_type": "code",
+      "norm_label": ".setuproutes()",
+      "source_file": "internal/server/server.go",
+      "source_location": "L60"
+    },
+    {
       "id": "web_web",
       "label": "web.go",
       "_origin": "ast",
@@ -2076,6 +1977,17 @@
       "source_location": "L1"
     },
     {
+      "id": "web_web_handler",
+      "label": "Handler()",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "go_pkg_net_http",
+      "file_type": "code",
+      "norm_label": "handler()",
+      "source_file": "web/web.go",
+      "source_location": "L11"
+    },
+    {
       "id": "bot_bot_executeexplore",
       "label": ".executeExplore()",
       "_origin": "ast",
@@ -2084,7 +1996,7 @@
       "file_type": "code",
       "norm_label": ".executeexplore()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L515"
+      "source_location": "L389"
     },
     {
       "id": "bot_bot_executesearch",
@@ -2095,7 +2007,7 @@
       "file_type": "code",
       "norm_label": ".executesearch()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L500"
+      "source_location": "L370"
     },
     {
       "id": "bot_bot_handlecomponent",
@@ -2117,7 +2029,7 @@
       "file_type": "code",
       "norm_label": ".handlemodalsubmit()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L470"
+      "source_location": "L360"
     },
     {
       "id": "bot_bot_handleslashcommand",
@@ -2142,17 +2054,6 @@
       "source_location": "L70"
     },
     {
-      "id": "bot_bot_postsearchresponse",
-      "label": ".postSearchResponse()",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "github.com/bwmarrin/discordgo.Session",
-      "file_type": "code",
-      "norm_label": ".postsearchresponse()",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L480"
-    },
-    {
       "id": "bot_bot_registerslashcommands",
       "label": ".registerSlashCommands()",
       "_origin": "ast",
@@ -2172,7 +2073,7 @@
       "file_type": "code",
       "norm_label": ".showepisodeselector()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L657"
+      "source_location": "L523"
     },
     {
       "id": "bot_bot_showseriesselector",
@@ -2183,18 +2084,7 @@
       "file_type": "code",
       "norm_label": ".showseriesselector()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L614"
-    },
-    {
-      "id": "bot_bot_showsettingscard",
-      "label": ".showSettingsCard()",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "github.com/bwmarrin/discordgo.Session",
-      "file_type": "code",
-      "norm_label": ".showsettingscard()",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L897"
+      "source_location": "L480"
     },
     {
       "id": "bot_bot_startepisodedownload",
@@ -2205,7 +2095,7 @@
       "file_type": "code",
       "norm_label": ".startepisodedownload()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L735"
+      "source_location": "L601"
     },
     {
       "id": "bot_bot_startmoviedownload",
@@ -2216,7 +2106,7 @@
       "file_type": "code",
       "norm_label": ".startmoviedownload()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L564"
+      "source_location": "L430"
     },
     {
       "id": "bot_bot_startseasondownload",
@@ -2227,18 +2117,7 @@
       "file_type": "code",
       "norm_label": ".startseasondownload()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L814"
-    },
-    {
-      "id": "go_type_github_com_bwmarrin_discordgo_buttonstyle",
-      "label": "github.com/bwmarrin/discordgo.ButtonStyle",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "github.com/bwmarrin/discordgo.Session",
-      "file_type": "code",
-      "norm_label": "github.com/bwmarrin/discordgo.buttonstyle",
-      "source_file": "",
-      "source_location": ""
+      "source_location": "L680"
     },
     {
       "id": "go_type_github_com_bwmarrin_discordgo_interactioncreate",
@@ -2263,17 +2142,6 @@
       "source_location": ""
     },
     {
-      "id": "internal_bot_interactions_getbtnstyle",
-      "label": "getBtnStyle()",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "github.com/bwmarrin/discordgo.Session",
-      "file_type": "code",
-      "norm_label": "getbtnstyle()",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L994"
-    },
-    {
       "id": "internal_bot_interactions_go_bot_bot",
       "label": "Bot",
       "_origin": "ast",
@@ -2293,14 +2161,14 @@
       "file_type": "code",
       "norm_label": "sanitizetitle()",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L889"
+      "source_location": "L755"
     },
     {
       "id": "bot_bot_builddashboardcomponents",
       "label": ".buildDashboardComponents()",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": ".builddashboardcomponents()",
       "source_file": "internal/bot/dashboard.go",
@@ -2311,84 +2179,73 @@
       "label": ".buildDashboardEmbed()",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": ".builddashboardembed()",
       "source_file": "internal/bot/dashboard.go",
       "source_location": "L69"
     },
     {
-      "id": "bot_bot_builddetailview",
-      "label": ".buildDetailView()",
+      "id": "bot_bot_buildexploreembed",
+      "label": ".buildExploreEmbed()",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
-      "norm_label": ".builddetailview()",
+      "norm_label": ".buildexploreembed()",
       "source_file": "internal/bot/search.go",
-      "source_location": "L198"
-    },
-    {
-      "id": "bot_bot_buildexploreview",
-      "label": ".buildExploreView()",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
-      "file_type": "code",
-      "norm_label": ".buildexploreview()",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L44"
+      "source_location": "L42"
     },
     {
       "id": "bot_bot_buildgenreselectcomponent",
       "label": ".buildGenreSelectComponent()",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": ".buildgenreselectcomponent()",
       "source_file": "internal/bot/search.go",
-      "source_location": "L316"
-    },
-    {
-      "id": "bot_bot_buildlistview",
-      "label": ".buildListView()",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
-      "file_type": "code",
-      "norm_label": ".buildlistview()",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L61"
+      "source_location": "L173"
     },
     {
       "id": "bot_bot_buildstorageembed",
       "label": ".buildStorageEmbed()",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": ".buildstorageembed()",
       "source_file": "internal/bot/dashboard.go",
-      "source_location": "L188"
+      "source_location": "L180"
+    },
+    {
+      "id": "bot_bot_createexploresession",
+      "label": ".createExploreSession()",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "GetDiskSpace",
+      "file_type": "code",
+      "norm_label": ".createexploresession()",
+      "source_file": "internal/bot/search.go",
+      "source_location": "L13"
     },
     {
       "id": "bot_bot_getexploresession",
       "label": ".getExploreSession()",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": ".getexploresession()",
       "source_file": "internal/bot/search.go",
-      "source_location": "L38"
+      "source_location": "L36"
     },
     {
       "id": "bot_bot_refreshdashboard",
       "label": ".refreshDashboard()",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": ".refreshdashboard()",
       "source_file": "internal/bot/dashboard.go",
@@ -2399,7 +2256,7 @@
       "label": "github.com/bwmarrin/discordgo.MessageComponent",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": "github.com/bwmarrin/discordgo.messagecomponent",
       "source_file": "",
@@ -2410,7 +2267,7 @@
       "label": "github.com/bwmarrin/discordgo.MessageEmbed",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": "github.com/bwmarrin/discordgo.messageembed",
       "source_file": "",
@@ -2421,7 +2278,7 @@
       "label": "Bot",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": "bot",
       "source_file": "internal/bot/dashboard.go",
@@ -2432,7 +2289,7 @@
       "label": "Bot",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": "bot",
       "source_file": "internal/bot/search.go",
@@ -2443,7 +2300,7 @@
       "label": "StorageInfo",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": "storageinfo",
       "source_file": "internal/models/models.go",
@@ -2454,340 +2311,15 @@
       "label": "GetDiskSpace()",
       "_origin": "ast",
       "community": 9,
-      "community_name": "github.com/bwmarrin/discordgo.MessageComponent",
+      "community_name": "GetDiskSpace",
       "file_type": "code",
       "norm_label": "getdiskspace()",
       "source_file": "internal/system/storage.go",
       "source_location": "L13"
     },
     {
-      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_notifier",
-      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_notifier",
-      "_origin": "semantic",
-      "community": 13,
-      "community_name": "downloader.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_notifier",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_math",
-      "label": "go_pkg_math",
-      "_origin": "semantic",
-      "community": 13,
-      "community_name": "downloader.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_math",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_os",
-      "label": "go_pkg_os",
-      "_origin": "semantic",
-      "community": 13,
-      "community_name": "downloader.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_os",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_os_exec",
-      "label": "go_pkg_os_exec",
-      "_origin": "semantic",
-      "community": 13,
-      "community_name": "downloader.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_os_exec",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_regexp",
-      "label": "go_pkg_regexp",
-      "_origin": "semantic",
-      "community": 13,
-      "community_name": "downloader.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_regexp",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_runtime",
-      "label": "go_pkg_runtime",
-      "_origin": "semantic",
-      "community": 13,
-      "community_name": "downloader.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_runtime",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_syscall",
-      "label": "go_pkg_syscall",
-      "_origin": "semantic",
-      "community": 13,
-      "community_name": "downloader.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_syscall",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_unsafe",
-      "label": "go_pkg_unsafe",
-      "_origin": "semantic",
-      "community": 13,
-      "community_name": "downloader.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_unsafe",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_github_com_bwmarrin_discordgo",
-      "label": "go_pkg_github_com_bwmarrin_discordgo",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_bwmarrin_discordgo",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_github_com_dustin_go_humanize",
-      "label": "go_pkg_github_com_dustin_go_humanize",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_dustin_go_humanize",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_github_com_google_uuid",
-      "label": "go_pkg_github_com_google_uuid",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_google_uuid",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_models",
-      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_models",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_models",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_system",
-      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_system",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_system",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_log",
-      "label": "go_pkg_log",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_log",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_path_filepath",
-      "label": "go_pkg_path_filepath",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_path_filepath",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_strconv",
-      "label": "go_pkg_strconv",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_strconv",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_time",
-      "label": "go_pkg_time",
-      "_origin": "semantic",
-      "community": 14,
-      "community_name": "go_pkg_time",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_time",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_encoding_json",
-      "label": "go_pkg_encoding_json",
-      "_origin": "semantic",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_encoding_json",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_fmt",
-      "label": "go_pkg_fmt",
-      "_origin": "semantic",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_fmt",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_httpclient",
-      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_httpclient",
-      "_origin": "semantic",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_httpclient",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_github_com_puerkitobio_goquery",
-      "label": "go_pkg_github_com_puerkitobio_goquery",
-      "_origin": "semantic",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_puerkitobio_goquery",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_net_url",
-      "label": "go_pkg_net_url",
-      "_origin": "semantic",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_net_url",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_strings",
-      "label": "go_pkg_strings",
-      "_origin": "semantic",
-      "community": 16,
-      "community_name": "go_pkg_fmt",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_strings",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_database_sql",
-      "label": "go_pkg_database_sql",
-      "_origin": "semantic",
-      "community": 17,
-      "community_name": "db.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_database_sql",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_config",
-      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_config",
-      "_origin": "semantic",
-      "community": 17,
-      "community_name": "db.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_config",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_modernc_org_sqlite",
-      "label": "go_pkg_modernc_org_sqlite",
-      "_origin": "semantic",
-      "community": 17,
-      "community_name": "db.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_modernc_org_sqlite",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_sync",
-      "label": "go_pkg_sync",
-      "_origin": "semantic",
-      "community": 17,
-      "community_name": "db.go",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_sync",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "go_pkg_archive_zip",
       "label": "go_pkg_archive_zip",
-      "_origin": "semantic",
       "community": 3,
       "community_name": "binmanager.go",
       "external": true,
@@ -2799,7 +2331,6 @@
     {
       "id": "go_pkg_io",
       "label": "go_pkg_io",
-      "_origin": "semantic",
       "community": 3,
       "community_name": "binmanager.go",
       "external": true,
@@ -2811,7 +2342,6 @@
     {
       "id": "go_pkg_bufio",
       "label": "go_pkg_bufio",
-      "_origin": "semantic",
       "community": 5,
       "community_name": "LoadConfig",
       "external": true,
@@ -2823,9 +2353,8 @@
     {
       "id": "go_pkg_context",
       "label": "go_pkg_context",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_context",
@@ -2833,11 +2362,65 @@
       "type": "external"
     },
     {
+      "id": "go_pkg_database_sql",
+      "label": "go_pkg_database_sql",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_database_sql",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_encoding_json",
+      "label": "go_pkg_encoding_json",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_encoding_json",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_fmt",
+      "label": "go_pkg_fmt",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_fmt",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_github_com_bwmarrin_discordgo",
+      "label": "go_pkg_github_com_bwmarrin_discordgo",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_bwmarrin_discordgo",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_github_com_dustin_go_humanize",
+      "label": "go_pkg_github_com_dustin_go_humanize",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_dustin_go_humanize",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "go_pkg_github_com_go_chi_chi_v5",
       "label": "go_pkg_github_com_go_chi_chi_v5",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_go_chi_chi_v5",
@@ -2847,9 +2430,8 @@
     {
       "id": "go_pkg_github_com_go_chi_chi_v5_middleware",
       "label": "go_pkg_github_com_go_chi_chi_v5_middleware",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_go_chi_chi_v5_middleware",
@@ -2857,11 +2439,21 @@
       "type": "external"
     },
     {
+      "id": "go_pkg_github_com_google_uuid",
+      "label": "go_pkg_github_com_google_uuid",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_google_uuid",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_binmanager",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_binmanager",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_binmanager",
@@ -2871,9 +2463,8 @@
     {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_bot",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_bot",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_bot",
@@ -2881,11 +2472,21 @@
       "type": "external"
     },
     {
+      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_config",
+      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_config",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_config",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_db",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_db",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_db",
@@ -2895,9 +2496,8 @@
     {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_downloader",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_downloader",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_downloader",
@@ -2907,9 +2507,8 @@
     {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_extractor",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_extractor",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_extractor",
@@ -2917,11 +2516,43 @@
       "type": "external"
     },
     {
+      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_httpclient",
+      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_httpclient",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_httpclient",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_models",
+      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_models",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_models",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_notifier",
+      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_notifier",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_notifier",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_scraper",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_scraper",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_scraper",
@@ -2931,9 +2562,8 @@
     {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_server",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_server",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_server",
@@ -2943,9 +2573,8 @@
     {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_sse",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_sse",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_sse",
@@ -2953,11 +2582,21 @@
       "type": "external"
     },
     {
+      "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_system",
+      "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_system",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_internal_system",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "go_pkg_github_com_iamnotpirates_idlixdownloader_web",
       "label": "go_pkg_github_com_iamnotpirates_idlixdownloader_web",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_github_com_iamnotpirates_idlixdownloader_web",
@@ -2965,11 +2604,87 @@
       "type": "external"
     },
     {
+      "id": "go_pkg_github_com_puerkitobio_goquery",
+      "label": "go_pkg_github_com_puerkitobio_goquery",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_github_com_puerkitobio_goquery",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_log",
+      "label": "go_pkg_log",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_log",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_math",
+      "label": "go_pkg_math",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_math",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_modernc_org_sqlite",
+      "label": "go_pkg_modernc_org_sqlite",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_modernc_org_sqlite",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_net_url",
+      "label": "go_pkg_net_url",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_net_url",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_os",
+      "label": "go_pkg_os",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_os",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_os_exec",
+      "label": "go_pkg_os_exec",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_os_exec",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "go_pkg_os_signal",
       "label": "go_pkg_os_signal",
-      "_origin": "semantic",
       "community": 6,
-      "community_name": "server.go",
+      "community_name": "downloader.go",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_os_signal",
@@ -2977,9 +2692,107 @@
       "type": "external"
     },
     {
+      "id": "go_pkg_path_filepath",
+      "label": "go_pkg_path_filepath",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_path_filepath",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_regexp",
+      "label": "go_pkg_regexp",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_regexp",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_runtime",
+      "label": "go_pkg_runtime",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_runtime",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_strconv",
+      "label": "go_pkg_strconv",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_strconv",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_strings",
+      "label": "go_pkg_strings",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_strings",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_sync",
+      "label": "go_pkg_sync",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_sync",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_syscall",
+      "label": "go_pkg_syscall",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_syscall",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_time",
+      "label": "go_pkg_time",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_time",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "go_pkg_unsafe",
+      "label": "go_pkg_unsafe",
+      "community": 6,
+      "community_name": "downloader.go",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "go_pkg_unsafe",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "go_pkg_bytes",
       "label": "go_pkg_bytes",
-      "_origin": "semantic",
       "community": 7,
       "community_name": "go_pkg_net_http",
       "external": true,
@@ -2991,7 +2804,6 @@
     {
       "id": "go_pkg_embed",
       "label": "go_pkg_embed",
-      "_origin": "semantic",
       "community": 7,
       "community_name": "go_pkg_net_http",
       "external": true,
@@ -3003,23 +2815,11 @@
     {
       "id": "go_pkg_net_http",
       "label": "go_pkg_net_http",
-      "_origin": "semantic",
       "community": 7,
       "community_name": "go_pkg_net_http",
       "external": true,
       "file_type": "concept",
       "norm_label": "go_pkg_net_http",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "go_pkg_testing",
-      "label": "go_pkg_testing",
-      "community": 1,
-      "community_name": "Bot",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "go_pkg_testing",
       "source_file": "",
       "type": "external"
     }
@@ -3182,7 +2982,7 @@
       "weight": 1.0
     },
     {
-      "source": "bot_bot_builddetailview",
+      "source": "bot_bot_buildexploreembed",
       "target": "bot_bot_getexploresession",
       "relation": "calls",
       "_origin": "ast",
@@ -3190,55 +2990,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/search.go",
-      "source_location": "L199",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_buildexploreview",
-      "target": "bot_bot_getexploresession",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L45",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_buildexploreview",
-      "target": "bot_bot_builddetailview",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L56",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_buildexploreview",
-      "target": "bot_bot_buildlistview",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L58",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_buildlistview",
-      "target": "bot_bot_getexploresession",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L62",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -3262,7 +3014,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/dashboard.go",
-      "source_location": "L189",
+      "source_location": "L181",
       "weight": 1.0
     },
     {
@@ -3274,7 +3026,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L247",
+      "source_location": "L222",
       "weight": 1.0
     },
     {
@@ -3286,31 +3038,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L271",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_executeexplore",
-      "target": "bot_bot_postsearchresponse",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L561",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_executesearch",
-      "target": "bot_bot_postsearchresponse",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L512",
+      "source_location": "L246",
       "weight": 1.0
     },
     {
@@ -3339,30 +3067,6 @@
     },
     {
       "source": "bot_bot_handlecomponent",
-      "target": "bot_bot_showsettingscard",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L243",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_handlecomponent",
-      "target": "internal_config_config_saveconfig",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L254",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_handlecomponent",
       "target": "bot_bot_startmoviedownload",
       "relation": "calls",
       "_origin": "ast",
@@ -3370,7 +3074,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L407",
+      "source_location": "L297",
       "weight": 1.0
     },
     {
@@ -3382,7 +3086,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L420",
+      "source_location": "L310",
       "weight": 1.0
     },
     {
@@ -3394,7 +3098,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L435",
+      "source_location": "L325",
       "weight": 1.0
     },
     {
@@ -3406,7 +3110,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L451",
+      "source_location": "L341",
       "weight": 1.0
     },
     {
@@ -3418,7 +3122,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L465",
+      "source_location": "L355",
       "weight": 1.0
     },
     {
@@ -3454,7 +3158,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L476",
+      "source_location": "L366",
       "weight": 1.0
     },
     {
@@ -3526,7 +3230,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L134",
+      "source_location": "L131",
       "weight": 1.0
     },
     {
@@ -3626,30 +3330,6 @@
       "weight": 1.0
     },
     {
-      "source": "bot_bot_showsettingscard",
-      "target": "internal_bot_interactions_getbtnstyle",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L939",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_showsettingscard",
-      "target": "bot_bot_postsearchresponse",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L990",
-      "weight": 1.0
-    },
-    {
       "source": "bot_bot_startepisodedownload",
       "target": "internal_config_config_loadconfig",
       "relation": "calls",
@@ -3658,7 +3338,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L763",
+      "source_location": "L629",
       "weight": 1.0
     },
     {
@@ -3670,7 +3350,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L764",
+      "source_location": "L630",
       "weight": 1.0
     },
     {
@@ -3682,7 +3362,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L573",
+      "source_location": "L439",
       "weight": 1.0
     },
     {
@@ -3694,7 +3374,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L574",
+      "source_location": "L440",
       "weight": 1.0
     },
     {
@@ -3706,7 +3386,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L838",
+      "source_location": "L704",
       "weight": 1.0
     },
     {
@@ -3718,7 +3398,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L839",
+      "source_location": "L705",
       "weight": 1.0
     },
     {
@@ -3854,18 +3534,6 @@
       "weight": 1.0
     },
     {
-      "source": "db_db_getallsettings",
-      "target": "db_db_close",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/db/db.go",
-      "source_location": "L279",
-      "weight": 1.0
-    },
-    {
       "source": "db_db_gettask",
       "target": "internal_models_models_go_models_downloadstatus",
       "relation": "calls",
@@ -3874,7 +3542,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/db/db.go",
-      "source_location": "L204",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -3886,7 +3554,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/db/db.go",
-      "source_location": "L304",
+      "source_location": "L241",
       "weight": 1.0
     },
     {
@@ -3898,7 +3566,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/db/db.go",
-      "source_location": "L159",
+      "source_location": "L143",
       "weight": 1.0
     },
     {
@@ -3910,7 +3578,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/db/db.go",
-      "source_location": "L174",
+      "source_location": "L157",
       "weight": 1.0
     },
     {
@@ -4210,7 +3878,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L69",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -4378,7 +4046,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L415",
+      "source_location": "L414",
       "weight": 1.0
     },
     {
@@ -4390,19 +4058,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/scraper/scraper.go",
-      "source_location": "L152",
-      "weight": 1.0
-    },
-    {
-      "source": "scraper_scraper_searchcontent",
-      "target": "scraper_scraper_searchcontentwithtype",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/scraper/scraper.go",
-      "source_location": "L34",
+      "source_location": "L134",
       "weight": 1.0
     },
     {
@@ -4414,7 +4070,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L332",
+      "source_location": "L331",
       "weight": 1.0
     },
     {
@@ -4426,7 +4082,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L337",
+      "source_location": "L336",
       "weight": 1.0
     },
     {
@@ -4462,7 +4118,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L348",
+      "source_location": "L347",
       "weight": 1.0
     },
     {
@@ -4474,7 +4130,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L351",
+      "source_location": "L350",
       "weight": 1.0
     },
     {
@@ -4486,7 +4142,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L166",
+      "source_location": "L165",
       "weight": 1.0
     },
     {
@@ -4498,7 +4154,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L170",
+      "source_location": "L169",
       "weight": 1.0
     },
     {
@@ -4510,7 +4166,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L174",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -4522,7 +4178,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L246",
+      "source_location": "L245",
       "weight": 1.0
     },
     {
@@ -4534,12 +4190,24 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L261",
+      "source_location": "L260",
       "weight": 1.0
     },
     {
       "source": "server_server_handlecreateseasondownload",
       "target": "internal_config_config_loadconfig",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "internal/server/server.go",
+      "source_location": "L264",
+      "weight": 1.0
+    },
+    {
+      "source": "server_server_handlecreateseasondownload",
+      "target": "internal_server_server_sanitizefilename",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -4551,18 +4219,6 @@
     },
     {
       "source": "server_server_handlecreateseasondownload",
-      "target": "internal_server_server_sanitizefilename",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "internal/server/server.go",
-      "source_location": "L266",
-      "weight": 1.0
-    },
-    {
-      "source": "server_server_handlecreateseasondownload",
       "target": "internal_server_server_respondjson",
       "relation": "calls",
       "_origin": "ast",
@@ -4570,7 +4226,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L321",
+      "source_location": "L320",
       "weight": 1.0
     },
     {
@@ -4582,7 +4238,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L343",
+      "source_location": "L342",
       "weight": 1.0
     },
     {
@@ -4594,7 +4250,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L385",
+      "source_location": "L384",
       "weight": 1.0
     },
     {
@@ -4606,7 +4262,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L386",
+      "source_location": "L385",
       "weight": 1.0
     },
     {
@@ -4618,7 +4274,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L148",
+      "source_location": "L147",
       "weight": 1.0
     },
     {
@@ -4630,7 +4286,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L378",
+      "source_location": "L377",
       "weight": 1.0
     },
     {
@@ -4642,7 +4298,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L381",
+      "source_location": "L380",
       "weight": 1.0
     },
     {
@@ -4654,7 +4310,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L364",
+      "source_location": "L363",
       "weight": 1.0
     },
     {
@@ -4666,7 +4322,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L365",
+      "source_location": "L364",
       "weight": 1.0
     },
     {
@@ -4678,7 +4334,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L368",
+      "source_location": "L367",
       "weight": 1.0
     },
     {
@@ -4690,7 +4346,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L130",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -4702,7 +4358,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L133",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -4714,7 +4370,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L357",
+      "source_location": "L356",
       "weight": 1.0
     },
     {
@@ -4726,7 +4382,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L360",
+      "source_location": "L359",
       "weight": 1.0
     },
     {
@@ -4738,7 +4394,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L392",
+      "source_location": "L391",
       "weight": 1.0
     },
     {
@@ -4750,7 +4406,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L396",
+      "source_location": "L395",
       "weight": 1.0
     },
     {
@@ -4762,7 +4418,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L405",
+      "source_location": "L404",
       "weight": 1.0
     },
     {
@@ -4774,7 +4430,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L120",
+      "source_location": "L119",
       "weight": 1.0
     },
     {
@@ -4786,7 +4442,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L123",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -4798,7 +4454,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L140",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -4810,7 +4466,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "internal/server/server.go",
-      "source_location": "L143",
+      "source_location": "L142",
       "weight": 1.0
     },
     {
@@ -4834,7 +4490,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L49",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -4846,7 +4502,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L50",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -4858,7 +4514,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L54",
+      "source_location": "L53",
       "weight": 1.0
     },
     {
@@ -4870,7 +4526,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L60",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -4954,7 +4610,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L38",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -4966,7 +4622,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L42",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -4978,7 +4634,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L43",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -5218,7 +4874,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "internal/server/server.go",
-      "source_location": "L255",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -6914,18 +6570,6 @@
       "weight": 1.0
     },
     {
-      "source": "internal_scraper_scraper_test",
-      "target": "go_pkg_testing",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "internal/scraper/scraper_test.go",
-      "source_location": "L4",
-      "weight": 1.0
-    },
-    {
       "source": "internal_server_server",
       "target": "go_pkg_github_com_go_chi_chi_v5",
       "relation": "imports_from",
@@ -7318,7 +6962,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L277",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -7342,7 +6986,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L515",
+      "source_location": "L389",
       "weight": 1.0
     },
     {
@@ -7354,7 +6998,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L515",
+      "source_location": "L389",
       "weight": 1.0
     },
     {
@@ -7366,7 +7010,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L500",
+      "source_location": "L370",
       "weight": 1.0
     },
     {
@@ -7378,7 +7022,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L500",
+      "source_location": "L370",
       "weight": 1.0
     },
     {
@@ -7426,7 +7070,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L470",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -7438,7 +7082,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L470",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -7498,7 +7142,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L129",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -7510,7 +7154,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L129",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -7550,54 +7194,6 @@
       "weight": 1.0
     },
     {
-      "source": "bot_bot_postsearchresponse",
-      "target": "go_type_github_com_bwmarrin_discordgo_interactioncreate",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L480",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_postsearchresponse",
-      "target": "go_type_github_com_bwmarrin_discordgo_messagecomponent",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L480",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_postsearchresponse",
-      "target": "go_type_github_com_bwmarrin_discordgo_messageembed",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L480",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_postsearchresponse",
-      "target": "go_type_github_com_bwmarrin_discordgo_session",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L480",
-      "weight": 1.0
-    },
-    {
       "source": "bot_bot_showepisodeselector",
       "target": "go_type_github_com_bwmarrin_discordgo_interactioncreate",
       "relation": "references",
@@ -7606,7 +7202,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L657",
+      "source_location": "L523",
       "weight": 1.0
     },
     {
@@ -7618,7 +7214,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L657",
+      "source_location": "L523",
       "weight": 1.0
     },
     {
@@ -7630,7 +7226,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L614",
+      "source_location": "L480",
       "weight": 1.0
     },
     {
@@ -7642,31 +7238,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L614",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_showsettingscard",
-      "target": "go_type_github_com_bwmarrin_discordgo_interactioncreate",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L897",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_showsettingscard",
-      "target": "go_type_github_com_bwmarrin_discordgo_session",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L897",
+      "source_location": "L480",
       "weight": 1.0
     },
     {
@@ -7678,7 +7250,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L735",
+      "source_location": "L601",
       "weight": 1.0
     },
     {
@@ -7690,7 +7262,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L735",
+      "source_location": "L601",
       "weight": 1.0
     },
     {
@@ -7702,7 +7274,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L564",
+      "source_location": "L430",
       "weight": 1.0
     },
     {
@@ -7714,7 +7286,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L564",
+      "source_location": "L430",
       "weight": 1.0
     },
     {
@@ -7726,7 +7298,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L814",
+      "source_location": "L680",
       "weight": 1.0
     },
     {
@@ -7738,7 +7310,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L814",
+      "source_location": "L680",
       "weight": 1.0
     },
     {
@@ -7750,7 +7322,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/db/db.go",
-      "source_location": "L101",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -7870,7 +7442,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L63",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -7882,7 +7454,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L63",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -7894,7 +7466,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L63",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -7906,7 +7478,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L63",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -7994,18 +7566,6 @@
       "weight": 1.0
     },
     {
-      "source": "internal_scraper_scraper_test_testsearchcontentwithtype",
-      "target": "go_type_testing_t",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "internal/scraper/scraper_test.go",
-      "source_location": "L7",
-      "weight": 1.0
-    },
-    {
       "source": "internal_server_server_new",
       "target": "internal_db_db_go_db_db",
       "relation": "references",
@@ -8074,7 +7634,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L414",
+      "source_location": "L413",
       "weight": 1.0
     },
     {
@@ -8086,7 +7646,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L408",
+      "source_location": "L407",
       "weight": 1.0
     },
     {
@@ -8098,7 +7658,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L327",
+      "source_location": "L326",
       "weight": 1.0
     },
     {
@@ -8110,7 +7670,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L327",
+      "source_location": "L326",
       "weight": 1.0
     },
     {
@@ -8146,7 +7706,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L346",
+      "source_location": "L345",
       "weight": 1.0
     },
     {
@@ -8158,7 +7718,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L346",
+      "source_location": "L345",
       "weight": 1.0
     },
     {
@@ -8170,7 +7730,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L163",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -8182,7 +7742,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L163",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -8194,7 +7754,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L258",
+      "source_location": "L257",
       "weight": 1.0
     },
     {
@@ -8206,7 +7766,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L258",
+      "source_location": "L257",
       "weight": 1.0
     },
     {
@@ -8218,7 +7778,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L340",
+      "source_location": "L339",
       "weight": 1.0
     },
     {
@@ -8230,7 +7790,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L340",
+      "source_location": "L339",
       "weight": 1.0
     },
     {
@@ -8242,7 +7802,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L384",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -8254,7 +7814,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L384",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -8266,7 +7826,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L146",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -8278,7 +7838,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L146",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -8290,7 +7850,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L374",
+      "source_location": "L373",
       "weight": 1.0
     },
     {
@@ -8302,7 +7862,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L374",
+      "source_location": "L373",
       "weight": 1.0
     },
     {
@@ -8314,7 +7874,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L363",
+      "source_location": "L362",
       "weight": 1.0
     },
     {
@@ -8326,7 +7886,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L363",
+      "source_location": "L362",
       "weight": 1.0
     },
     {
@@ -8338,7 +7898,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L126",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -8350,7 +7910,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L126",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -8362,7 +7922,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L354",
+      "source_location": "L353",
       "weight": 1.0
     },
     {
@@ -8374,7 +7934,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L354",
+      "source_location": "L353",
       "weight": 1.0
     },
     {
@@ -8386,7 +7946,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L389",
+      "source_location": "L388",
       "weight": 1.0
     },
     {
@@ -8398,7 +7958,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L389",
+      "source_location": "L388",
       "weight": 1.0
     },
     {
@@ -8434,7 +7994,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L136",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -8446,7 +8006,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "internal/server/server.go",
-      "source_location": "L136",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -8510,7 +8070,7 @@
       "weight": 1.0
     },
     {
-      "source": "bot_bot_builddetailview",
+      "source": "bot_bot_buildexploreembed",
       "target": "go_type_github_com_bwmarrin_discordgo_messagecomponent",
       "relation": "references",
       "_origin": "ast",
@@ -8518,11 +8078,11 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/bot/search.go",
-      "source_location": "L198",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
-      "source": "bot_bot_builddetailview",
+      "source": "bot_bot_buildexploreembed",
       "target": "go_type_github_com_bwmarrin_discordgo_messageembed",
       "relation": "references",
       "_origin": "ast",
@@ -8530,31 +8090,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/bot/search.go",
-      "source_location": "L198",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_buildexploreview",
-      "target": "go_type_github_com_bwmarrin_discordgo_messagecomponent",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L44",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_buildexploreview",
-      "target": "go_type_github_com_bwmarrin_discordgo_messageembed",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L44",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -8566,31 +8102,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/bot/search.go",
-      "source_location": "L316",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_buildlistview",
-      "target": "go_type_github_com_bwmarrin_discordgo_messagecomponent",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L61",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bot_buildlistview",
-      "target": "go_type_github_com_bwmarrin_discordgo_messageembed",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "internal/bot/search.go",
-      "source_location": "L61",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -8626,7 +8138,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/bot/dashboard.go",
-      "source_location": "L188",
+      "source_location": "L180",
       "weight": 1.0
     },
     {
@@ -8638,7 +8150,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L277",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -8650,7 +8162,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/bot/search.go",
-      "source_location": "L38",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -8662,7 +8174,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/db/db.go",
-      "source_location": "L180",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -8674,7 +8186,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/db/db.go",
-      "source_location": "L291",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -8686,7 +8198,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/db/db.go",
-      "source_location": "L144",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -8758,19 +8270,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/bot/bot.go",
-      "source_location": "L63",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_bot_interactions_getbtnstyle",
-      "target": "go_type_github_com_bwmarrin_discordgo_buttonstyle",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L994",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -8926,7 +8426,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "internal/scraper/scraper.go",
-      "source_location": "L148",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -8939,18 +8439,6 @@
       "context": "return_type",
       "source_file": "internal/scraper/scraper.go",
       "source_location": "L33",
-      "weight": 1.0
-    },
-    {
-      "source": "scraper_scraper_searchcontentwithtype",
-      "target": "internal_models_models_go_models_mediaitem",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "internal/scraper/scraper.go",
-      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -9084,7 +8572,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/bot.go",
-      "source_location": "L46",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
@@ -9095,7 +8583,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/bot.go",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -9106,7 +8594,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/bot.go",
-      "source_location": "L63",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -9128,18 +8616,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L889",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_bot_interactions",
-      "target": "internal_bot_interactions_getbtnstyle",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L994",
+      "source_location": "L755",
       "weight": 1.0
     },
     {
@@ -9539,17 +9016,6 @@
       "weight": 1.0
     },
     {
-      "source": "internal_scraper_scraper_test",
-      "target": "internal_scraper_scraper_test_testsearchcontentwithtype",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/scraper/scraper_test.go",
-      "source_location": "L7",
-      "weight": 1.0
-    },
-    {
       "source": "internal_server_server",
       "target": "server_downloadrequest",
       "relation": "contains",
@@ -9557,7 +9023,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L151",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -9568,7 +9034,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L249",
+      "source_location": "L248",
       "weight": 1.0
     },
     {
@@ -9601,7 +9067,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L408",
+      "source_location": "L407",
       "weight": 1.0
     },
     {
@@ -9612,7 +9078,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L414",
+      "source_location": "L413",
       "weight": 1.0
     },
     {
@@ -9623,7 +9089,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L418",
+      "source_location": "L417",
       "weight": 1.0
     },
     {
@@ -9711,7 +9177,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "Memory/Projects/idlixdownloader.md",
-      "source_location": "L21",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -9722,7 +9188,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "Memory/Projects/idlixdownloader.md",
-      "source_location": "L26",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -9887,7 +9353,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/bot.go",
-      "source_location": "L106",
+      "source_location": "L103",
       "weight": 1.0
     },
     {
@@ -9898,7 +9364,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/bot.go",
-      "source_location": "L121",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -9909,7 +9375,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/bot.go",
-      "source_location": "L129",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -9920,7 +9386,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/bot.go",
-      "source_location": "L140",
+      "source_location": "L137",
       "weight": 1.0
     },
     {
@@ -9931,7 +9397,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/bot.go",
-      "source_location": "L277",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -9964,7 +9430,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/dashboard.go",
-      "source_location": "L188",
+      "source_location": "L180",
       "weight": 1.0
     },
     {
@@ -10074,18 +9540,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L470",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_bot_interactions_go_bot_bot",
-      "target": "bot_bot_postsearchresponse",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L480",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -10096,7 +9551,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L500",
+      "source_location": "L370",
       "weight": 1.0
     },
     {
@@ -10107,7 +9562,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L515",
+      "source_location": "L389",
       "weight": 1.0
     },
     {
@@ -10118,7 +9573,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L564",
+      "source_location": "L430",
       "weight": 1.0
     },
     {
@@ -10129,7 +9584,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L614",
+      "source_location": "L480",
       "weight": 1.0
     },
     {
@@ -10140,7 +9595,29 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/interactions.go",
-      "source_location": "L657",
+      "source_location": "L523",
+      "weight": 1.0
+    },
+    {
+      "source": "internal_bot_interactions_go_bot_bot",
+      "target": "bot_bot_startepisodedownload",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "internal/bot/interactions.go",
+      "source_location": "L601",
+      "weight": 1.0
+    },
+    {
+      "source": "internal_bot_interactions_go_bot_bot",
+      "target": "bot_bot_startseasondownload",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "internal/bot/interactions.go",
+      "source_location": "L680",
       "weight": 1.0
     },
     {
@@ -10156,17 +9633,6 @@
     },
     {
       "source": "internal_bot_interactions_go_bot_bot",
-      "target": "bot_bot_startepisodedownload",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L735",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_bot_interactions_go_bot_bot",
       "target": "bot_bot_handleslashcommand",
       "relation": "method",
       "_origin": "ast",
@@ -10174,28 +9640,6 @@
       "confidence_score": 1.0,
       "source_file": "internal/bot/interactions.go",
       "source_location": "L81",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_bot_interactions_go_bot_bot",
-      "target": "bot_bot_startseasondownload",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L814",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_bot_interactions_go_bot_bot",
-      "target": "bot_bot_showsettingscard",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/bot/interactions.go",
-      "source_location": "L897",
       "weight": 1.0
     },
     {
@@ -10211,24 +9655,13 @@
     },
     {
       "source": "internal_bot_search_go_bot_bot",
-      "target": "bot_bot_builddetailview",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/bot/search.go",
-      "source_location": "L198",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_bot_search_go_bot_bot",
       "target": "bot_bot_buildgenreselectcomponent",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/search.go",
-      "source_location": "L316",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -10239,40 +9672,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/search.go",
-      "source_location": "L38",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
       "source": "internal_bot_search_go_bot_bot",
-      "target": "bot_bot_buildexploreview",
+      "target": "bot_bot_buildexploreembed",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/bot/search.go",
-      "source_location": "L44",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_bot_search_go_bot_bot",
-      "target": "bot_bot_buildlistview",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/bot/search.go",
-      "source_location": "L61",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_db_db_go_db_db",
-      "target": "db_db_savetask",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/db/db.go",
-      "source_location": "L101",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -10283,7 +9694,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/db/db.go",
-      "source_location": "L144",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -10294,7 +9705,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/db/db.go",
-      "source_location": "L180",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -10305,7 +9716,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/db/db.go",
-      "source_location": "L208",
+      "source_location": "L189",
       "weight": 1.0
     },
     {
@@ -10316,7 +9727,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/db/db.go",
-      "source_location": "L219",
+      "source_location": "L200",
       "weight": 1.0
     },
     {
@@ -10327,40 +9738,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/db/db.go",
-      "source_location": "L232",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_db_db_go_db_db",
-      "target": "db_db_setsetting",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/db/db.go",
-      "source_location": "L247",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_db_db_go_db_db",
-      "target": "db_db_getsetting",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/db/db.go",
-      "source_location": "L259",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_db_db_go_db_db",
-      "target": "db_db_getallsettings",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/db/db.go",
-      "source_location": "L271",
+      "source_location": "L213",
       "weight": 1.0
     },
     {
@@ -10371,7 +9749,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/db/db.go",
-      "source_location": "L291",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -10393,7 +9771,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/db/db.go",
-      "source_location": "L97",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "internal_db_db_go_db_db",
+      "target": "db_db_savetask",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "internal/db/db.go",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -10646,7 +10035,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/scraper/scraper.go",
-      "source_location": "L148",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -10658,17 +10047,6 @@
       "confidence_score": 1.0,
       "source_file": "internal/scraper/scraper.go",
       "source_location": "L33",
-      "weight": 1.0
-    },
-    {
-      "source": "internal_scraper_scraper_go_scraper_scraper",
-      "target": "scraper_scraper_searchcontentwithtype",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "internal/scraper/scraper.go",
-      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -10723,7 +10101,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L126",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -10734,7 +10112,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L136",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -10745,7 +10123,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L146",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -10756,7 +10134,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L163",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -10767,7 +10145,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L258",
+      "source_location": "L257",
       "weight": 1.0
     },
     {
@@ -10778,7 +10156,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L327",
+      "source_location": "L326",
       "weight": 1.0
     },
     {
@@ -10789,7 +10167,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L340",
+      "source_location": "L339",
       "weight": 1.0
     },
     {
@@ -10800,7 +10178,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L346",
+      "source_location": "L345",
       "weight": 1.0
     },
     {
@@ -10811,7 +10189,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L354",
+      "source_location": "L353",
       "weight": 1.0
     },
     {
@@ -10822,7 +10200,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L363",
+      "source_location": "L362",
       "weight": 1.0
     },
     {
@@ -10833,7 +10211,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L374",
+      "source_location": "L373",
       "weight": 1.0
     },
     {
@@ -10844,7 +10222,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L384",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -10855,7 +10233,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "internal/server/server.go",
-      "source_location": "L389",
+      "source_location": "L388",
       "weight": 1.0
     },
     {
@@ -10879,20 +10257,8 @@
       "source_file": "internal/server/server.go",
       "source_location": "L60",
       "weight": 1.0
-    },
-    {
-      "source": "internal_scraper_scraper_test_testsearchcontentwithtype",
-      "target": "internal_scraper_scraper_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "call",
-      "source_file": "internal/scraper/scraper_test.go",
-      "source_location": "L8",
-      "weight": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "716a43707bb94de957408b1480265948ee7ec62b"
+  "built_at_commit": "f1c09ba3b5ffd6002ae1425d57330c3f508f0e17"
 }
