@@ -209,22 +209,29 @@ func (b *Bot) ensureChannels() {
 	// 4. Map or Rename existing child channels under category (Opsi 1 Scheme)
 	for _, ch := range channels {
 		if ch.ParentID == b.categoryID {
+			// Skip Forum channels completely
+			if ch.Type == discordgo.ChannelTypeGuildForum {
+				continue
+			}
+
 			name := strings.ToLower(ch.Name)
-			if strings.Contains(name, "search") || strings.Contains(name, "control") || strings.Contains(name, "hub") {
+			if strings.Contains(name, "control") || strings.Contains(name, "search") || strings.Contains(name, "hub") {
 				b.searchChannelID = ch.ID
 				if ch.Name != "🎛️・control-panel" {
 					_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
 						Name: "🎛️・control-panel",
 					})
 				}
-			} else if strings.Contains(name, "download") || strings.Contains(name, "active") || strings.Contains(name, "live") {
-				b.downloadsChannelID = ch.ID
-				if ch.Name != "⚡・live-downloads" {
-					_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
-						Name: "⚡・live-downloads",
-					})
+			} else if strings.Contains(name, "download") || strings.Contains(name, "live") || strings.Contains(name, "active") {
+				if b.downloadsChannelID == "" || b.downloadsChannelID == ch.ID {
+					b.downloadsChannelID = ch.ID
+					if ch.Name != "⚡・live-downloads" {
+						_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
+							Name: "⚡・live-downloads",
+						})
+					}
 				}
-			} else if strings.Contains(name, "history") || strings.Contains(name, "library") || strings.Contains(name, "completed") {
+			} else if strings.Contains(name, "completed") || strings.Contains(name, "history") || strings.Contains(name, "library") {
 				b.historyChannelID = ch.ID
 				if ch.Name != "✅・completed" {
 					_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
