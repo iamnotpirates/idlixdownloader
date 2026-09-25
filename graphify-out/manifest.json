@@ -1,0 +1,146 @@
+{
+  "cmd/server/main.go": {
+    "mtime": 1790344630.4812338,
+    "seen": 1790344816.8611896,
+    "ast_hash": "50134122e71fe1dbf768f6fdebd0ed42",
+    "semantic_hash": ""
+  },
+  "gateway.json": {
+    "mtime": 1790234308.36438,
+    "seen": 1790344816.8611896,
+    "ast_hash": "6477a77e40dab3bff8dd93e02d26f962",
+    "semantic_hash": ""
+  },
+  "go.mod": {
+    "mtime": 1790344183.3151717,
+    "seen": 1790344816.8611896,
+    "ast_hash": "f6c6ed08c16b56cdba6a4750edc47070",
+    "semantic_hash": ""
+  },
+  "internal/binmanager/binmanager.go": {
+    "mtime": 1790234308.366107,
+    "seen": 1790344816.8611896,
+    "ast_hash": "384b281bf753e3b8b4604d3d2c195c41",
+    "semantic_hash": ""
+  },
+  "internal/bot/bot.go": {
+    "mtime": 1790344724.9347289,
+    "seen": 1790344816.8611896,
+    "ast_hash": "db64299ecba4e43d3dfed87d3e8b5688",
+    "semantic_hash": ""
+  },
+  "internal/bot/dashboard.go": {
+    "mtime": 1790344516.5944815,
+    "seen": 1790344816.8611896,
+    "ast_hash": "f97ec15feb24f7178459d609c213ddeb",
+    "semantic_hash": ""
+  },
+  "internal/bot/download.go": {
+    "mtime": 1790344538.987084,
+    "seen": 1790344816.8611896,
+    "ast_hash": "edfa1dd20b7df47f45c708a04035cafa",
+    "semantic_hash": ""
+  },
+  "internal/bot/interactions.go": {
+    "mtime": 1790344567.3071089,
+    "seen": 1790344816.8611896,
+    "ast_hash": "5a0ab745b254f0b18b3adf85a47d6e89",
+    "semantic_hash": ""
+  },
+  "internal/bot/search.go": {
+    "mtime": 1790344528.4108338,
+    "seen": 1790344816.8611896,
+    "ast_hash": "e3f136a52be66d54f7d708b5f77fd60d",
+    "semantic_hash": ""
+  },
+  "internal/config/config.go": {
+    "mtime": 1790344355.1796644,
+    "seen": 1790344816.8611896,
+    "ast_hash": "fec0779653fe079df8a1a3e3eff899a4",
+    "semantic_hash": ""
+  },
+  "internal/db/db.go": {
+    "mtime": 1790234308.3665724,
+    "seen": 1790344816.8611896,
+    "ast_hash": "2def11281388430536524deb2f5fc579",
+    "semantic_hash": ""
+  },
+  "internal/downloader/downloader.go": {
+    "mtime": 1790344456.7774284,
+    "seen": 1790344816.8611896,
+    "ast_hash": "1f8bb5b52a44da06081ecf61d38a707c",
+    "semantic_hash": ""
+  },
+  "internal/extractor/extractor.go": {
+    "mtime": 1790234308.367551,
+    "seen": 1790344816.8611896,
+    "ast_hash": "05c347f56234b9d6c259b61525f69a0a",
+    "semantic_hash": ""
+  },
+  "internal/httpclient/client.go": {
+    "mtime": 1790234308.3680563,
+    "seen": 1790344816.8611896,
+    "ast_hash": "6bf97fab3a518d92138c4cfb6bc4a156",
+    "semantic_hash": ""
+  },
+  "internal/models/models.go": {
+    "mtime": 1790344276.3866491,
+    "seen": 1790344816.8611896,
+    "ast_hash": "7345fafb6012335a16f2066ba9d0ba16",
+    "semantic_hash": ""
+  },
+  "internal/notifier/telegram.go": {
+    "mtime": 1790234308.3690617,
+    "seen": 1790344816.8611896,
+    "ast_hash": "ef27f0c1c73e2c30f2c2c90d61afccaf",
+    "semantic_hash": ""
+  },
+  "internal/scraper/scraper.go": {
+    "mtime": 1790234308.369577,
+    "seen": 1790344816.8611896,
+    "ast_hash": "899ec685164083c0c889f149e7d11e96",
+    "semantic_hash": ""
+  },
+  "internal/server/server.go": {
+    "mtime": 1790234308.3701928,
+    "seen": 1790344816.8611896,
+    "ast_hash": "4fd27c93242e9142fb2de0c944eb2f94",
+    "semantic_hash": ""
+  },
+  "internal/sse/hub.go": {
+    "mtime": 1790234308.3708243,
+    "seen": 1790344816.8611896,
+    "ast_hash": "cfef0ef85d6a6aac82c5a43cd95501b5",
+    "semantic_hash": ""
+  },
+  "internal/system/storage.go": {
+    "mtime": 1790234308.3713453,
+    "seen": 1790344816.8611896,
+    "ast_hash": "d11753e93abdd6a13b22021dab71c44f",
+    "semantic_hash": ""
+  },
+  "web/web.go": {
+    "mtime": 1790234308.3713453,
+    "seen": 1790344816.8611896,
+    "ast_hash": "d91a585aae173b2d7d3388366adba6be",
+    "semantic_hash": ""
+  },
+  "Memory/Projects/idlixdownloader.md": {
+    "mtime": 1790234305.0835128,
+    "seen": 1790344816.8611896,
+    "ast_hash": "6c8a7d015d0dcc3b9699d1b08dfb3787",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1790234305.0840156,
+    "seen": 1790344816.8611896,
+    "ast_hash": "62313b14e7297a3d4d1eddc97cbfe143",
+    "semantic_hash": ""
+  },
+  "web/index.html": {
+    "mtime": 1790234308.3713453,
+    "seen": 1790344816.8611896,
+    "ast_hash": "8022232928a79d63fe358aafbb483c0b",
+    "semantic_hash": ""
+  }
+}

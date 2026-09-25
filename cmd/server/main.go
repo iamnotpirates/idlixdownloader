@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/iamnotpirates/idlixdownloader/internal/binmanager"
+	"github.com/iamnotpirates/idlixdownloader/internal/bot"
 	"github.com/iamnotpirates/idlixdownloader/internal/config"
 	"github.com/iamnotpirates/idlixdownloader/internal/db"
 	"github.com/iamnotpirates/idlixdownloader/internal/downloader"
@@ -59,7 +60,18 @@ func main() {
 	dlMgr.Start()
 	fmt.Println("✅ Download Worker Pool started")
 
-	// 6. HTTP Server
+	// 6. Discord Bot Interface
+	discordBot := bot.New(database, sc, ext, dlMgr)
+	if discordBot != nil {
+		if err := discordBot.Start(); err != nil {
+			log.Printf("⚠️ Discord bot failed to start: %v\n", err)
+		} else {
+			defer discordBot.Stop()
+			fmt.Println("🤖 Discord Bot UI initialized")
+		}
+	}
+
+	// 7. HTTP Server (Optional / Fallback)
 	srv := server.New(database, sc, ext, dlMgr, hub)
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -74,7 +86,7 @@ func main() {
 	go func() {
 		fmt.Printf("🌐 Server running on http://localhost:%s\n", port)
 		if err := httpSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("❌ Server error: %v", err)
+			log.Printf("⚠️ HTTP Server notice: %v (Discord Bot UI remains fully active)\n", err)
 		}
 	}()
 

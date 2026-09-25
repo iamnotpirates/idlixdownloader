@@ -32,6 +32,8 @@ var (
 	fallbackETARegex     = regexp.MustCompile(`(\d{2}:\d{2}:\d{2})`)
 )
 
+type TaskListener func(event string, task *models.DownloadTask)
+
 type Manager struct {
 	db          *db.DB
 	extractor   *extractor.IdlixClient
@@ -41,7 +43,28 @@ type Manager struct {
 	queueChan   chan string
 	tasks       map[string]*models.DownloadTask
 	activeProcs map[string]*exec.Cmd
+	listeners   []TaskListener
 	mu          sync.RWMutex
+}
+
+func (m *Manager) AddListener(l TaskListener) {
+	m.mu.Lock()
+	m.listeners = append(m.listeners, l)
+	m.mu.Unlock()
+}
+
+func (m *Manager) broadcast(event string, task *models.DownloadTask) {
+	if m.sseHub != nil {
+		m.sseHub.Broadcast(event, task)
+	}
+	m.mu.RLock()
+	listeners := make([]TaskListener, len(m.listeners))
+	copy(listeners, m.listeners)
+	m.mu.RUnlock()
+
+	for _, l := range listeners {
+		go l(event, task)
+	}
 }
 
 func New(database *db.DB, ext *extractor.IdlixClient, bins *binmanager.BinPaths, hub *sse.Hub) *Manager {
@@ -99,7 +122,7 @@ func (m *Manager) Enqueue(task *models.DownloadTask) error {
 		return err
 	}
 
-	m.sseHub.Broadcast("task_created", task)
+	m.broadcast("task_created", task)
 	m.queueChan <- task.ID
 	return nil
 }
@@ -112,7 +135,7 @@ func (m *Manager) Cancel(taskID string) error {
 	if task, ok := m.tasks[taskID]; ok {
 		task.Status = models.StatusCancelled
 		_ = m.db.SaveTask(task)
-		m.sseHub.Broadcast("task_updated", task)
+		m.broadcast("task_updated", task)
 	}
 	m.mu.Unlock()
 	return nil
@@ -208,7 +231,7 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 		_ = m.db.SaveTask(task)
 		m.mu.Unlock()
 		m.log(task.ID, fmt.Sprintf("Valid media file already exists (%.2f MB), skipping download: %s", sizeMB, existingFile))
-		m.sseHub.Broadcast("task_updated", task)
+		m.broadcast("task_updated", task)
 		return
 	}
 
@@ -388,7 +411,7 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 	m.mu.Unlock()
 
 	m.log(task.ID, fmt.Sprintf("Successfully saved to: %s", task.OutputDir))
-	m.sseHub.Broadcast("task_updated", task)
+	m.broadcast("task_updated", task)
 	go m.notifyComplete(task)
 }
 
@@ -451,7 +474,7 @@ func (m *Manager) scanOutput(taskID string, r io.Reader) {
 					if updated && time.Since(lastBroadcast) > 100*time.Millisecond {
 						lastBroadcast = time.Now()
 						_ = m.db.SaveTask(task)
-						m.sseHub.Broadcast("task_updated", task)
+						m.broadcast("task_updated", task)
 					}
 				}
 				m.mu.Unlock()
@@ -467,7 +490,7 @@ func (m *Manager) scanOutput(taskID string, r io.Reader) {
 							if time.Since(lastBroadcast) > 100*time.Millisecond {
 								lastBroadcast = time.Now()
 								_ = m.db.SaveTask(task)
-								m.sseHub.Broadcast("task_updated", task)
+								m.broadcast("task_updated", task)
 							}
 						}
 						m.mu.Unlock()
@@ -508,7 +531,7 @@ func (m *Manager) updateStatus(task *models.DownloadTask, status models.Download
 	_ = m.db.SaveTask(task)
 	m.mu.Unlock()
 
-	m.sseHub.Broadcast("task_updated", task)
+	m.broadcast("task_updated", task)
 }
 
 func (m *Manager) failTask(task *models.DownloadTask, errMsg string) {
@@ -521,7 +544,7 @@ func (m *Manager) failTask(task *models.DownloadTask, errMsg string) {
 	m.mu.Unlock()
 
 	m.log(task.ID, fmt.Sprintf("[ERROR] %s", errMsg))
-	m.sseHub.Broadcast("task_updated", task)
+	m.broadcast("task_updated", task)
 }
 
 func (m *Manager) log(taskID, message string) {

@@ -86,6 +86,9 @@ type DownloadTask struct {
 	ETA         string         `json:"eta"`
 	ErrorMsg    *string        `json:"error_msg,omitempty"`
 	CreatedAt   int64          `json:"created_at"`
+	DiscordChannelID *string   `json:"discord_channel_id,omitempty"`
+	DiscordThreadID  *string   `json:"discord_thread_id,omitempty"`
+	DiscordMessageID *string   `json:"discord_message_id,omitempty"`
 }
 
 type TaskLog struct {
@@ -107,6 +110,13 @@ type AppConfig struct {
 	TelegramChatID      string `json:"telegram_chat_id,omitempty"`
 	TelegramThreadID    *int64 `json:"telegram_thread_id,omitempty"`
 	NotifyTelegram      bool   `json:"notify_telegram"`
+	DiscordBotToken           string `json:"discord_bot_token,omitempty"`
+	DiscordGuildID            string `json:"discord_guild_id,omitempty"`
+	DiscordCategoryName       string `json:"discord_category_name,omitempty"`
+	DiscordCategoryID         string `json:"discord_category_id,omitempty"`
+	DiscordSearchChannelID    string `json:"discord_search_channel_id,omitempty"`
+	DiscordDownloadsChannelID string `json:"discord_downloads_channel_id,omitempty"`
+	DiscordHistoryChannelID   string `json:"discord_history_channel_id,omitempty"`
 }
 
 type StorageInfo struct {
