@@ -251,29 +251,17 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
-	// 6. Navigation Buttons (Prev / Next)
-	if strings.HasPrefix(customID, "btn_nav_prev_") {
-		sessionID := strings.TrimPrefix(customID, "btn_nav_prev_")
+	// 6. Select Item from List Dropdown
+	if strings.HasPrefix(customID, "select_item_from_list_") {
+		sessionID := strings.TrimPrefix(customID, "select_item_from_list_")
+		selectedIdxStr := i.MessageComponentData().Values[0]
+		selectedIdx, _ := strconv.Atoi(selectedIdxStr)
+
 		sess := b.getExploreSession(sessionID)
-		if sess != nil && sess.CurrentIndex > 0 {
-			sess.CurrentIndex--
-			embed, comps := b.buildExploreEmbed(sessionID)
-			_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseUpdateMessage,
-				Data: &discordgo.InteractionResponseData{
-					Embeds:     []*discordgo.MessageEmbed{embed},
-					Components: comps,
-				},
-			})
-		}
-		return
-	}
-	if strings.HasPrefix(customID, "btn_nav_next_") {
-		sessionID := strings.TrimPrefix(customID, "btn_nav_next_")
-		sess := b.getExploreSession(sessionID)
-		if sess != nil && sess.CurrentIndex < len(sess.Items)-1 {
-			sess.CurrentIndex++
-			embed, comps := b.buildExploreEmbed(sessionID)
+		if sess != nil {
+			sess.CurrentIndex = selectedIdx
+			sess.ViewMode = "detail"
+			embed, comps := b.buildExploreView(sessionID)
 			_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseUpdateMessage,
 				Data: &discordgo.InteractionResponseData{
@@ -285,7 +273,93 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
-	// 7. Movie Download Button
+	// 7. Back to List Button
+	if strings.HasPrefix(customID, "btn_back_to_list_") {
+		sessionID := strings.TrimPrefix(customID, "btn_back_to_list_")
+		sess := b.getExploreSession(sessionID)
+		if sess != nil {
+			sess.ViewMode = "list"
+			embed, comps := b.buildExploreView(sessionID)
+			_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseUpdateMessage,
+				Data: &discordgo.InteractionResponseData{
+					Embeds:     []*discordgo.MessageEmbed{embed},
+					Components: comps,
+				},
+			})
+		}
+		return
+	}
+
+	// 8. List Page Navigation Buttons (Prev / Next)
+	if strings.HasPrefix(customID, "btn_page_prev_") {
+		sessionID := strings.TrimPrefix(customID, "btn_page_prev_")
+		sess := b.getExploreSession(sessionID)
+		if sess != nil && sess.Page > 0 {
+			sess.Page--
+			embed, comps := b.buildExploreView(sessionID)
+			_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseUpdateMessage,
+				Data: &discordgo.InteractionResponseData{
+					Embeds:     []*discordgo.MessageEmbed{embed},
+					Components: comps,
+				},
+			})
+		}
+		return
+	}
+	if strings.HasPrefix(customID, "btn_page_next_") {
+		sessionID := strings.TrimPrefix(customID, "btn_page_next_")
+		sess := b.getExploreSession(sessionID)
+		if sess != nil {
+			sess.Page++
+			embed, comps := b.buildExploreView(sessionID)
+			_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseUpdateMessage,
+				Data: &discordgo.InteractionResponseData{
+					Embeds:     []*discordgo.MessageEmbed{embed},
+					Components: comps,
+				},
+			})
+		}
+		return
+	}
+
+	// 9. Detail Carousel Navigation Buttons (Prev / Next)
+	if strings.HasPrefix(customID, "btn_detail_prev_") {
+		sessionID := strings.TrimPrefix(customID, "btn_detail_prev_")
+		sess := b.getExploreSession(sessionID)
+		if sess != nil && sess.CurrentIndex > 0 {
+			sess.CurrentIndex--
+			embed, comps := b.buildExploreView(sessionID)
+			_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseUpdateMessage,
+				Data: &discordgo.InteractionResponseData{
+					Embeds:     []*discordgo.MessageEmbed{embed},
+					Components: comps,
+				},
+			})
+		}
+		return
+	}
+	if strings.HasPrefix(customID, "btn_detail_next_") {
+		sessionID := strings.TrimPrefix(customID, "btn_detail_next_")
+		sess := b.getExploreSession(sessionID)
+		if sess != nil && sess.CurrentIndex < len(sess.Items)-1 {
+			sess.CurrentIndex++
+			embed, comps := b.buildExploreView(sessionID)
+			_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseUpdateMessage,
+				Data: &discordgo.InteractionResponseData{
+					Embeds:     []*discordgo.MessageEmbed{embed},
+					Components: comps,
+				},
+			})
+		}
+		return
+	}
+
+	// 10. Movie Download Button
 	if strings.HasPrefix(customID, "btn_movie_dl_") {
 		parts := strings.Split(strings.TrimPrefix(customID, "btn_movie_dl_"), "_")
 		sessionID := parts[0]
@@ -298,7 +372,7 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
-	// 8. Series View / Episode Selector Button
+	// 11. Series View / Episode Selector Button
 	if strings.HasPrefix(customID, "btn_series_view_") {
 		parts := strings.Split(strings.TrimPrefix(customID, "btn_series_view_"), "_")
 		sessionID := parts[0]
@@ -311,7 +385,7 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
-	// 9. Series Season Selected Dropdown
+	// 12. Series Season Selected Dropdown
 	if strings.HasPrefix(customID, "select_season_") {
 		parts := strings.Split(strings.TrimPrefix(customID, "select_season_"), "_")
 		sessionID := parts[0]
@@ -326,7 +400,7 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
-	// 10. Single Episode Download Selected
+	// 13. Single Episode Download Selected
 	if strings.HasPrefix(customID, "select_ep_dl_") {
 		parts := strings.Split(strings.TrimPrefix(customID, "select_ep_dl_"), "_")
 		sessionID := parts[0]
@@ -342,7 +416,7 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
-	// 11. Download All Season Episodes Button
+	// 14. Download All Season Episodes Button
 	if strings.HasPrefix(customID, "btn_dl_all_season_") {
 		parts := strings.Split(strings.TrimPrefix(customID, "btn_dl_all_season_"), "_")
 		sessionID := parts[0]
@@ -378,7 +452,7 @@ func (b *Bot) executeSearch(s *discordgo.Session, i *discordgo.InteractionCreate
 	}
 
 	sessionID := b.createExploreSession(items, query, category)
-	embed, comps := b.buildExploreEmbed(sessionID)
+	embed, comps := b.buildExploreView(sessionID)
 
 	_, _ = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 		Embeds:     []*discordgo.MessageEmbed{embed},
@@ -419,7 +493,7 @@ func (b *Bot) executeExplore(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	sessionID := b.createExploreSession(items, category, catLabel)
-	embed, comps := b.buildExploreEmbed(sessionID)
+	embed, comps := b.buildExploreView(sessionID)
 
 	_, _ = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 		Embeds:     []*discordgo.MessageEmbed{embed},

@@ -52,8 +52,10 @@ type DownloadThreadState struct {
 type ExploreSession struct {
 	Items        []models.MediaItem
 	CurrentIndex int
+	Page         int
 	Query        string
 	Category     string
+	ViewMode     string // "list" or "detail"
 	CreatedAt    time.Time
 }
 

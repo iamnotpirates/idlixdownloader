@@ -26,8 +26,10 @@ func (b *Bot) createExploreSession(items []models.MediaItem, query, category str
 	b.exploreSessions[sessionID] = &ExploreSession{
 		Items:        items,
 		CurrentIndex: 0,
+		Page:         0,
 		Query:        query,
 		Category:     category,
+		ViewMode:     "list",
 		CreatedAt:    now,
 	}
 	return sessionID
@@ -39,7 +41,7 @@ func (b *Bot) getExploreSession(sessionID string) *ExploreSession {
 	return b.exploreSessions[sessionID]
 }
 
-func (b *Bot) buildExploreEmbed(sessionID string) (*discordgo.MessageEmbed, []discordgo.MessageComponent) {
+func (b *Bot) buildExploreView(sessionID string) (*discordgo.MessageEmbed, []discordgo.MessageComponent) {
 	session := b.getExploreSession(sessionID)
 	if session == nil || len(session.Items) == 0 {
 		embed := &discordgo.MessageEmbed{
@@ -50,14 +52,159 @@ func (b *Bot) buildExploreEmbed(sessionID string) (*discordgo.MessageEmbed, []di
 		return embed, nil
 	}
 
+	if session.ViewMode == "detail" {
+		return b.buildDetailView(sessionID)
+	}
+	return b.buildListView(sessionID)
+}
+
+func (b *Bot) buildListView(sessionID string) (*discordgo.MessageEmbed, []discordgo.MessageComponent) {
+	session := b.getExploreSession(sessionID)
+	if session == nil || len(session.Items) == 0 {
+		return nil, nil
+	}
+
+	pageSize := 25
+	totalPages := (len(session.Items) + pageSize - 1) / pageSize
+	if totalPages == 0 {
+		totalPages = 1
+	}
+	if session.Page < 0 {
+		session.Page = 0
+	}
+	if session.Page >= totalPages {
+		session.Page = totalPages - 1
+	}
+
+	startIdx := session.Page * pageSize
+	endIdx := startIdx + pageSize
+	if endIdx > len(session.Items) {
+		endIdx = len(session.Items)
+	}
+
+	pageItems := session.Items[startIdx:endIdx]
+
+	var sb strings.Builder
+	var selectOptions []discordgo.SelectMenuOption
+
+	for i, item := range pageItems {
+		globalIdx := startIdx + i
+		yearStr := "N/A"
+		if item.Year != nil && *item.Year != "" {
+			yearStr = *item.Year
+		}
+
+		typeIcon := "🎬"
+		if strings.EqualFold(item.MediaType, "TV Series") || strings.EqualFold(item.MediaType, "series") {
+			typeIcon = "📺"
+		}
+
+		ratingStr := item.Rating
+		if ratingStr == "" {
+			ratingStr = "N/A"
+		}
+
+		sb.WriteString(fmt.Sprintf("`%2d.` %s **%s** (%s) • ⭐ `%s`\n",
+			globalIdx+1, typeIcon, item.Title, yearStr, ratingStr))
+
+		label := fmt.Sprintf("%d. %s (%s)", globalIdx+1, item.Title, yearStr)
+		if len(label) > 100 {
+			label = label[:97] + "..."
+		}
+		desc := fmt.Sprintf("%s • Rating: %s", item.MediaType, ratingStr)
+		if len(desc) > 100 {
+			desc = desc[:97] + "..."
+		}
+
+		selectOptions = append(selectOptions, discordgo.SelectMenuOption{
+			Label:       label,
+			Value:       fmt.Sprintf("%d", globalIdx),
+			Description: desc,
+			Emoji: &discordgo.ComponentEmoji{
+				Name: typeIcon,
+			},
+		})
+	}
+
+	categoryLabel := session.Category
+	if categoryLabel == "" {
+		categoryLabel = "Hasil Pencarian"
+	}
+
+	embed := &discordgo.MessageEmbed{
+		Title:       fmt.Sprintf("📋 %s (%d Total Ditemukan)", categoryLabel, len(session.Items)),
+		Description: fmt.Sprintf("Menampilkan **%d-%d** dari **%d** hasil:\n\n%s\n👉 *Pilih nomor/judul dari dropdown di bawah untuk melihat poster, sinopsis, & unduh.*", startIdx+1, endIdx, len(session.Items), sb.String()),
+		Color:       0x5865F2,
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: fmt.Sprintf("Halaman %d dari %d • IDLIX Stream & Downloader", session.Page+1, totalPages),
+		},
+	}
+
+	if len(pageItems) > 0 && pageItems[0].Poster != "" {
+		embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
+			URL: pageItems[0].Poster,
+		}
+	}
+
+	var components []discordgo.MessageComponent
+
+	// Dropdown Select Menu (up to 25 items)
+	if len(selectOptions) > 0 {
+		components = append(components, discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.SelectMenu{
+					CustomID:    fmt.Sprintf("select_item_from_list_%s", sessionID),
+					Placeholder: "👇 Pilih judul untuk buka menu download / episode...",
+					Options:     selectOptions,
+				},
+			},
+		})
+	}
+
+	// Pagination & Close Buttons
+	var navRow []discordgo.MessageComponent
+	if totalPages > 1 {
+		navRow = append(navRow, discordgo.Button{
+			Label:    "◀️ Halaman Sebelumnya",
+			Style:    discordgo.SecondaryButton,
+			CustomID: fmt.Sprintf("btn_page_prev_%s", sessionID),
+			Disabled: session.Page == 0,
+		})
+		navRow = append(navRow, discordgo.Button{
+			Label:    fmt.Sprintf("Hal %d / %d", session.Page+1, totalPages),
+			Style:    discordgo.SecondaryButton,
+			CustomID: fmt.Sprintf("btn_page_info_%s", sessionID),
+			Disabled: true,
+		})
+		navRow = append(navRow, discordgo.Button{
+			Label:    "Halaman Berikutnya ▶️",
+			Style:    discordgo.SecondaryButton,
+			CustomID: fmt.Sprintf("btn_page_next_%s", sessionID),
+			Disabled: session.Page >= totalPages-1,
+		})
+	}
+
+	navRow = append(navRow, discordgo.Button{
+		Label:    "❌ Tutup",
+		Style:    discordgo.DangerButton,
+		CustomID: fmt.Sprintf("btn_close_session_%s", sessionID),
+	})
+
+	components = append(components, discordgo.ActionsRow{Components: navRow})
+
+	return embed, components
+}
+
+func (b *Bot) buildDetailView(sessionID string) (*discordgo.MessageEmbed, []discordgo.MessageComponent) {
+	session := b.getExploreSession(sessionID)
+	if session == nil || len(session.Items) == 0 {
+		return nil, nil
+	}
+
 	idx := session.CurrentIndex
-	if idx < 0 {
+	if idx < 0 || idx >= len(session.Items) {
 		idx = 0
 		session.CurrentIndex = 0
-	}
-	if idx >= len(session.Items) {
-		idx = len(session.Items) - 1
-		session.CurrentIndex = idx
 	}
 
 	item := session.Items[idx]
@@ -77,30 +224,26 @@ func (b *Bot) buildExploreEmbed(sessionID string) (*discordgo.MessageEmbed, []di
 	}
 
 	titleText := fmt.Sprintf("%s %s (%s)", typeIcon, item.Title, yearStr)
-	categoryLabel := session.Category
-	if categoryLabel == "" {
-		categoryLabel = "Search Result"
-	}
 
 	embed := &discordgo.MessageEmbed{
 		Title:       titleText,
 		URL:         item.URL,
-		Description: fmt.Sprintf("**Kategori**: %s\n**Rating**: ⭐ `%s` | **Tipe**: `%s`", categoryLabel, ratingStr, item.MediaType),
-		Color:       0x5865F2,
+		Description: fmt.Sprintf("**Rating**: ⭐ `%s` | **Tipe**: `%s` | **Tahun**: `%s`", ratingStr, item.MediaType, yearStr),
+		Color:       0x57F287,
 		Fields: []*discordgo.MessageEmbedField{
 			{
-				Name:   "📌 Info",
-				Value:  fmt.Sprintf("Item **%d** dari **%d** hasil", idx+1, len(session.Items)),
+				Name:   "🔗 Link Web",
+				Value:  fmt.Sprintf("[Buka IDLIX](%s)", item.URL),
 				Inline: true,
 			},
 			{
-				Name:   "🔗 Link",
-				Value:  fmt.Sprintf("[Buka IDLIX Web](%s)", item.URL),
+				Name:   "📌 Urutan",
+				Value:  fmt.Sprintf("Item **%d** dari **%d**", idx+1, len(session.Items)),
 				Inline: true,
 			},
 		},
 		Footer: &discordgo.MessageEmbedFooter{
-			Text: fmt.Sprintf("IDLIX • Item %d/%d • ID: %s", idx+1, len(session.Items), item.Slug),
+			Text: fmt.Sprintf("ID: %s • Pilih aksi unduh di bawah", item.Slug),
 		},
 	}
 
@@ -113,10 +256,9 @@ func (b *Bot) buildExploreEmbed(sessionID string) (*discordgo.MessageEmbed, []di
 		}
 	}
 
-	// Build Action Components
 	var compRows []discordgo.MessageComponent
 
-	// Row 1: Item Actions (Download / View Episodes)
+	// Row 1: Action Buttons (Download / Episodes)
 	var actionRow1 []discordgo.MessageComponent
 	if strings.EqualFold(item.MediaType, "TV Series") || strings.EqualFold(item.MediaType, "series") {
 		actionRow1 = append(actionRow1, discordgo.Button{
@@ -134,38 +276,39 @@ func (b *Bot) buildExploreEmbed(sessionID string) (*discordgo.MessageEmbed, []di
 		})
 	}
 
-	actionRow1 = append(actionRow1, discordgo.Button{
-		Label:    "❌ Tutup",
+	compRows = append(compRows, discordgo.ActionsRow{Components: actionRow1})
+
+	// Row 2: Back to List & Navigation
+	var navRow []discordgo.MessageComponent
+	navRow = append(navRow, discordgo.Button{
+		Label:    "🔙 Kembali ke Daftar",
+		Style:    discordgo.SecondaryButton,
+		CustomID: fmt.Sprintf("btn_back_to_list_%s", sessionID),
+		Emoji:    &discordgo.ComponentEmoji{Name: "🔙"},
+	})
+
+	if len(session.Items) > 1 {
+		navRow = append(navRow, discordgo.Button{
+			Label:    "◀️",
+			Style:    discordgo.SecondaryButton,
+			CustomID: fmt.Sprintf("btn_detail_prev_%s", sessionID),
+			Disabled: idx == 0,
+		})
+		navRow = append(navRow, discordgo.Button{
+			Label:    "▶️",
+			Style:    discordgo.SecondaryButton,
+			CustomID: fmt.Sprintf("btn_detail_next_%s", sessionID),
+			Disabled: idx >= len(session.Items)-1,
+		})
+	}
+
+	navRow = append(navRow, discordgo.Button{
+		Label:    "❌",
 		Style:    discordgo.DangerButton,
 		CustomID: fmt.Sprintf("btn_close_session_%s", sessionID),
 	})
-	compRows = append(compRows, discordgo.ActionsRow{Components: actionRow1})
 
-	// Row 2: Navigation Carousel Buttons
-	if len(session.Items) > 1 {
-		compRows = append(compRows, discordgo.ActionsRow{
-			Components: []discordgo.MessageComponent{
-				discordgo.Button{
-					Label:    "◀️ Prev",
-					Style:    discordgo.SecondaryButton,
-					CustomID: fmt.Sprintf("btn_nav_prev_%s", sessionID),
-					Disabled: idx == 0,
-				},
-				discordgo.Button{
-					Label:    fmt.Sprintf("%d / %d", idx+1, len(session.Items)),
-					Style:    discordgo.SecondaryButton,
-					CustomID: fmt.Sprintf("btn_nav_pos_%s", sessionID),
-					Disabled: true,
-				},
-				discordgo.Button{
-					Label:    "Next ▶️",
-					Style:    discordgo.SecondaryButton,
-					CustomID: fmt.Sprintf("btn_nav_next_%s", sessionID),
-					Disabled: idx >= len(session.Items)-1,
-				},
-			},
-		})
-	}
+	compRows = append(compRows, discordgo.ActionsRow{Components: navRow})
 
 	return embed, compRows
 }
