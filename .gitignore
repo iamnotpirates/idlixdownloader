@@ -9,6 +9,7 @@
 config.json
 *.txt
 *.exe
+*.exe~
 *.db
 *.db-shm
 *.db-wal

@@ -518,9 +518,15 @@ func (b *Bot) executeExplore(s *discordgo.Session, i *discordgo.InteractionCreat
 
 	switch category {
 	case "movies":
-		items, err = b.scraper.SearchContent("2026")
+		items, err = b.scraper.SearchContentWithType("2026", "movie")
+		if err != nil || len(items) == 0 {
+			items, err = b.scraper.SearchContentWithType("2025", "movie")
+		}
 	case "series":
-		items, err = b.scraper.SearchContent("Season")
+		items, err = b.scraper.SearchContentWithType("2026", "tv_series")
+		if err != nil || len(items) == 0 {
+			items, err = b.scraper.SearchContentWithType("2025", "tv_series")
+		}
 	case "anime":
 		items, err = b.scraper.SearchContent("anime")
 	case "drama":
@@ -530,7 +536,13 @@ func (b *Bot) executeExplore(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	if err != nil || len(items) == 0 {
-		items, _ = b.scraper.SearchContent("2025")
+		if category == "movies" {
+			items, _ = b.scraper.SearchContentWithType("2025", "movie")
+		} else if category == "series" {
+			items, _ = b.scraper.SearchContentWithType("2025", "tv_series")
+		} else {
+			items, _ = b.scraper.SearchContent("2025")
+		}
 	}
 
 	catLabel := "🔥 Featured & Trending"

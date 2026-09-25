@@ -114,7 +114,8 @@ func (s *Server) handleCatalog(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) handleSearch(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query().Get("q")
-	items, err := s.scraper.SearchContent(q)
+	mediaType := r.URL.Query().Get("type")
+	items, err := s.scraper.SearchContentWithType(q, mediaType)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 		return

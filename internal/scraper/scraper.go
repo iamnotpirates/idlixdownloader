@@ -31,12 +31,23 @@ func New(baseURL string, client *httpclient.CurlClient) *Scraper {
 }
 
 func (s *Scraper) SearchContent(query string) ([]models.MediaItem, error) {
+	return s.SearchContentWithType(query, "")
+}
+
+func (s *Scraper) SearchContentWithType(query, typeFilter string) ([]models.MediaItem, error) {
 	qClean := strings.TrimSpace(query)
 	if qClean == "" {
 		return nil, nil
 	}
 
 	apiURL := fmt.Sprintf("%s/api/search?q=%s", s.BaseURL, url.QueryEscape(qClean))
+	if typeFilter != "" {
+		validType := typeFilter
+		if typeFilter == "series" || typeFilter == "tv" {
+			validType = "tv_series"
+		}
+		apiURL = fmt.Sprintf("%s/api/search?q=%s&type=%s", s.BaseURL, url.QueryEscape(qClean), url.QueryEscape(validType))
+	}
 	referer := fmt.Sprintf("%s/", s.BaseURL)
 
 	body, err := s.client.Get(apiURL, referer, true)
@@ -77,6 +88,13 @@ func (s *Scraper) SearchContent(query string) ([]models.MediaItem, error) {
 			item.ContentType == "tvshows" ||
 			strings.Contains(item.Slug, "series/") ||
 			strings.Contains(item.Slug, "tvshows/")
+
+		if typeFilter == "movie" && isTV {
+			continue
+		}
+		if (typeFilter == "tv_series" || typeFilter == "series" || typeFilter == "tv") && !isTV {
+			continue
+		}
 
 		mediaType := "Movie"
 		itemURL := fmt.Sprintf("%s/movie/%s", s.BaseURL, item.Slug)
