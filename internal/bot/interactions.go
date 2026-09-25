@@ -230,11 +230,7 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		taskID := strings.TrimPrefix(customID, "btn_cancel_task_")
 		_ = b.downloader.Cancel(taskID)
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: fmt.Sprintf("⏹️ Membatalkan tugas unduhan `%s`...", taskID),
-				Flags:   discordgo.MessageFlagsEphemeral,
-			},
+			Type: discordgo.InteractionResponseDeferredMessageUpdate,
 		})
 		return
 	}
@@ -488,8 +484,13 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		sessionID := parts[0]
 		slug := strings.Join(parts[1:], "_")
 
+		b.cleanSearchMessage(s, i)
+
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Flags: discordgo.MessageFlagsEphemeral,
+			},
 		})
 		go b.startMovieDownload(s, i, sessionID, slug)
 		return
@@ -532,8 +533,13 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		epNumStr := i.MessageComponentData().Values[0]
 		epNum, _ := strconv.Atoi(epNumStr)
 
+		b.cleanSearchMessage(s, i)
+
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Flags: discordgo.MessageFlagsEphemeral,
+			},
 		})
 		go b.startEpisodeDownload(s, i, sessionID, slug, seasonNum, epNum)
 		return
@@ -546,12 +552,28 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		seasonNum, _ := strconv.Atoi(parts[1])
 		slug := strings.Join(parts[2:], "_")
 
+		b.cleanSearchMessage(s, i)
+
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Flags: discordgo.MessageFlagsEphemeral,
+			},
 		})
 		go b.startSeasonDownload(s, i, sessionID, slug, seasonNum)
 		return
 	}
+}
+
+func (b *Bot) cleanSearchMessage(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	if i.Message != nil {
+		_ = s.ChannelMessageDelete(i.ChannelID, i.Message.ID)
+	}
+	b.mu.Lock()
+	if i.Message != nil && i.Message.ID == b.lastSearchMsgID {
+		b.lastSearchMsgID = ""
+	}
+	b.mu.Unlock()
 }
 
 func (b *Bot) handleModalSubmit(s *discordgo.Session, i *discordgo.InteractionCreate) {

@@ -234,6 +234,10 @@ func (b *Bot) ensureChannels() {
 	}
 
 	// 4. Map or Rename existing child channels under category (Opsi 1 Scheme)
+	b.searchChannelID = ""
+	b.downloadsChannelID = ""
+	b.historyChannelID = ""
+
 	for _, ch := range channels {
 		if ch.ParentID == b.categoryID {
 			// Skip Forum channels completely
@@ -250,13 +254,11 @@ func (b *Bot) ensureChannels() {
 					})
 				}
 			} else if strings.Contains(name, "download") || strings.Contains(name, "live") || strings.Contains(name, "active") {
-				if b.downloadsChannelID == "" || b.downloadsChannelID == ch.ID {
-					b.downloadsChannelID = ch.ID
-					if ch.Name != "⚡・live-downloads" {
-						_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
-							Name: "⚡・live-downloads",
-						})
-					}
+				b.downloadsChannelID = ch.ID
+				if ch.Name != "⚡・live-downloads" {
+					_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
+						Name: "⚡・live-downloads",
+					})
 				}
 			} else if strings.Contains(name, "completed") || strings.Contains(name, "history") || strings.Contains(name, "library") {
 				b.historyChannelID = ch.ID

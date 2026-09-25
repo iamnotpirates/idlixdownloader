@@ -130,10 +130,16 @@ func (m *Manager) Enqueue(task *models.DownloadTask) error {
 func (m *Manager) Cancel(taskID string) error {
 	m.mu.Lock()
 	if cmd, ok := m.activeProcs[taskID]; ok && cmd != nil && cmd.Process != nil {
-		_ = cmd.Process.Kill()
+		if runtime.GOOS == "windows" {
+			_ = exec.Command("taskkill", "/F", "/T", "/PID", strconv.Itoa(cmd.Process.Pid)).Run()
+		} else {
+			_ = cmd.Process.Kill()
+		}
 	}
 	if task, ok := m.tasks[taskID]; ok {
 		task.Status = models.StatusCancelled
+		task.ETA = "Dibatalkan"
+		task.Speed = ""
 		_ = m.db.SaveTask(task)
 		m.broadcast("task_updated", task)
 	}
@@ -236,6 +242,13 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 	}
 
 	// 1. Check if extraction is needed
+	m.mu.RLock()
+	if task.Status == models.StatusCancelled {
+		m.mu.RUnlock()
+		return
+	}
+	m.mu.RUnlock()
+
 	if task.M3U8URL == "" {
 		m.updateStatus(task, models.StatusExtracting, "Extracting video stream...")
 		m.log(task.ID, "Starting stream extraction...")
@@ -258,6 +271,13 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 			m.failTask(task, fmt.Sprintf("Stream extraction failed: %v", err))
 			return
 		}
+
+		m.mu.RLock()
+		if task.Status == models.StatusCancelled {
+			m.mu.RUnlock()
+			return
+		}
+		m.mu.RUnlock()
 
 		task.M3U8URL = sources.M3U8URL
 
@@ -284,6 +304,13 @@ func (m *Manager) executeTask(task *models.DownloadTask) {
 		task.SubtitleURL = chosenSub
 		m.log(task.ID, fmt.Sprintf("Stream URL resolved: %s", task.M3U8URL))
 	}
+
+	m.mu.RLock()
+	if task.Status == models.StatusCancelled {
+		m.mu.RUnlock()
+		return
+	}
+	m.mu.RUnlock()
 
 	// 2. Setup Staging Directory
 	stagingDir := filepath.Join(os.TempDir(), "idlixdownloader", task.ID)

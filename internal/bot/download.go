@@ -62,19 +62,33 @@ func (b *Bot) onTaskCreated(task *models.DownloadTask) {
 		return
 	}
 
+	b.threadsMu.Lock()
 	state.ThreadID = th.ID
+	currentTask := state.Task
+	if currentTask == nil {
+		currentTask = task
+	}
+	b.threadsMu.Unlock()
 
 	// 3. Post Live Progress Embed inside Thread
-	embed := b.buildProgressEmbed(task)
-	components := b.buildProgressComponents(task)
+	embed := b.buildProgressEmbed(currentTask)
+	components := b.buildProgressComponents(currentTask)
 
 	msg, err := b.session.ChannelMessageSendComplex(th.ID, &discordgo.MessageSend{
 		Embeds:     []*discordgo.MessageEmbed{embed},
 		Components: components,
 	})
-	if err == nil {
+	if err == nil && msg != nil {
+		b.threadsMu.Lock()
 		state.MessageID = msg.ID
 		state.LastUpdated = time.Now()
+		latestTask := state.Task
+		b.threadsMu.Unlock()
+
+		// If task advanced while thread was being created, sync immediately
+		if latestTask != nil && latestTask.Status != currentTask.Status {
+			b.onTaskUpdated(latestTask)
+		}
 	}
 }
 
@@ -82,7 +96,6 @@ func (b *Bot) onTaskUpdated(task *models.DownloadTask) {
 	b.threadsMu.Lock()
 	state, exists := b.activeThreads[task.ID]
 	if !exists {
-		// If task was created before bot connected, create thread now
 		b.threadsMu.Unlock()
 		b.onTaskCreated(task)
 		return
@@ -94,14 +107,15 @@ func (b *Bot) onTaskUpdated(task *models.DownloadTask) {
 	b.threadsMu.Unlock()
 
 	if threadID == "" || messageID == "" {
+		// Thread message creation still in progress; onTaskCreated will pick up state.Task
 		return
 	}
 
 	// If task is completed or failed/cancelled, update immediately
 	isFinal := task.Status == models.StatusCompleted || task.Status == models.StatusFailed || task.Status == models.StatusCancelled
 
-	// Throttle in-progress updates to once every 2.5 seconds to respect rate limits
-	if !isFinal && time.Since(lastUpdated) < 2500*time.Millisecond {
+	// Throttle in-progress updates to once every 2 seconds to respect Discord rate limits
+	if !isFinal && time.Since(lastUpdated) < 2000*time.Millisecond {
 		return
 	}
 
@@ -123,20 +137,10 @@ func (b *Bot) onTaskUpdated(task *models.DownloadTask) {
 	state.LastUpdated = time.Now()
 	b.threadsMu.Unlock()
 
-	// If finished, post to history channel and clean up thread
+	// If finished, post to separate completed channel if configured
 	if isFinal {
-		if task.Status == models.StatusCompleted {
+		if task.Status == models.StatusCompleted && b.historyChannelID != "" && b.historyChannelID != b.downloadsChannelID {
 			b.postHistoryCard(task)
-			// Auto archive thread after 15s
-			go func(thID string) {
-				time.Sleep(15 * time.Second)
-				isArchived := true
-				isLocked := true
-				_, _ = b.session.ChannelEditComplex(thID, &discordgo.ChannelEdit{
-					Archived: &isArchived,
-					Locked:   &isLocked,
-				})
-			}(threadID)
 		}
 		b.refreshDashboard()
 	}
