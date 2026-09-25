@@ -104,14 +104,19 @@ func (b *Bot) buildListView(sessionID string) (*discordgo.MessageEmbed, []discor
 			ratingStr = "N/A"
 		}
 
-		sb.WriteString(fmt.Sprintf("`%2d.` %s **%s** (%s) • ⭐ `%s`\n",
-			globalIdx+1, typeIcon, item.Title, yearStr, ratingStr))
+		qualityBadge := item.Quality
+		if qualityBadge == "" {
+			qualityBadge = "HD"
+		}
+
+		sb.WriteString(fmt.Sprintf("`%2d.` %s **%s** (%s) `[%s]` • ⭐ `%s`\n",
+			globalIdx+1, typeIcon, item.Title, yearStr, qualityBadge, ratingStr))
 
 		label := fmt.Sprintf("%d. %s (%s)", globalIdx+1, item.Title, yearStr)
 		if len(label) > 100 {
 			label = label[:97] + "..."
 		}
-		desc := fmt.Sprintf("%s • Rating: %s", item.MediaType, ratingStr)
+		desc := fmt.Sprintf("%s • %s • Rating: %s", item.MediaType, qualityBadge, ratingStr)
 		if len(desc) > 100 {
 			desc = desc[:97] + "..."
 		}
@@ -223,12 +228,17 @@ func (b *Bot) buildDetailView(sessionID string) (*discordgo.MessageEmbed, []disc
 		typeIcon = "📺"
 	}
 
-	titleText := fmt.Sprintf("%s %s (%s)", typeIcon, item.Title, yearStr)
+	qualityBadge := item.Quality
+	if qualityBadge == "" {
+		qualityBadge = "HD"
+	}
+
+	titleText := fmt.Sprintf("%s %s (%s) [%s]", typeIcon, item.Title, yearStr, qualityBadge)
 
 	embed := &discordgo.MessageEmbed{
 		Title:       titleText,
 		URL:         item.URL,
-		Description: fmt.Sprintf("**Rating**: ⭐ `%s` | **Tipe**: `%s` | **Tahun**: `%s`", ratingStr, item.MediaType, yearStr),
+		Description: fmt.Sprintf("**Rating**: ⭐ `%s` | **Tipe**: `%s` | **Tahun**: `%s` | **Kualitas**: `[%s]`", ratingStr, item.MediaType, yearStr, qualityBadge),
 		Color:       0x57F287,
 		Fields: []*discordgo.MessageEmbedField{
 			{
@@ -269,7 +279,7 @@ func (b *Bot) buildDetailView(sessionID string) (*discordgo.MessageEmbed, []disc
 		})
 	} else {
 		actionRow1 = append(actionRow1, discordgo.Button{
-			Label:    "⬇️ Unduh Film (1080p)",
+			Label:    fmt.Sprintf("⬇️ Unduh Film (%s)", qualityBadge),
 			Style:    discordgo.SuccessButton,
 			CustomID: fmt.Sprintf("btn_movie_dl_%s_%s", sessionID, item.Slug),
 			Emoji:    &discordgo.ComponentEmoji{Name: "⬇️"},

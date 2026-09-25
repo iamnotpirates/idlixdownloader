@@ -66,6 +66,7 @@ func (s *Scraper) SearchContentWithType(query, typeFilter string) ([]models.Medi
 			VoteAverage  *float64 `json:"voteAverage"`
 			PosterPath   string   `json:"posterPath"`
 			Poster       string   `json:"poster"`
+			Quality      string   `json:"quality"`
 		} `json:"results"`
 	}
 
@@ -131,6 +132,11 @@ func (s *Scraper) SearchContentWithType(query, typeFilter string) ([]models.Medi
 			}
 		}
 
+		quality := strings.TrimSpace(item.Quality)
+		if quality == "" {
+			quality = "HD"
+		}
+
 		items = append(items, models.MediaItem{
 			Title:     title,
 			URL:       itemURL,
@@ -139,6 +145,7 @@ func (s *Scraper) SearchContentWithType(query, typeFilter string) ([]models.Medi
 			MediaType: mediaType,
 			Poster:    poster,
 			Year:      year,
+			Quality:   quality,
 		})
 	}
 
@@ -219,6 +226,7 @@ func (s *Scraper) FetchFeatured() ([]models.MediaItem, error) {
 				Slug:      tgt.slug,
 				Rating:    "Featured",
 				MediaType: mType,
+				Quality:   "HD",
 			}
 		}(i, t)
 	}

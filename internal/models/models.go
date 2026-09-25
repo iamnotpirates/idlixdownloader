@@ -8,6 +8,7 @@ type MediaItem struct {
 	MediaType string  `json:"media_type"` // "Movie" or "TV Series"
 	Poster    string  `json:"poster"`
 	Year      *string `json:"year,omitempty"`
+	Quality   string  `json:"quality,omitempty"`
 }
 
 type EpisodeInfo struct {
