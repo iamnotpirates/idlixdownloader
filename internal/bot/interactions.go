@@ -258,7 +258,7 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 	}
 
 	// 5. Close Session Button (Direct Delete - Zero Leftover Text)
-	if strings.HasPrefix(customID, "btn_close_session_") || customID == "btn_close_session_settings" {
+	if strings.HasPrefix(customID, "btn_close_session_") {
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseDeferredMessageUpdate,
 		})
@@ -270,6 +270,20 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 			b.lastSearchMsgID = ""
 		}
 		b.mu.Unlock()
+		return
+	}
+
+	// Back to Dashboard from Settings
+	if customID == "btn_back_to_dashboard" {
+		embed := b.buildDashboardEmbed()
+		comps := b.buildDashboardComponents()
+		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Embeds:     []*discordgo.MessageEmbed{embed},
+				Components: comps,
+			},
+		})
 		return
 	}
 
@@ -936,6 +950,12 @@ func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCre
 		},
 		discordgo.ActionsRow{
 			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "Kembali ke Dashboard",
+					Style:    discordgo.PrimaryButton,
+					CustomID: "btn_back_to_dashboard",
+					Emoji:    &discordgo.ComponentEmoji{Name: "🔙"},
+				},
 				discordgo.Button{
 					Label:    "Tutup",
 					Style:    discordgo.SecondaryButton,
