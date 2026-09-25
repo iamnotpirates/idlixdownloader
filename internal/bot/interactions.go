@@ -240,7 +240,7 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 
 	// Settings button
 	if customID == "btn_open_settings" {
-		b.showSettingsCard(s, i)
+		b.showSettingsCard(s, i, true)
 		return
 	}
 
@@ -252,8 +252,54 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 			_ = b.db.SetSetting("max_concurrent_tasks", valStr)
 			b.cfg.MaxConcurrentTasks = val
 			_ = config.SaveConfig(b.cfg)
-			b.showSettingsCard(s, i)
+			b.showSettingsCard(s, i, false)
 		}
+		return
+	}
+
+	// Change Subtitle Language Setting
+	if strings.HasPrefix(customID, "set_sublang_") {
+		lang := strings.TrimPrefix(customID, "set_sublang_")
+		if lang != "" {
+			_ = b.db.SetSetting("sub_lang", lang)
+			b.cfg.SubLang = lang
+			_ = config.SaveConfig(b.cfg)
+			b.showSettingsCard(s, i, false)
+		}
+		return
+	}
+
+	// Change Mirror BaseURL Setting
+	if strings.HasPrefix(customID, "set_mirror_") {
+		mirrorCode := strings.TrimPrefix(customID, "set_mirror_")
+		newBaseURL := "https://z2.idlixku.com"
+		if mirrorCode == "asia" {
+			newBaseURL = "https://idlix.asia"
+		}
+		_ = b.db.SetSetting("base_url", newBaseURL)
+		b.cfg.BaseURL = newBaseURL
+		if b.scraper != nil {
+			b.scraper.BaseURL = newBaseURL
+		}
+		if b.extractor != nil {
+			b.extractor.BaseURL = newBaseURL
+		}
+		_ = config.SaveConfig(b.cfg)
+		b.showSettingsCard(s, i, false)
+		return
+	}
+
+	// Close Settings popup
+	if customID == "btn_close_session_settings" {
+		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Content:    "✅ Pengaturan ditutup. Pesan dashboard tetap aktif di channel ini.",
+				Embeds:     []*discordgo.MessageEmbed{},
+				Components: []discordgo.MessageComponent{},
+				Flags:      discordgo.MessageFlagsEphemeral,
+			},
+		})
 		return
 	}
 
@@ -894,21 +940,41 @@ func sanitizeTitle(name string) string {
 	return strings.TrimSpace(name)
 }
 
-func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCreate, initialOpen bool) {
 	currentMax := b.cfg.MaxConcurrentTasks
 	if currentMax <= 0 {
 		currentMax = 1
 	}
 
+	subLang := b.cfg.SubLang
+	if subLang == "" {
+		subLang = "Indonesian"
+	}
+
+	baseURL := b.cfg.BaseURL
+	if baseURL == "" {
+		baseURL = "https://z2.idlixku.com"
+	}
+
 	embed := &discordgo.MessageEmbed{
-		Title:       "⚙️ Pengaturan Downloader & Library (SQLite)",
-		Description: "Konfigurasi engine, penyimpanan direktori, dan batas simultaneous downloading.",
+		Title:       "⚙️ Pengaturan Downloader & Library",
+		Description: "Pengaturan engine, preferensi bahasa subtitle, mirror IDLIX, dan jumlah antrean unduhan.\n*(Panel ini bersifat private/ephemeral dan tidak akan mengubah tampilan dashboard yang di-pin)*",
 		Color:       0xFEE75C,
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:   "⚡ Max Concurrent Tasks",
 				Value:  fmt.Sprintf("Saat ini: **%d task berjalan bersamaan**", currentMax),
 				Inline: false,
+			},
+			{
+				Name:   "🇮🇩 Subtitle Language",
+				Value:  fmt.Sprintf("Saat ini: **`%s`**", subLang),
+				Inline: true,
+			},
+			{
+				Name:   "🌐 IDLIX Active Mirror",
+				Value:  fmt.Sprintf("Saat ini: **`%s`**", baseURL),
+				Inline: true,
 			},
 			{
 				Name:   "📁 Movies Directory",
@@ -920,11 +986,6 @@ func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCre
 				Value:  fmt.Sprintf("`%s`", b.cfg.SeriesDir),
 				Inline: false,
 			},
-			{
-				Name:   "🇮🇩 Subtitle Language",
-				Value:  fmt.Sprintf("`%s`", b.cfg.SubLang),
-				Inline: true,
-			},
 		},
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: "Tersimpan persisten di SQLite & config.json",
@@ -932,10 +993,11 @@ func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCre
 	}
 
 	comps := []discordgo.MessageComponent{
+		// Row 1: Concurrency Limits
 		discordgo.ActionsRow{
 			Components: []discordgo.MessageComponent{
 				discordgo.Button{
-					Label:    "1 Task (Aman/Hemat IP)",
+					Label:    "1 Task (Aman)",
 					Style:    getBtnStyle(currentMax == 1),
 					CustomID: "set_concurrency_1",
 					Emoji:    &discordgo.ComponentEmoji{Name: "1️⃣"},
@@ -953,23 +1015,58 @@ func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCre
 					Emoji:    &discordgo.ComponentEmoji{Name: "3️⃣"},
 				},
 				discordgo.Button{
-					Label:    "5 Tasks (Maksimal)",
+					Label:    "5 Tasks (Max)",
 					Style:    getBtnStyle(currentMax == 5),
 					CustomID: "set_concurrency_5",
 					Emoji:    &discordgo.ComponentEmoji{Name: "🚀"},
 				},
 			},
 		},
+		// Row 2: Subtitle Preference
 		discordgo.ActionsRow{
 			Components: []discordgo.MessageComponent{
 				discordgo.Button{
-					Label:    "Kembali ke Dashboard",
-					Style:    discordgo.PrimaryButton,
-					CustomID: "btn_back_to_dashboard",
-					Emoji:    &discordgo.ComponentEmoji{Name: "🔙"},
+					Label:    "Indonesian",
+					Style:    getBtnStyle(subLang == "Indonesian"),
+					CustomID: "set_sublang_Indonesian",
+					Emoji:    &discordgo.ComponentEmoji{Name: "🇮🇩"},
 				},
 				discordgo.Button{
-					Label:    "Tutup",
+					Label:    "English",
+					Style:    getBtnStyle(subLang == "English"),
+					CustomID: "set_sublang_English",
+					Emoji:    &discordgo.ComponentEmoji{Name: "🇬🇧"},
+				},
+				discordgo.Button{
+					Label:    "Semua Bahasa",
+					Style:    getBtnStyle(subLang == "All"),
+					CustomID: "set_sublang_All",
+					Emoji:    &discordgo.ComponentEmoji{Name: "🌐"},
+				},
+			},
+		},
+		// Row 3: Mirror Preference
+		discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "Mirror: z2.idlixku.com",
+					Style:    getBtnStyle(strings.Contains(baseURL, "idlixku")),
+					CustomID: "set_mirror_z2",
+					Emoji:    &discordgo.ComponentEmoji{Name: "🔗"},
+				},
+				discordgo.Button{
+					Label:    "Mirror: idlix.asia",
+					Style:    getBtnStyle(strings.Contains(baseURL, "idlix.asia")),
+					CustomID: "set_mirror_asia",
+					Emoji:    &discordgo.ComponentEmoji{Name: "🔗"},
+				},
+			},
+		},
+		// Row 4: Close Action
+		discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "Tutup Pengaturan",
 					Style:    discordgo.SecondaryButton,
 					CustomID: "btn_close_session_settings",
 					Emoji:    &discordgo.ComponentEmoji{Name: "❌"},
@@ -978,16 +1075,24 @@ func (b *Bot) showSettingsCard(s *discordgo.Session, i *discordgo.InteractionCre
 		},
 	}
 
-	if i.Type == discordgo.InteractionMessageComponent {
+	if initialOpen {
+		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Embeds:     []*discordgo.MessageEmbed{embed},
+				Components: comps,
+				Flags:      discordgo.MessageFlagsEphemeral,
+			},
+		})
+	} else {
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseUpdateMessage,
 			Data: &discordgo.InteractionResponseData{
 				Embeds:     []*discordgo.MessageEmbed{embed},
 				Components: comps,
+				Flags:      discordgo.MessageFlagsEphemeral,
 			},
 		})
-	} else {
-		b.postSearchResponse(s, i, embed, comps)
 	}
 }
 
