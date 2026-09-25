@@ -206,35 +206,50 @@ func (b *Bot) ensureChannels() {
 		}
 	}
 
-	// 4. Map existing child channels under category
+	// 4. Map or Rename existing child channels under category (Opsi 1 Scheme)
 	for _, ch := range channels {
 		if ch.ParentID == b.categoryID {
 			name := strings.ToLower(ch.Name)
-			if strings.Contains(name, "search") || strings.Contains(name, "request") {
+			if strings.Contains(name, "search") || strings.Contains(name, "control") || strings.Contains(name, "hub") {
 				b.searchChannelID = ch.ID
-			} else if strings.Contains(name, "download") && (strings.Contains(name, "active") || strings.Contains(name, "live") || strings.Contains(name, "task")) {
+				if ch.Name != "🎛️・control-panel" {
+					_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
+						Name: "🎛️・control-panel",
+					})
+				}
+			} else if strings.Contains(name, "download") || strings.Contains(name, "active") || strings.Contains(name, "live") {
 				b.downloadsChannelID = ch.ID
-			} else if strings.Contains(name, "history") || strings.Contains(name, "library") || strings.Contains(name, "selesai") {
+				if ch.Name != "⚡・live-downloads" {
+					_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
+						Name: "⚡・live-downloads",
+					})
+				}
+			} else if strings.Contains(name, "history") || strings.Contains(name, "library") || strings.Contains(name, "completed") {
 				b.historyChannelID = ch.ID
+				if ch.Name != "✅・completed" {
+					_, _ = b.session.ChannelEdit(ch.ID, &discordgo.ChannelEdit{
+						Name: "✅・completed",
+					})
+				}
 			}
 		}
 	}
 
-	// 3. Create missing channels under category
+	// 5. Create missing channels under category
 	if b.searchChannelID == "" {
-		ch, err := b.createChannelUnderCategory("🔍・search-request", discordgo.ChannelTypeGuildText)
+		ch, err := b.createChannelUnderCategory("🎛️・control-panel", discordgo.ChannelTypeGuildText)
 		if err == nil {
 			b.searchChannelID = ch.ID
 		}
 	}
 	if b.downloadsChannelID == "" {
-		ch, err := b.createChannelUnderCategory("📥・active-downloads", discordgo.ChannelTypeGuildText)
+		ch, err := b.createChannelUnderCategory("⚡・live-downloads", discordgo.ChannelTypeGuildText)
 		if err == nil {
 			b.downloadsChannelID = ch.ID
 		}
 	}
 	if b.historyChannelID == "" {
-		ch, err := b.createChannelUnderCategory("📚・download-history", discordgo.ChannelTypeGuildText)
+		ch, err := b.createChannelUnderCategory("✅・completed", discordgo.ChannelTypeGuildText)
 		if err == nil {
 			b.historyChannelID = ch.ID
 		}

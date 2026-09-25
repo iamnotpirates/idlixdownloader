@@ -14,7 +14,7 @@ Aplikasi scraper & multi-threaded video stream downloader untuk IDLIX yang diopt
 - **Network / Bypass**: DoH (Cloudflare 1.1.1.1 DNS-over-HTTPS) via `curl.exe` wrapper
 - **Downloader Engine**: `N_m3u8DL-RE.exe` + `ffmpeg.exe` di `%LOCALAPPDATA%\iamnotpirates\idlixdownloader\bin\`
 - **Frontend UI**:
-  - **Discord Bot**: Native UI di kategori `iDLiX Downloader` (`🔍・search-request`, `📥・active-downloads` dgn Auto-Threads per task download, `📚・download-history`).
+  - **Discord Bot**: Native UI di kategori `iDLiX Downloader` (`🎛️・control-panel`, `⚡・live-downloads` dgn Auto-Threads per task download, `✅・completed`).
   - **Mobile Web**: Mobile-First UI (Tailwind CSS, Alpine.js) embedded via `go:embed` on port `8989`.
 - **Real-Time Updates**: Discord Message Edit (2.5s throttled) & Server-Sent Events (SSE) `/api/events`
 
