@@ -30,8 +30,9 @@ type Bot struct {
 	downloadsChannelID string
 	historyChannelID   string
 
-	dashboardMsgID string
-	mu             sync.RWMutex
+	dashboardMsgID  string
+	lastSearchMsgID string
+	mu              sync.RWMutex
 
 	// Live download tracking
 	activeThreads map[string]*DownloadThreadState // taskID -> state

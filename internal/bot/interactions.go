@@ -238,16 +238,19 @@ func (b *Bot) handleComponent(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
-	// 5. Close Session Button
+	// 5. Close Session Button (Direct Delete - Zero Leftover Text)
 	if strings.HasPrefix(customID, "btn_close_session_") {
 		_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseUpdateMessage,
-			Data: &discordgo.InteractionResponseData{
-				Content:    "🔒 Pencarian ditutup.",
-				Embeds:     []*discordgo.MessageEmbed{},
-				Components: []discordgo.MessageComponent{},
-			},
+			Type: discordgo.InteractionResponseDeferredMessageUpdate,
 		})
+		if i.Message != nil {
+			_ = s.ChannelMessageDelete(i.ChannelID, i.Message.ID)
+		}
+		b.mu.Lock()
+		if i.Message != nil && i.Message.ID == b.lastSearchMsgID {
+			b.lastSearchMsgID = ""
+		}
+		b.mu.Unlock()
 		return
 	}
 
@@ -441,6 +444,26 @@ func (b *Bot) handleModalSubmit(s *discordgo.Session, i *discordgo.InteractionCr
 	}
 }
 
+func (b *Bot) postSearchResponse(s *discordgo.Session, i *discordgo.InteractionCreate, embed *discordgo.MessageEmbed, comps []discordgo.MessageComponent) {
+	// Auto clean-up previous search message to keep channel pristine
+	b.mu.Lock()
+	if b.lastSearchMsgID != "" {
+		_ = s.ChannelMessageDelete(i.ChannelID, b.lastSearchMsgID)
+		b.lastSearchMsgID = ""
+	}
+	b.mu.Unlock()
+
+	msg, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+		Embeds:     []*discordgo.MessageEmbed{embed},
+		Components: comps,
+	})
+	if err == nil && msg != nil {
+		b.mu.Lock()
+		b.lastSearchMsgID = msg.ID
+		b.mu.Unlock()
+	}
+}
+
 func (b *Bot) executeSearch(s *discordgo.Session, i *discordgo.InteractionCreate, query, category string) {
 	items, err := b.scraper.SearchContent(query)
 	if err != nil || len(items) == 0 {
@@ -453,11 +476,7 @@ func (b *Bot) executeSearch(s *discordgo.Session, i *discordgo.InteractionCreate
 
 	sessionID := b.createExploreSession(items, query, category)
 	embed, comps := b.buildExploreView(sessionID)
-
-	_, _ = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-		Embeds:     []*discordgo.MessageEmbed{embed},
-		Components: comps,
-	})
+	b.postSearchResponse(s, i, embed, comps)
 }
 
 func (b *Bot) executeExplore(s *discordgo.Session, i *discordgo.InteractionCreate, category string) {
@@ -494,11 +513,7 @@ func (b *Bot) executeExplore(s *discordgo.Session, i *discordgo.InteractionCreat
 
 	sessionID := b.createExploreSession(items, category, catLabel)
 	embed, comps := b.buildExploreView(sessionID)
-
-	_, _ = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-		Embeds:     []*discordgo.MessageEmbed{embed},
-		Components: comps,
-	})
+	b.postSearchResponse(s, i, embed, comps)
 }
 
 func (b *Bot) startMovieDownload(s *discordgo.Session, i *discordgo.InteractionCreate, sessionID, slug string) {
