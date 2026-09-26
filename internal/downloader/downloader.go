@@ -26,7 +26,7 @@ import (
 
 var (
 	ansiRegex           = regexp.MustCompile(`\x1b(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])`)
-	streamProgressRegex = regexp.MustCompile(`(?i)(\d+(?:\.\d+)?)%\s*(?:[\d\.]+\s*[kKMmGg]?[bB]/[\d\.]+\s*[kKMmGg]?[bB])?\s*-?([\d\.]+\s*(?:[kKMmGg]?[bB](?:ps|/s|/sec)|[kKMmGg]bps))\s*(\d{2}:\d{2}:\d{2}|--:--:--)?`)
+	streamProgressRegex = regexp.MustCompile(`(?i)(\d+(?:\.\d+)?)%\s*(?:([\d\.]+\s*[kKMmGg]?[bB]))?\s*(?:-?([\d\.]+\s*(?:[kKMmGg]?[bB](?:ps|/s|/sec)|[kKMmGg]bps)|-))?\s*(\d{2}:\d{2}:\d{2}|--:--:--)?`)
 	fallbackPercentRegex = regexp.MustCompile(`(?i)(?:Progress:)?\s*(\d+(?:\.\d+)?)%`)
 	fallbackSpeedRegex   = regexp.MustCompile(`(?i)-?([\d\.]+\s*(?:[kKMmGg]?[bB](?:ps|/s|/sec)|[kKMmGg]bps))`)
 	fallbackETARegex     = regexp.MustCompile(`(\d{2}:\d{2}:\d{2})`)
@@ -472,10 +472,13 @@ func (m *Manager) scanOutput(taskID string, r io.Reader) {
 			if len(matches) > 0 {
 				lastMatch := matches[len(matches)-1]
 				percentStr := lastMatch[1]
-				speedStr := lastMatch[2]
+				speedStr := ""
+				if len(lastMatch) > 3 && lastMatch[3] != "-" {
+					speedStr = lastMatch[3]
+				}
 				etaStr := ""
-				if len(lastMatch) > 3 {
-					etaStr = lastMatch[3]
+				if len(lastMatch) > 4 {
+					etaStr = lastMatch[4]
 				}
 
 				m.mu.Lock()
